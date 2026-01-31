@@ -68,7 +68,7 @@ const LoginPage = () => {
             </Group>
 
             <Group grow mt="md">
-              <Button variant="outline" radius="xl" onClick={close}>
+              <Button variant="fill" bg="red" radius="xl" onClick={close}>
                 {t('login.logout')}
               </Button>
 
