@@ -31,3 +31,31 @@
   color: #fff;
   border: 2px solid #f6f6f6;
 }
+
+.select {
+  background: #003366;
+  color: white;
+  border-radius: 12px;
+  padding: 6px 14px;
+  font-family: noto-b;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  height: 36px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.select option {
+  background: white;
+  color: black;
+}
+
+:global(.lang-option[data-checked='true']) {
+  display: none !important;
+}
+
+:global(.lang-option[aria-selected='true']) {
+  display: none !important;
+}

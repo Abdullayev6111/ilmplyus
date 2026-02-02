@@ -188,7 +188,7 @@ const LoginPage = () => {
       </div>
 
       <div className="login-right">
-        <LanguageSelect />
+        <LanguageSelect variant="login" />
         <img src={phoneLogo} alt="*" className="phone-logo" />
         <div className="login-right-content">
           <h1>{t('login.authorization')}</h1>
