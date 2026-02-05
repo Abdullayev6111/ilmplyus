@@ -13,5 +13,27 @@
     "authorization": "Avtorizatsiya",
     "resetPassword": "Parolni tiklash",
     "rightReserved": "Barcha huquqlar himoyalangan"
+  },
+  "home": {
+    "weeklySales": "Haftalik savdo",
+    "saleType": "Savdo turlari bo‘yicha",
+    "saleAmount": "Savdo soni",
+    "inCash": "Naqd",
+    "byCard": "Karta",
+    "bank": "Bank",
+    "totalPrice": "Umumiy summa",
+    "sum": "so‘m",
+    "piece": "ta",
+    "dailySale": "Bugungi savdo",
+    "users": "Foydalanuvchilar",
+    "errors": "Xatoliklar",
+    "branches": "Filiallar",
+    "products": "Omborxona maxsulotlar",
+    "day1": "DU",
+    "day2": "SE",
+    "day3": "CHO",
+    "day4": "PA",
+    "day5": "JU",
+    "day6": "SHA"
   }
 }

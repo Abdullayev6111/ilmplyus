@@ -13,5 +13,27 @@
     "authorization": "Authorization",
     "resetPassword": "Reset password",
     "rightReserved": "All rights reserved"
+  },
+  "home": {
+    "weeklySales": "Weekly sales",
+    "saleType": "By sales type",
+    "saleAmount": "Sales quantity",
+    "inCash": "Cash",
+    "byCard": "Card",
+    "bank": "Bank",
+    "totalPrice": "Total amount",
+    "sum": "UZS",
+    "piece": "pcs",
+    "dailySale": "Today's sales",
+    "users": "Users",
+    "errors": "Errors",
+    "branches": "Branches",
+    "products": "Warehouse products",
+    "day1": "MON",
+    "day2": "TUE",
+    "day3": "WED",
+    "day4": "THU",
+    "day5": "FRI",
+    "day6": "SAT"
   }
 }

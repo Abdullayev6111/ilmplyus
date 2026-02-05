@@ -1,0 +1,298 @@
+.users {
+  width: 100%;
+  max-width: 1262px;
+  min-height: 864px;
+  border: 1px solid #003366;
+  border-radius: 15px;
+  padding: 25px;
+  margin-top: 30px !important;
+  margin-bottom: 30px !important;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.users-filters {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.users-filters select,
+.users-filters input {
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid #003366;
+  outline: none;
+  min-width: 200px;
+}
+
+.users-filters input::placeholder {
+  color: #888;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.users-table thead {
+  background: #e6e6e6;
+}
+
+.users-table th {
+  padding: 10px;
+  border: 1px solid #8aa3c0;
+  color: #003366;
+  text-align: center;
+  font-weight: 600;
+}
+
+.users-table td {
+  padding: 10px;
+  border-right: 1px solid #8aa3c0;
+  border-bottom: 1px solid #8aa3c0;
+  text-align: center;
+}
+
+.users-table tr td:first-child,
+.users-table tr th:first-child {
+  border-left: 1px solid #8aa3c0;
+}
+
+.users-table tbody tr:hover {
+  background: #f5faff;
+}
+
+.users-table td:last-child {
+  display: flex;
+  gap: 10px;
+}
+
+.users-table td:last-child svg,
+.users-table td:last-child span {
+  cursor: pointer;
+}
+
+.users-table-wrapper {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.users-table thead th {
+  position: sticky;
+  top: 0;
+  background: #e6e6e6;
+  z-index: 2;
+}
+
+.users-table input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.actions button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.add-user-panel {
+  border: 1px solid #003366;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.form-grid input,
+.form-grid select {
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #003366;
+  padding: 0 10px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 500px;
+}
+
+.modal.small {
+  width: 320px;
+  text-align: center;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 15px 0;
+}
+
+.form-grid input,
+.form-grid select {
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #003366;
+  padding: 0 10px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-actions .primary {
+  background: #003366;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.modal-actions .danger {
+  background: #c90000;
+  color: #fff;
+}
+
+.add-new-user {
+  width: 130px;
+  height: 40px;
+  border-radius: 15px;
+  border: 2px solid #003366;
+  background-color: #003366;
+  color: #fff;
+  font-family: noto-m;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-new-user:hover {
+  background-color: #fff;
+  color: #003366;
+  font-family: noto-b;
+}
+
+.delete-all {
+  width: 130px;
+  height: 40px;
+  border-radius: 15px;
+  border: 2px solid #e70a0a;
+  background-color: #e70a0a;
+  color: #fff;
+  font-family: noto-m;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.delete-all:hover {
+  background-color: #fff;
+  color: #e70a0a;
+  font-family: noto-b;
+}
+
+.user-edit-btn {
+  font-size: 18px !important;
+  color: green;
+  font-family: noto-b;
+}
+
+.user-archive-btn {
+  font-size: 18px !important;
+  color: gray;
+  font-family: noto-b;
+}
+
+.user-workTime-btn {
+  font-size: 18px !important;
+  color: #003366;
+  font-family: noto-b;
+}
+
+.user-delete-btn {
+  font-size: 18px !important;
+  font-family: noto-b;
+  color: #e70a0a;
+}
+
+.danger {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.cancel {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.main-title {
+  text-align: center;
+  font-family: noto-b;
+  font-size: 20px;
+  color: #003366;
+  margin-bottom: 20px;
+}
+
+/* @media (max-width: 1024px) {
+  .users-filters {
+    flex-wrap: wrap;
+  }
+
+  .users-filters select,
+  .users-filters input {
+    width: 100%;
+  }
+
+  .users-table {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .users {
+    padding: 15px;
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: 7px;
+  }
+} */

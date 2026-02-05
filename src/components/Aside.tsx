@@ -13,17 +13,21 @@ import branchesIcon from '../assets/images/aside-location.svg';
 import classesIcon from '../assets/images/aside-school.svg';
 import studentsIcon from '../assets/images/aside-students.svg';
 import teachersIcon from '../assets/images/aside-teacher.svg';
+import userRoleIcon from '../assets/images/aside-user-role.svg';
+import paymentsIcon from '../assets/images/money-bill.svg';
 import { Accordion } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 
 const menu = [
   { label: 'Boshqaruv paneli', icon: infoGrafikIcon, path: '/' },
+  { label: 'Ro‘llar', icon: userRoleIcon, path: '/roles' },
   { label: 'Foydalanuvchilar', icon: usersIcon, path: '/users' },
   { label: 'Sozlamalar', icon: settingsIcon, path: '/settings' },
   { label: 'Filiallar', icon: branchesIcon, path: '/branches' },
-  { label: 'Sinflar', icon: classesIcon, path: '/classes' },
+  { label: 'Guruhlar', icon: classesIcon, path: '/classes' },
   { label: 'O‘quvchilar', icon: studentsIcon, path: '/students' },
   { label: 'O‘qtuvchilar', icon: teachersIcon, path: '/teachers' },
+  { label: 'To‘lovlar', icon: paymentsIcon, path: '/payments' },
 ];
 
 const Aside = ({ collapsed, onOpen, onClose }: Props) => {

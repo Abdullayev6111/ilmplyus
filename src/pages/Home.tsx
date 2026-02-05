@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import ControlCard from '../components/ControlCard';
 import WeeklySalesChart from '../components/WeeklySalesChart';
 
 const Home = () => {
+  const { t } = useTranslation();
   return (
     <section className="control container">
       <div className="control-top">
@@ -10,7 +12,7 @@ const Home = () => {
 
       <div className="control-content">
         <div className="control-content-left">
-          <h1>Haftalik savdo</h1>
+          <h1>{t('home.weeklySales')}</h1>
 
           <div className="chart">
             <WeeklySalesChart />
@@ -18,7 +20,7 @@ const Home = () => {
         </div>
 
         <div className="control-content-right">
-          <h1>Savdo turlari bo‘yicha</h1>
+          <h1>{t('home.saleType')}</h1>
 
           <div
             style={{
@@ -30,16 +32,16 @@ const Home = () => {
             }}
           >
             <h4>
-              Savdo soni <span>12ta</span>
+              {t('home.saleAmount')} <span>12{t('home.piece')}</span>
             </h4>
             <h5>
-              Naqd <span>3.500.000</span>
+              {t('home.inCash')} <span>3.500.000</span>
             </h5>
             <h5>
-              Karta <span>750.000</span>
+              {t('home.byCard')} <span>750.000</span>
             </h5>
             <h5>
-              Bank <span>2.000.000</span>
+              {t('home.bank')} <span>2.000.000</span>
             </h5>
           </div>
 
@@ -52,7 +54,7 @@ const Home = () => {
               marginTop: 45,
             }}
           >
-            <h2>Umumiy summa</h2>
+            <h2>{t('home.totalPrice')}</h2>
 
             <div
               style={{
@@ -62,7 +64,7 @@ const Home = () => {
                 textAlign: 'center',
               }}
             >
-              <h3>6.250.000so‘m</h3>
+              <h3>6.250.000{t('home.sum')}</h3>
             </div>
           </div>
         </div>

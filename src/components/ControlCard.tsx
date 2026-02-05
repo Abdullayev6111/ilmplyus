@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 
 type ControlItem = {
@@ -8,12 +9,13 @@ type ControlItem = {
 };
 
 const ControlCard = () => {
+  const { t } = useTranslation();
   const controlData: ControlItem[] = [
-    { id: 1, title: 'Bugungi savdo', number: "13.200.000 so'm", path: '/' },
-    { id: 2, title: 'Foydaluvchilar', number: '74 ta', path: '/users' },
-    { id: 3, title: 'Xatoliklar', number: '11 ta', path: '/' },
-    { id: 4, title: 'Filiallar', number: '4 ta', path: '/branches' },
-    { id: 5, title: 'Omborxona maxsulotlar', number: '10 ta', path: '/' },
+    { id: 1, title: t('home.dailySale'), number: `13.200.000 ${t('home.sum')}`, path: '/' },
+    { id: 2, title: t('home.users'), number: `74 ${t('home.piece')}`, path: '/users' },
+    { id: 3, title: t('home.errors'), number: `11 ${t('home.piece')}`, path: '/' },
+    { id: 4, title: t('home.branches'), number: `4 ${t('home.piece')}`, path: '/branches' },
+    { id: 5, title: t('home.products'), number: `10 ${t('home.piece')}`, path: '/' },
   ];
   return (
     <>

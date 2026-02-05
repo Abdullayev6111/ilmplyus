@@ -8,6 +8,8 @@ import Branches from './pages/branches';
 import Classes from './pages/classes';
 import Students from './pages/students';
 import Teachers from './pages/teachers';
+import Roles from './pages/roles';
+import Payments from './pages/payments';
 import '@mantine/core/styles.css';
 
 const App = () => {
@@ -16,12 +18,14 @@ const App = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/roles" element={<Roles />} />
         <Route path="/users" element={<Users />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/branches" element={<Branches />} />
         <Route path="/classes" element={<Classes />} />
         <Route path="/students" element={<Students />} />
         <Route path="/teachers" element={<Teachers />} />
+        <Route path="/payments" element={<Payments />} />
       </Route>
     </Routes>
   );
