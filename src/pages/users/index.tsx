@@ -1,86 +1,283 @@
 import { useState, useMemo } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { API } from '../../api/api';
 import './users.css';
+import Loading from '../../components/Loading';
+
+interface Branch {
+  id: number;
+  address: string;
+  city: string;
+}
+
+interface Position {
+  id: number;
+  name: string;
+}
+
+interface Role {
+  id: number;
+  name: string;
+}
 
 interface User {
   id: number;
-  name: string;
+  full_name: string;
+  username: string;
   phone: string;
-  role: string;
-  status: string;
-  branch: string;
-  login: string;
-  date: string;
-  workTime?: string;
+  type: string;
+  is_active: boolean;
+  branch: Branch;
+  roles: Role[];
+  created_at: string;
 }
 
-const initialData: User[] = [
-  {
-    id: 1145,
-    name: 'Alijonov Valijon Abdullayevich',
-    phone: '+998901234567',
-    role: 'Administrator',
-    status: 'Neaktiv',
-    branch: 'Andijon',
-    login: 'Alijonov',
-    date: '2026-01-02',
-  },
-  {
-    id: 1146,
-    name: 'Ganisher Valiyev Abdullayevich',
-    phone: '+998901234567',
-    role: 'Kassir',
-    status: 'Neaktiv',
-    branch: 'Andijon',
-    login: 'Ganisher',
-    date: '2026-01-05',
-  },
-];
+interface ApiResponse {
+  current_page: number;
+  data: User[];
+  total: number;
+  per_page: number;
+}
 
 const genPassword = () =>
   Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-4);
 
 const Users = () => {
-  const [users, setUsers] = useState<User[]>(() => initialData);
+  const queryClient = useQueryClient();
   const [selected, setSelected] = useState<number[]>([]);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId] = useState<number | null>(null);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
   const [workTimeId, setWorkTimeId] = useState<number | null>(null);
-
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<number | 'all' | null>(null);
-
   const [search, setSearch] = useState('');
   const [role, setRole] = useState('');
   const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  // const [password, setPassword] = useState(genPassword());
+  const [showRange, setShowRange] = useState(false);
 
-  const [password, setPassword] = useState(genPassword());
+  const { data: apiData, isLoading } = useQuery<ApiResponse>({
+    queryKey: ['users'],
+    queryFn: async () => {
+      const { data } = await API.get('/users');
+      return data;
+    },
+  });
+
+  const [formData, setFormData] = useState({
+    familiya: '',
+    ism: '',
+    sharif: '',
+    phone: '',
+    username: '',
+    password: genPassword(),
+    start_date: '',
+    role_ids: [] as string[],
+    branch_ids: [] as string[],
+    type: '',
+    position_id: '',
+    is_active: true,
+  });
+
+  const addRole = (roleId: string) => {
+    if (roleId && !formData.role_ids.includes(roleId)) {
+      setFormData({ ...formData, role_ids: [...formData.role_ids, roleId] });
+    }
+  };
+
+  const removeRole = (roleId: string) => {
+    setFormData({ ...formData, role_ids: formData.role_ids.filter((id) => id !== roleId) });
+  };
+
+  const addBranch = (branchId: string) => {
+    if (branchId && !formData.branch_ids.includes(branchId)) {
+      setFormData({ ...formData, branch_ids: [...formData.branch_ids, branchId] });
+    }
+  };
+
+  const removeBranch = (branchId: string) => {
+    setFormData({ ...formData, branch_ids: formData.branch_ids.filter((id) => id !== branchId) });
+  };
+
+  const createMutation = useMutation({
+    mutationFn: async (newUser: typeof formData) => {
+      const payload = {
+        full_name: `${newUser.familiya} ${newUser.ism} ${newUser.sharif}`,
+        username: newUser.username,
+        phone: newUser.phone,
+        password: newUser.password,
+        role_ids: newUser.role_ids,
+        branch_ids: newUser.branch_ids,
+        type: newUser.type,
+        position_id: newUser.position_id || null,
+        is_active: newUser.is_active,
+      };
+      const { data } = await API.post('/users', payload);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setShowAddModal(false);
+      setFormData({
+        familiya: '',
+        ism: '',
+        sharif: '',
+        phone: '',
+        username: '',
+        password: genPassword(),
+        start_date: '',
+        role_ids: [],
+        branch_ids: [],
+        type: '',
+        position_id: '',
+        is_active: true,
+      });
+    },
+  });
+
+  const { data: branchesData } = useQuery<Branch[]>({
+    queryKey: ['branches'],
+    queryFn: async () => {
+      const { data } = await API.get('/branches');
+      return data;
+    },
+  });
+
+  const { data: positionsData } = useQuery<Position[]>({
+    queryKey: ['positions'],
+    queryFn: async () => {
+      const { data } = await API.get('/positions');
+      return data;
+    },
+  });
+
+  const branches = branchesData || [];
+  const positions = positionsData || [];
+
+  const handleSubmit = () => {
+    createMutation.mutate(formData);
+  };
+
+  const openEditModal = (user: User) => {
+    setEditingUser(user);
+    setFormData({
+      familiya: user.full_name.split(' ')[0] || '',
+      ism: user.full_name.split(' ')[1] || '',
+      sharif: user.full_name.split(' ')[2] || '',
+      phone: user.phone,
+      username: user.username,
+      password: '',
+      start_date: user.created_at.slice(0, 10),
+      role_ids: user.roles?.map((r) => r.id.toString()),
+      branch_ids: user.branch ? [user.branch.id.toString()] : [],
+      type: user.type,
+      position_id: '',
+      is_active: user.is_active,
+    });
+    setShowAddModal(true);
+  };
+
+  const handleEditSubmit = () => {
+    if (editingUser) {
+      updateMutation.mutate({
+        id: editingUser.id,
+        updates: {
+          full_name: `${formData.familiya} ${formData.ism} ${formData.sharif}`,
+          username: formData.username,
+          phone: formData.phone,
+          role_ids: formData.role_ids,
+          branch_ids: formData.branch_ids,
+          type: formData.type,
+          position_id: formData.position_id || null,
+          is_active: formData.is_active,
+        },
+      });
+    } else {
+      createMutation.mutate(formData);
+    }
+  };
+
+  interface UpdateUserPayload {
+    full_name?: string;
+    username?: string;
+    phone?: string;
+    role_ids?: string[];
+    branch_ids?: string[];
+    type?: string;
+    position_id?: string | null;
+    is_active?: boolean;
+  }
+
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, updates }: { id: number; updates: UpdateUserPayload }) => {
+      const { data } = await API.put(`/users/${id}`, updates);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setShowAddModal(false);
+      setEditingUser(null);
+      setFormData({
+        familiya: '',
+        ism: '',
+        sharif: '',
+        phone: '',
+        username: '',
+        password: genPassword(),
+        start_date: '',
+        role_ids: [],
+        branch_ids: [],
+        type: '',
+        position_id: '',
+        is_active: true,
+      });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await API.delete(`/users/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
 
   const filtered = useMemo(() => {
-    return users.filter((u) => {
-      const d = new Date(u.date).getTime();
-      const from = fromDate ? new Date(fromDate).getTime() : null;
+    const users = apiData?.data || [];
 
-      return (
-        u.name.toLowerCase().includes(search.toLowerCase()) &&
-        (role ? u.role === role : true) &&
-        (from ? d >= from : true)
-      );
-    });
-  }, [users, search, role, fromDate]);
+    return users
+      .filter((u) => {
+        const d = u.created_at.slice(0, 10);
+        const matchSearch = u.full_name.toLowerCase().includes(search.toLowerCase());
+        const matchRole = role ? u.roles[0]?.name === role : true;
 
-  const toggleAll = (checked: boolean) => setSelected(checked ? filtered.map((u) => u.id) : []);
+        if (!matchSearch || !matchRole) return false;
+
+        if (fromDate && toDate) {
+          return d >= fromDate && d <= toDate;
+        }
+
+        return true;
+      })
+      .sort((a, b) => a.id - b.id);
+  }, [apiData?.data, search, role, fromDate, toDate]);
+
+  const toggleAll = (checked: boolean) => setSelected(checked ? filtered?.map((u) => u.id) : []);
 
   const toggleOne = (id: number) =>
     setSelected((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
 
   const confirmDelete = () => {
     if (deleteTarget === 'all') {
-      setUsers((prev) => prev.filter((u) => !selected.includes(u.id)));
+      selected.forEach((id) => deleteMutation.mutate(id));
       setSelected([]);
     }
 
     if (typeof deleteTarget === 'number') {
-      setUsers((prev) => prev.filter((u) => u.id !== deleteTarget));
+      deleteMutation.mutate(deleteTarget);
       setSelected((p) => p.filter((x) => x !== deleteTarget));
     }
 
@@ -91,48 +288,225 @@ const Users = () => {
   const archiveUser = (u: User) => {
     const archived = JSON.parse(localStorage.getItem('archivedUsers') || '[]');
     localStorage.setItem('archivedUsers', JSON.stringify([...archived, u]));
-    setUsers((p) => p.filter((x) => x.id !== u.id));
+    deleteMutation.mutate(u.id);
   };
 
-  const updateUser = (id: number, key: keyof User, value: string) => {
-    setUsers((p) => p.map((u) => (u.id === id ? { ...u, [key]: value } : u)));
-  };
+  if (isLoading)
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
 
   return (
     <section className="users container">
+      <h1 className="main-title">Foydaluvchilar ro‘yhati</h1>
       {showAddModal && (
         <div className="modal-overlay">
-          <div className="modal">
-            <h3>Yangi foydalanuvchi qo‘shish</h3>
+          <div className="modal add-user-modal">
+            <h3 className="modal-title">
+              {editingUser ? 'Foydalanuvchini tahrirlash' : "Yangi foydalanuvchi qo'shish"}
+            </h3>
 
-            <div className="form-grid">
-              <input placeholder="Familiya" />
-              <input placeholder="Ism" />
-              <input placeholder="Sharif" />
-              <input placeholder="Telefon" />
-              <input placeholder="Login" />
-              <div style={{ position: 'relative' }}>
-                <input value={password} readOnly />
-                <button
-                  style={{ position: 'absolute', right: 6, top: 6 }}
-                  onClick={() => setPassword(genPassword())}
-                >
-                  🔄
-                </button>
+            <div className="add-user-form">
+              <div className="form-left">
+                <div className="form-group">
+                  <label>Familiya</label>
+                  <input
+                    type="text"
+                    value={formData.familiya}
+                    onChange={(e) => setFormData({ ...formData, familiya: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Ism</label>
+                  <input
+                    type="text"
+                    value={formData.ism}
+                    onChange={(e) => setFormData({ ...formData, ism: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Sharif</label>
+                  <input
+                    type="text"
+                    value={formData.sharif}
+                    onChange={(e) => setFormData({ ...formData, sharif: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Telefon raqami</label>
+                  <input
+                    type="text"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Login</label>
+                  <input
+                    type="text"
+                    value={formData.username}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Parol</label>
+                  <div style={{ position: 'relative' }}>
+                    <input type="text" value={formData.password} readOnly />
+                    <button
+                      className="refresh-password"
+                      onClick={() => {
+                        const newPass = genPassword();
+                        setFormData({ ...formData, password: newPass });
+                      }}
+                    >
+                      🔄
+                    </button>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Ish boshlangan sana</label>
+                  <input
+                    type="date"
+                    value={formData.start_date}
+                    onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                  />
+                </div>
               </div>
-              <input type="date" />
-              <select>
-                <option>Administrator</option>
-                <option>Kassir</option>
-                <option>Yetakchi</option>
-              </select>
+
+              <div className="form-right">
+                <div className="form-group">
+                  <label>Ro'llar</label>
+                  <div className="selected-items-box">
+                    {formData.role_ids?.map((roleId) => (
+                      <div key={roleId} className="selected-item">
+                        {roleId === '1' ? 'Administrator' : roleId === '2' ? 'Kassir' : 'Yetakchi'}
+                        <button onClick={() => removeRole(roleId)}>×</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <select
+                    onChange={(e) => {
+                      addRole(e.target.value);
+                      e.target.value = '';
+                    }}
+                  >
+                    <option value="">Tanlang</option>
+                    <option value="1">Administrator</option>
+                    <option value="2">Kassir</option>
+                    <option value="3">Yetakchi</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Mavjud Filiallar</label>
+                  <div className="selected-items-box">
+                    {formData.branch_ids?.map((branchId) => {
+                      const branch = branches.find((b) => b.id.toString() === branchId);
+                      return (
+                        <div key={branchId} className="selected-item">
+                          {branch?.address || branchId}
+                          <button onClick={() => removeBranch(branchId)}>×</button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <select
+                    onChange={(e) => {
+                      addBranch(e.target.value);
+                      e.target.value = '';
+                    }}
+                  >
+                    <option value="">Tanlang</option>
+                    {branches?.map((branch) => (
+                      <option key={branch.id} value={branch.id}>
+                        {branch.address}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Xodim turi</label>
+                  <select
+                    value={formData.position_id}
+                    onChange={(e) => setFormData({ ...formData, position_id: e.target.value })}
+                  >
+                    <option value="">Tanlang</option>
+                    {positions?.map((position) => (
+                      <option key={position.id} value={position.id}>
+                        {position.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Arivdan chiqgan sana</label>
+                  <input type="date" />
+                </div>
+
+                <div className="form-group">
+                  <div className="toggle-buttons">
+                    <button
+                      type="button"
+                      className={formData.is_active ? '' : 'active'}
+                      onClick={() => setFormData({ ...formData, is_active: false })}
+                    >
+                      Neaktiv
+                    </button>
+                    <button
+                      type="button"
+                      className={formData.is_active ? 'active' : ''}
+                      onClick={() => setFormData({ ...formData, is_active: true })}
+                    >
+                      Aktiv
+                    </button>
+                  </div>
+                </div>
+
+                {!formData.is_active && (
+                  <div className="form-group">
+                    <label>Arxivga olinsimi?</label>
+                    <div className="checkbox-group">
+                      <label>
+                        <input type="checkbox" /> Ha
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Yo'q
+                      </label>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="modal-actions">
-              <button className="cancel" onClick={() => setShowAddModal(false)}>
-                Bekor
+              <button
+                className="cancel"
+                onClick={() => {
+                  setShowAddModal(false);
+                  setEditingUser(null);
+                }}
+              >
+                Bekor qilish
               </button>
-              <button className="primary">Saqlash</button>
+              <button
+                className="primary"
+                onClick={editingUser ? handleEditSubmit : handleSubmit}
+                disabled={createMutation.isPending || updateMutation.isPending}
+              >
+                {createMutation.isPending || updateMutation.isPending
+                  ? 'Saqlanmoqda...'
+                  : 'Saqlash'}
+              </button>
             </div>
           </div>
         </div>
@@ -141,7 +515,7 @@ const Users = () => {
       {showDeleteModal && (
         <div className="modal-overlay">
           <div className="modal small">
-            <h3>O‘chirishni tasdiqlaysizmi?</h3>
+            <h3>O'chirishni tasdiqlaysizmi?</h3>
 
             <div className="modal-actions">
               <button className="cancel" onClick={() => setShowDeleteModal(false)}>
@@ -157,7 +531,7 @@ const Users = () => {
 
       <div className="users-filters">
         <button className="add-new-user" onClick={() => setShowAddModal(true)}>
-          Qo‘shish
+          Qo'shish
         </button>
 
         <button
@@ -168,7 +542,7 @@ const Users = () => {
             setShowDeleteModal(true);
           }}
         >
-          O‘chirish
+          O'chirish
         </button>
 
         <select onChange={(e) => setRole(e.target.value)}>
@@ -179,7 +553,30 @@ const Users = () => {
         </select>
 
         <input placeholder="Qidirish..." onChange={(e) => setSearch(e.target.value)} />
-        <input type="date" onChange={(e) => setFromDate(e.target.value)} />
+
+        <div style={{ position: 'relative' }}>
+          <input
+            type="text"
+            readOnly
+            placeholder="Sana oralig'i"
+            value={fromDate && toDate ? `${fromDate} - ${toDate}` : ''}
+            onClick={() => setShowRange(true)}
+          />
+
+          {showRange && (
+            <div className="range-box">
+              <input type="date" onChange={(e) => setFromDate(e.target.value)} />
+
+              <input
+                type="date"
+                onChange={(e) => {
+                  setToDate(e.target.value);
+                  setShowRange(false);
+                }}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="users-table-wrapper">
@@ -206,7 +603,7 @@ const Users = () => {
           </thead>
 
           <tbody>
-            {filtered.map((u) => (
+            {filtered?.map((u) => (
               <tr key={u.id}>
                 <td>
                   <input
@@ -221,20 +618,22 @@ const Users = () => {
                 <td>
                   {editingId === u.id ? (
                     <input
-                      value={u.name}
-                      onChange={(e) => updateUser(u.id, 'name', e.target.value)}
+                      value={u.full_name}
+                      onChange={(e) =>
+                        updateMutation.mutate({ id: u.id, updates: { full_name: e.target.value } })
+                      }
                     />
                   ) : (
-                    u.name
+                    u.full_name
                   )}
                 </td>
 
                 <td>{u.phone}</td>
-                <td>{u.role}</td>
-                <td>{u.status}</td>
-                <td>{u.branch}</td>
-                <td>{u.login}</td>
-                <td>{u.date}</td>
+                <td>{u.roles[0]?.name || '-'}</td>
+                <td>{u.is_active ? 'Aktiv' : 'Noaktiv'}</td>
+                <td>{u.branch?.address || '-'}</td>
+                <td>{u.username}</td>
+                <td>{u.created_at.slice(0, 10).replaceAll('-', '.')}</td>
 
                 <td className="actions">
                   <div style={{ position: 'relative' }}>
@@ -253,12 +652,7 @@ const Users = () => {
                           padding: 8,
                         }}
                       >
-                        <input
-                          type="time"
-                          step="60"
-                          lang="ru"
-                          onChange={(e) => updateUser(u.id, 'workTime', e.target.value)}
-                        />
+                        <input type="time" step="60" lang="ru" />
                         <button onClick={() => setWorkTimeId(null)}>OK</button>
                       </div>
                     )}
@@ -268,7 +662,7 @@ const Users = () => {
                     <i className="fa-solid fa-box-archive"></i>
                   </button>
 
-                  <button className="user-edit-btn" onClick={() => setEditingId(u.id)}>
+                  <button className="user-edit-btn" onClick={() => openEditModal(u)}>
                     <i className="fa-solid fa-pen"></i>
                   </button>
 

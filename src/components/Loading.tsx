@@ -1,9 +1,10 @@
-import Logo from '../assets/images/logo.svg?react';
+// import Logo from '../assets/images/logo.svg?react';
+import Logo from '../assets/images/logo.svg';
 
 const Loading = () => {
   return (
     <section className="loader">
-      <svg viewBox="0 0 300 300" width={140}>
+      {/* <svg viewBox="0 0 300 300" width={140}>
         <defs>
           <pattern
             id="lines"
@@ -32,7 +33,8 @@ const Loading = () => {
         <g mask="url(#fillMask)">
           <Logo />
         </g>
-      </svg>
+      </svg> */}
+      <img src={Logo} className="logo" />
     </section>
   );
 };

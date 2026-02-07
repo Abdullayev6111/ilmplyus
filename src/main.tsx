@@ -4,6 +4,7 @@ import { MantineProvider } from '@mantine/core';
 import App from './App.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Notifications } from '@mantine/notifications';
 import './i18n';
 import './index.css';
 
@@ -14,6 +15,7 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <MantineProvider>
         <App />
+        <Notifications position="top-right" />
       </MantineProvider>
     </BrowserRouter>
     <ReactQueryDevtools initialIsOpen={false} />

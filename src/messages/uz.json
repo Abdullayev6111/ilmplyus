@@ -35,5 +35,23 @@
     "day4": "PA",
     "day5": "JU",
     "day6": "SHA"
+  },
+  "payments": {
+    "mainTitle": "To‘lovlar",
+    "editPaymenTitle": "To‘lovni tahrirlash",
+    "addNewPaymentTitle": "Yangi To‘lov qo‘shish",
+    "lastName": "Familiya",
+    "firstName": "Ism",
+    "amount": "Summa",
+    "paymentMethod": "To‘lov turi",
+    "choose": "Tanlang",
+    "branch": "Fillial",
+    "course": "Kurs",
+    "paymentDate": "To‘lov sanasi",
+    "save": "Saqlash",
+    "cancel": "Bekor qilsih",
+    "inCash": "Naqd",
+    "bank": "Bank",
+    "byCard": "Karta"
   }
 }

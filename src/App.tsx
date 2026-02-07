@@ -11,6 +11,7 @@ import Teachers from './pages/teachers';
 import Roles from './pages/roles';
 import Payments from './pages/payments';
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 
 const App = () => {
   return (
