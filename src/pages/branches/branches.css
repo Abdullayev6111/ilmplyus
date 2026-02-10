@@ -1,0 +1,320 @@
+.branch-container {
+  width: 100%;
+  max-width: 1262px;
+  min-height: 864px;
+  border: 1px solid #003366;
+  border-radius: 15px;
+  padding: 25px;
+  margin-top: 30px !important;
+  margin-bottom: 30px !important;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.branch-filter-panel {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.branch-filter-panel select,
+.branch-filter-panel input,
+.branch-search-input,
+.branch-date-input {
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid #003366;
+  outline: none;
+  min-width: 200px;
+}
+
+.branch-search-input::placeholder,
+.branch-date-input::placeholder {
+  color: #888;
+}
+
+.branch-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.branch-data-table thead {
+  background: #e6e6e6;
+}
+
+.branch-data-table th {
+  padding: 10px;
+  border: 1px solid #8aa3c0;
+  color: #003366;
+  text-align: center;
+  font-weight: 600;
+}
+
+.branch-data-table td {
+  padding: 10px;
+  border-right: 1px solid #8aa3c0;
+  border-bottom: 1px solid #8aa3c0;
+  text-align: center;
+}
+
+.branch-data-table tr td:first-child,
+.branch-data-table tr th:first-child {
+  border-left: 1px solid #8aa3c0;
+}
+
+.branch-data-table tbody tr:hover {
+  background: #f5faff;
+}
+
+.branch-data-table td:last-child {
+  display: flex;
+  gap: 10px;
+}
+
+.branch-data-table td:last-child svg,
+.branch-data-table td:last-child span {
+  cursor: pointer;
+}
+
+.branch-table-container {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.branch-data-table thead th {
+  position: sticky;
+  top: 0;
+  background: #e6e6e6;
+  z-index: 2;
+}
+
+.branch-data-table input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.branch-action-cell {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.branch-action-cell button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.branch-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.branch-modal {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 500px;
+}
+
+.branch-small-modal {
+  width: 320px;
+  text-align: center;
+}
+
+.branch-modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.branch-page-title {
+  text-align: center;
+  font-family: noto-m;
+  font-size: 20px;
+  color: #003366;
+  margin-bottom: 14px;
+}
+
+.branch-modal-heading {
+  text-align: center;
+  font-family: noto-b;
+  font-size: 20px;
+  color: #003366;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.branch-save-btn {
+  background: #003366;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.branch-danger-btn {
+  background: #c90000;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.branch-add-btn {
+  width: 130px;
+  height: 40px;
+  border-radius: 15px;
+  border: 2px solid #003366;
+  background-color: #003366;
+  color: #fff;
+  font-family: noto-m;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.branch-add-btn:hover {
+  background-color: #fff;
+  color: #003366;
+  font-family: noto-b;
+}
+
+.branch-delete-btn {
+  width: 130px;
+  height: 40px;
+  border-radius: 15px;
+  border: 2px solid #e70a0a;
+  background-color: #e70a0a;
+  color: #fff;
+  font-family: noto-m;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.branch-delete-btn:hover {
+  background-color: #fff;
+  color: #e70a0a;
+  font-family: noto-b;
+}
+
+.branch-edit-icon {
+  font-size: 18px !important;
+  color: green;
+  font-family: noto-b;
+}
+
+.branch-delete-icon {
+  font-size: 18px !important;
+  font-family: noto-b;
+  color: #e70a0a;
+}
+
+.branch-cancel-btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.branch-date-picker {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: white;
+  border: 1px solid #003366;
+  padding: 10px;
+  display: flex;
+  gap: 6px;
+  z-index: 100;
+  border-radius: 8px;
+}
+
+.branch-add-modal {
+  max-width: 900px;
+  width: 90%;
+}
+
+.branch-form-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin: 20px 0;
+}
+
+.branch-form-left,
+.branch-form-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.branch-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.branch-input-group label {
+  font-size: 14px;
+  font-family: noto-m;
+  color: #003366;
+}
+
+.branch-input-group input,
+.branch-input-group select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #003366;
+}
+
+.branch-input-group input:focus,
+.branch-input-group select:focus {
+  outline: none;
+  border-color: #003366;
+}
+
+.branch-toggle-wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.branch-toggle-wrapper button {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.branch-toggle-wrapper button.branch-active-btn {
+  background: #003366;
+  color: #fff;
+  border-color: #003366;
+}
+
+@media (max-width: 1920px) {
+  .container {
+    max-width: 1750px !important;
+    width: 100%;
+  }
+}

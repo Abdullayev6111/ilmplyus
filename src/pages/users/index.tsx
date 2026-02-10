@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '../../api/api';
 import './users.css';
 import Loading from '../../components/Loading';
+import { useTranslation } from 'react-i18next';
 
 interface Branch {
   id: number;
@@ -43,6 +44,7 @@ const genPassword = () =>
   Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-4);
 
 const Users = () => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [selected, setSelected] = useState<number[]>([]);
   const [editingId] = useState<number | null>(null);
@@ -152,6 +154,16 @@ const Users = () => {
       return data;
     },
   });
+
+  const { data: rolesData } = useQuery<Role[]>({
+    queryKey: ['roles'],
+    queryFn: async () => {
+      const { data } = await API.get('/roles');
+      return data;
+    },
+  });
+
+  const roles = rolesData || [];
 
   const branches = branchesData || [];
   const positions = positionsData || [];
@@ -300,18 +312,18 @@ const Users = () => {
 
   return (
     <section className="users container">
-      <h1 className="main-title">Foydaluvchilar ro‘yhati</h1>
+      <h1 className="main-title">{t('users.listTitle')}</h1>
       {showAddModal && (
         <div className="modal-overlay">
           <div className="modal add-user-modal">
             <h3 className="modal-title">
-              {editingUser ? 'Foydalanuvchini tahrirlash' : "Yangi foydalanuvchi qo'shish"}
+              {editingUser ? t('users.userEditTitle') : t('users.addNewUserTitle')}
             </h3>
 
             <div className="add-user-form">
               <div className="form-left">
                 <div className="form-group">
-                  <label>Familiya</label>
+                  <label>{t('users.lastName')}</label>
                   <input
                     type="text"
                     value={formData.familiya}
@@ -319,7 +331,7 @@ const Users = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Ism</label>
+                  <label>{t('users.firstName')}</label>
                   <input
                     type="text"
                     value={formData.ism}
@@ -327,7 +339,7 @@ const Users = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Sharif</label>
+                  <label>{t('users.familyName')}</label>
                   <input
                     type="text"
                     value={formData.sharif}
@@ -335,7 +347,7 @@ const Users = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Telefon raqami</label>
+                  <label>{t('users.phoneNumber')}</label>
                   <input
                     type="text"
                     value={formData.phone}
@@ -343,7 +355,7 @@ const Users = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Login</label>
+                  <label>{t('users.loginText')}</label>
                   <input
                     type="text"
                     value={formData.username}
@@ -351,7 +363,7 @@ const Users = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Parol</label>
+                  <label>{t('users.password')}</label>
                   <div style={{ position: 'relative' }}>
                     <input type="text" value={formData.password} readOnly />
                     <button
@@ -366,7 +378,7 @@ const Users = () => {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>Ish boshlangan sana</label>
+                  <label>{t('users.startDate')}</label>
                   <input
                     type="date"
                     value={formData.start_date}
@@ -377,14 +389,17 @@ const Users = () => {
 
               <div className="form-right">
                 <div className="form-group">
-                  <label>Ro'llar</label>
+                  <label>{t('users.roles')}</label>
                   <div className="selected-items-box">
-                    {formData.role_ids?.map((roleId) => (
-                      <div key={roleId} className="selected-item">
-                        {roleId === '1' ? 'Administrator' : roleId === '2' ? 'Kassir' : 'Yetakchi'}
-                        <button onClick={() => removeRole(roleId)}>×</button>
-                      </div>
-                    ))}
+                    {formData.role_ids?.map((roleId) => {
+                      const role = roles.find((r) => r.id.toString() === roleId);
+                      return (
+                        <div key={roleId} className="selected-item">
+                          {role?.name || roleId}
+                          <button onClick={() => removeRole(roleId)}>×</button>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -395,15 +410,17 @@ const Users = () => {
                       e.target.value = '';
                     }}
                   >
-                    <option value="">Tanlang</option>
-                    <option value="1">Administrator</option>
-                    <option value="2">Kassir</option>
-                    <option value="3">Yetakchi</option>
+                    <option value="">{t('users.choose')}</option>
+                    {roles?.map((role) => (
+                      <option key={role.id} value={role.id}>
+                        {role.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
                 <div className="form-group">
-                  <label>Mavjud Filiallar</label>
+                  <label>{t('users.branches')}</label>
                   <div className="selected-items-box">
                     {formData.branch_ids?.map((branchId) => {
                       const branch = branches.find((b) => b.id.toString() === branchId);
@@ -424,7 +441,7 @@ const Users = () => {
                       e.target.value = '';
                     }}
                   >
-                    <option value="">Tanlang</option>
+                    <option value="">{t('users.choose')}</option>
                     {branches?.map((branch) => (
                       <option key={branch.id} value={branch.id}>
                         {branch.address}
@@ -434,12 +451,12 @@ const Users = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Xodim turi</label>
+                  <label>{t('users.position')}</label>
                   <select
                     value={formData.position_id}
                     onChange={(e) => setFormData({ ...formData, position_id: e.target.value })}
                   >
-                    <option value="">Tanlang</option>
+                    <option value="">{t('users.choose')}</option>
                     {positions?.map((position) => (
                       <option key={position.id} value={position.id}>
                         {position.name}
@@ -449,7 +466,7 @@ const Users = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Arivdan chiqgan sana</label>
+                  <label>{t('users.endDate')}</label>
                   <input type="date" />
                 </div>
 
@@ -460,27 +477,27 @@ const Users = () => {
                       className={formData.is_active ? '' : 'active'}
                       onClick={() => setFormData({ ...formData, is_active: false })}
                     >
-                      Neaktiv
+                      {t('users.inactive')}
                     </button>
                     <button
                       type="button"
                       className={formData.is_active ? 'active' : ''}
                       onClick={() => setFormData({ ...formData, is_active: true })}
                     >
-                      Aktiv
+                      {t('users.active')}
                     </button>
                   </div>
                 </div>
 
                 {!formData.is_active && (
                   <div className="form-group">
-                    <label>Arxivga olinsimi?</label>
+                    <label>{t('users.isActive')}</label>
                     <div className="checkbox-group">
                       <label>
-                        <input type="checkbox" /> Ha
+                        <input type="checkbox" /> {t('users.yes')}
                       </label>
                       <label>
-                        <input type="checkbox" /> Yo'q
+                        <input type="checkbox" /> {t('users.no')}
                       </label>
                     </div>
                   </div>
@@ -496,7 +513,7 @@ const Users = () => {
                   setEditingUser(null);
                 }}
               >
-                Bekor qilish
+                {t('users.cancel')}
               </button>
               <button
                 className="primary"
@@ -504,8 +521,8 @@ const Users = () => {
                 disabled={createMutation.isPending || updateMutation.isPending}
               >
                 {createMutation.isPending || updateMutation.isPending
-                  ? 'Saqlanmoqda...'
-                  : 'Saqlash'}
+                  ? t('users.saving')
+                  : t('users.save')}
               </button>
             </div>
           </div>
@@ -515,14 +532,14 @@ const Users = () => {
       {showDeleteModal && (
         <div className="modal-overlay">
           <div className="modal small">
-            <h3>O'chirishni tasdiqlaysizmi?</h3>
+            <h3>{t('users.confirmDelete')}</h3>
 
             <div className="modal-actions">
               <button className="cancel" onClick={() => setShowDeleteModal(false)}>
-                Bekor
+                {t('users.cancel')}
               </button>
               <button className="danger" onClick={confirmDelete}>
-                Tasdiqlash
+                {t('users.confirm')}
               </button>
             </div>
           </div>
@@ -531,7 +548,7 @@ const Users = () => {
 
       <div className="users-filters">
         <button className="add-new-user" onClick={() => setShowAddModal(true)}>
-          Qo'shish
+          {t('users.addNew')}
         </button>
 
         <button
@@ -542,23 +559,25 @@ const Users = () => {
             setShowDeleteModal(true);
           }}
         >
-          O'chirish
+          {t('users.delete')}
         </button>
 
         <select onChange={(e) => setRole(e.target.value)}>
-          <option value="">Xodim turi</option>
-          <option value="Administrator">Administrator</option>
-          <option value="Kassir">Kassir</option>
-          <option value="Yetakchi">Yetakchi</option>
+          <option value="">{t('users.employeeType')}</option>
+          {roles?.map((role) => (
+            <option key={role.id} value={role.name}>
+              {role.name}
+            </option>
+          ))}
         </select>
 
-        <input placeholder="Qidirish..." onChange={(e) => setSearch(e.target.value)} />
+        <input placeholder={t('users.search')} onChange={(e) => setSearch(e.target.value)} />
 
         <div style={{ position: 'relative' }}>
           <input
             type="text"
             readOnly
-            placeholder="Sana oralig'i"
+            placeholder={t('users.dateFilter')}
             value={fromDate && toDate ? `${fromDate} - ${toDate}` : ''}
             onClick={() => setShowRange(true)}
           />
@@ -591,14 +610,14 @@ const Users = () => {
                 />
               </th>
               <th>ID</th>
-              <th>F.I.SH</th>
-              <th>Tel</th>
-              <th>Rol</th>
-              <th>Holat</th>
-              <th>Filial</th>
-              <th>Login</th>
-              <th>Sana</th>
-              <th>Harakat</th>
+              <th>{t('users.fish')}</th>
+              <th>{t('users.phone')}</th>
+              <th>{t('users.role')}</th>
+              <th>{t('users.status')}</th>
+              <th>{t('users.branch')}</th>
+              <th>{t('users.loginText')}</th>
+              <th>{t('users.date')}</th>
+              <th>{t('users.actions')}</th>
             </tr>
           </thead>
 

@@ -15,6 +15,7 @@ import studentsIcon from '../assets/images/aside-students.svg';
 import teachersIcon from '../assets/images/aside-teacher.svg';
 import userRoleIcon from '../assets/images/aside-user-role.svg';
 import paymentsIcon from '../assets/images/money-bill.svg';
+import expenseIcon from '../assets/images/walletIcon.svg';
 import { Accordion } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 
@@ -28,6 +29,16 @@ const menu = [
   { label: 'O‘quvchilar', icon: studentsIcon, path: '/students' },
   { label: 'O‘qtuvchilar', icon: teachersIcon, path: '/teachers' },
   { label: 'To‘lovlar', icon: paymentsIcon, path: '/payments' },
+  {
+    label: 'Chiqimlar',
+    icon: expenseIcon,
+    path: '/expenses',
+    children: [
+      { label: 'Chiqimlar kategoriyasi', path: '/expenses' },
+      { label: 'Chiqimlar podkategoriyasi', path: '/expenses/subcategory' },
+      { label: 'Chiqim kiritish', path: '/expenses/create' },
+    ],
+  },
 ];
 
 const Aside = ({ collapsed, onOpen, onClose }: Props) => {

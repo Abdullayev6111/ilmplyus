@@ -12,6 +12,7 @@ import Roles from './pages/roles';
 import Payments from './pages/payments';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
+import ArchivedPayments from './pages/archive';
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="/students" element={<Students />} />
         <Route path="/teachers" element={<Teachers />} />
         <Route path="/payments" element={<Payments />} />
+        <Route path="/payments/archive" element={<ArchivedPayments />} />
       </Route>
     </Routes>
   );

@@ -1,4 +1,5 @@
 import './roles.css';
+import { useTranslation } from 'react-i18next';
 
 interface PermissionProps {
   title: string;
@@ -6,45 +7,51 @@ interface PermissionProps {
 }
 
 const Roles = () => {
+  const { t } = useTranslation();
+
   return (
     <section className="role-page">
-      {/* TOP FORM */}
       <div className="role-create-card">
-        <h2>Yangi rol qo‘shish</h2>
+        <h2>{t('roles.pageTitle')}</h2>
 
         <div className="role-form">
           <label>
-            Rol nomi
-            <input type="text" placeholder="Rol nomini kiriting" />
+            {t('roles.roleName')}
+            <input type="text" placeholder={t('roles.rolePlaceholder')} />
           </label>
 
-          <button className="save-btn">Saqlash</button>
+          <button className="save-btn">{t('roles.save')}</button>
         </div>
       </div>
 
-      {/* PERMISSIONS */}
-
       <div className="permission-grid">
-        <PermissionCard title="Admin panel" items={['Panelga kirish']} />
+        <PermissionCard title={t('roles.adminPanel')} items={[t('roles.accessPanel')]} />
 
         <PermissionCard
-          title="Foydalanuvchilar"
-          items={['Qo‘shish', 'Tahrirlash', 'Ko‘rish', 'O‘chirish', 'Vaqt belgilash', 'Arxivlash']}
+          title={t('roles.users')}
+          items={[
+            t('roles.add'),
+            t('roles.edit'),
+            t('roles.view'),
+            t('roles.delete'),
+            t('roles.setTime'),
+            t('roles.archive'),
+          ]}
         />
 
         <PermissionCard
-          title="To‘lovlar"
-          items={['Qo‘shish', 'Tahrirlash', 'Ko‘rish', 'O‘chirish']}
+          title={t('roles.payments')}
+          items={[t('roles.add'), t('roles.edit'), t('roles.view'), t('roles.delete')]}
         />
 
         <PermissionCard
-          title="Chiqimlar"
-          items={['Qo‘shish', 'Tahrirlash', 'Ko‘rish', 'O‘chirish']}
+          title={t('roles.expenses')}
+          items={[t('roles.add'), t('roles.edit'), t('roles.view'), t('roles.delete')]}
         />
 
         <PermissionCard
-          title="Filiallar"
-          items={['Qo‘shish', 'Tahrirlash', 'Ko‘rish', 'O‘chirish']}
+          title={t('roles.branches')}
+          items={[t('roles.add'), t('roles.edit'), t('roles.view'), t('roles.delete')]}
         />
       </div>
     </section>
