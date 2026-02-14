@@ -166,5 +166,25 @@
     "delete": "O‘chirish",
     "setTime": "Vaqt belgilash",
     "archive": "Arxivlash"
+  },
+  "expenses": {
+    "expenseTitle": "Chiqimlar",
+    "addNewExpense": "Chiqim kiritish",
+    "expenseCategory": "Chiqimlar kategoriyasi",
+    "choose": "Tanlang",
+    "expenseSubCategory": "Chiqim podkategoriyasi",
+    "cashier": "Kassir",
+    "amount": "Summa",
+    "date": "Sana",
+    "branch": "Filial",
+    "cancel": "Bekor qilish",
+    "save": "Saqlash",
+    "confirmDelete": "O‘chirishni tasdiqlaysizmi?",
+    "delete": "O‘chirish",
+    "addBtn": "Qo‘shish",
+    "category": "Kategoriya",
+    "subCategory": "Podkategoriya",
+    "actions": "Harakatlar",
+    "comment": "Izoh"
   }
 }

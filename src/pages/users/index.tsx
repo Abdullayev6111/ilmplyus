@@ -59,6 +59,7 @@ const Users = () => {
   const [toDate, setToDate] = useState('');
   // const [password, setPassword] = useState(genPassword());
   const [showRange, setShowRange] = useState(false);
+  const [userImage, setUserImage] = useState<File | null>(null);
 
   const { data: apiData, isLoading } = useQuery<ApiResponse>({
     queryKey: ['users'],
@@ -104,24 +105,38 @@ const Users = () => {
   };
 
   const createMutation = useMutation({
-    mutationFn: async (newUser: typeof formData) => {
-      const payload = {
-        full_name: `${newUser.familiya} ${newUser.ism} ${newUser.sharif}`,
-        username: newUser.username,
-        phone: newUser.phone,
-        password: newUser.password,
-        role_ids: newUser.role_ids,
-        branch_ids: newUser.branch_ids,
-        type: newUser.type,
-        position_id: newUser.position_id || null,
-        is_active: newUser.is_active,
-      };
-      const { data } = await API.post('/users', payload);
-      return data;
+    mutationFn: async () => {
+      const data = new FormData();
+
+      data.append('full_name', `${formData.familiya} ${formData.ism} ${formData.sharif}`);
+      data.append('username', formData.username);
+      data.append('phone', formData.phone);
+      data.append('password', formData.password);
+      data.append('type', formData.type);
+      data.append('position_id', formData.position_id || '');
+      data.append('is_active', String(formData.is_active));
+
+      formData.role_ids.forEach((id) => data.append('role_ids[]', id));
+
+      formData.branch_ids.forEach((id) => data.append('branch_ids[]', id));
+
+      if (userImage) {
+        data.append('image', userImage);
+      }
+
+      const res = await API.post('/users', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       setShowAddModal(false);
+      setUserImage(null);
+      resetForm();
       setFormData({
         familiya: '',
         ism: '',
@@ -169,7 +184,7 @@ const Users = () => {
   const positions = positionsData || [];
 
   const handleSubmit = () => {
-    createMutation.mutate(formData);
+    createMutation.mutate();
   };
 
   const openEditModal = (user: User) => {
@@ -207,7 +222,7 @@ const Users = () => {
         },
       });
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate();
     }
   };
 
@@ -231,6 +246,7 @@ const Users = () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       setShowAddModal(false);
       setEditingUser(null);
+      resetForm();
       setFormData({
         familiya: '',
         ism: '',
@@ -247,6 +263,25 @@ const Users = () => {
       });
     },
   });
+
+  const resetForm = () => {
+    setFormData({
+      familiya: '',
+      ism: '',
+      sharif: '',
+      phone: '',
+      username: '',
+      password: genPassword(),
+      start_date: '',
+      role_ids: [],
+      branch_ids: [],
+      type: '',
+      position_id: '',
+      is_active: true,
+    });
+    setEditingUser(null);
+    setUserImage(null);
+  };
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -309,6 +344,28 @@ const Users = () => {
         <Loading />
       </div>
     );
+
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
+  const ALLOWED_TYPES = ['image/png', 'image/jpeg'];
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      alert('Only PNG or JPG format is allowed');
+      e.target.value = '';
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      alert('Maximum file size is 5MB');
+      e.target.value = '';
+      return;
+    }
+
+    setUserImage(file);
+  };
 
   return (
     <section className="users container">
@@ -384,6 +441,22 @@ const Users = () => {
                     value={formData.start_date}
                     onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
                   />
+                </div>
+                <div className="form-group">
+                  <label>Profil uchun rasm png yoki jpg formatda max 5mb</label>
+
+                  <div className="file-upload-wrapper">
+                    <input
+                      id="userImage"
+                      type="file"
+                      accept="image/png, image/jpeg"
+                      onChange={handleFileChange}
+                      className="file-input"
+                    />
+                    <label htmlFor="userImage" className="file-upload-btn">
+                      Yuklash
+                    </label>
+                  </div>
                 </div>
               </div>
 
@@ -511,6 +584,7 @@ const Users = () => {
                 onClick={() => {
                   setShowAddModal(false);
                   setEditingUser(null);
+                  resetForm();
                 }}
               >
                 {t('users.cancel')}

@@ -166,5 +166,25 @@
     "delete": "Delete",
     "setTime": "Set time",
     "archive": "Archive"
+  },
+  "expenses": {
+    "expenseTitle": "Expenses",
+    "addNewExpense": "Add Expense",
+    "expenseCategory": "Expense Category",
+    "choose": "Select",
+    "expenseSubCategory": "Expense Subcategory",
+    "cashier": "Cashier",
+    "amount": "Amount",
+    "date": "Date",
+    "branch": "Branch",
+    "cancel": "Cancel",
+    "save": "Save",
+    "confirmDelete": "Do you confirm deletion?",
+    "delete": "Delete",
+    "addBtn": "Add",
+    "category": "Category",
+    "subCategory": "Subcategory",
+    "actions": "Actions",
+    "comment": "Comment"
   }
 }

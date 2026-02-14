@@ -460,6 +460,33 @@
   border-color: #003366;
 }
 
+.file-upload-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-upload-btn {
+  display: block;
+  width: 100%;
+  padding: 10px 0;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  color: #003366;
+  font-family: noto-m;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.file-upload-btn:active {
+  transform: scale(0.98);
+}
+
 @media (max-width: 1920px) {
   .container {
     max-width: 1750px !important;

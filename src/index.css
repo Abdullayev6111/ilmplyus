@@ -134,7 +134,7 @@ aside {
 
 .collapsed-logo {
   width: 36px;
-  margin-left: 12px;
+  margin-left: 22px;
 }
 
 .aside-content {
@@ -265,17 +265,6 @@ aside {
   background: transparent !important;
 }
 
-.sidebar-sub-item {
-  height: 48px;
-  padding: 12px 18px 12px 54px;
-  display: flex;
-  align-items: center;
-  color: #ffffffcc;
-  text-decoration: none;
-  font-size: 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
 .sidebar-sub-item:hover {
   background: rgba(255, 255, 255, 0.08);
 }
@@ -283,6 +272,89 @@ aside {
 .sidebar-sub-item.active {
   background: #ffffff26;
   color: #fff;
+}
+
+.sidebar .mantine-Accordion-panel {
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+.layout.collapsed .sidebar-subitem {
+  display: none !important;
+}
+
+.layout.collapsed .mantine-Accordion-control {
+  justify-content: center !important;
+}
+
+.layout.collapsed .mantine-Accordion-control .sidebar-icon {
+  margin: 0 auto;
+}
+
+.layout.collapsed .mantine-Accordion-label {
+  justify-content: center !important;
+  width: 100%;
+}
+
+.mantine-Accordion-item {
+  border-bottom: none;
+  width: 100%;
+  padding: 0 !important;
+}
+
+.sidebar-submenu {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar .mantine-Accordion-panel {
+  padding: 0 !important;
+  width: 100%;
+  margin: 0 !important;
+}
+
+.sidebar .mantine-Accordion-content {
+  padding: 0 !important;
+  background: transparent !important;
+  width: 100% !important;
+}
+
+.sidebar-subitem {
+  height: 48px;
+  display: block;
+  padding: 14px 18px;
+  font-size: 15px;
+  font-family: noto-m;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.2s ease;
+  line-height: 20px;
+}
+
+.sidebar-subitem:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.sidebar-subitem.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-family: noto-b;
+}
+
+.sidebar .mantine-Accordion-panel > div {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+.sidebar .mantine-Accordion-item {
+  width: 100% !important;
+  padding: 0 !important;
 }
 
 /* Aside end */

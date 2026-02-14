@@ -5,7 +5,7 @@ interface Props {
 }
 
 import asideLogo from '../assets/images/talim tizimi white.svg';
-import mainLogo from '../assets/images/logo.svg';
+import mainLogo from '../assets/images/logo-mini.svg';
 import infoGrafikIcon from '../assets/images/aside-infografik.svg';
 import usersIcon from '../assets/images/aside-users.svg';
 import settingsIcon from '../assets/images/aside-settings.svg';
@@ -34,7 +34,7 @@ const menu = [
     icon: expenseIcon,
     path: '/expenses',
     children: [
-      { label: 'Chiqimlar kategoriyasi', path: '/expenses' },
+      { label: 'Chiqimlar kategoriyasi', path: '/expenses/category' },
       { label: 'Chiqimlar podkategoriyasi', path: '/expenses/subcategory' },
       { label: 'Chiqim kiritish', path: '/expenses/create' },
     ],
@@ -58,24 +58,54 @@ const Aside = ({ collapsed, onOpen, onClose }: Props) => {
 
       <div className="aside-content">
         <Accordion radius={0} className="sidebar" multiple={false}>
-          {menu.map((item) => (
-            <Accordion.Item value={item.label} key={item.label}>
+          {menu.map((item) => {
+            if (item.children) {
+              return (
+                <Accordion.Item value={item.label} key={item.label}>
+                  <Accordion.Control>
+                    <div className="sidebar-item">
+                      <span className="sidebar-icon">
+                        <img src={item.icon} alt={item.label} />
+                      </span>
+                      <span className={`sidebar-label ${collapsed ? 'hidden' : ''}`}>
+                        {item.label}
+                      </span>
+                    </div>
+                  </Accordion.Control>
+
+                  <Accordion.Panel>
+                    <div className="sidebar-submenu">
+                      {item.children.map((child) => (
+                        <NavLink
+                          key={child.path}
+                          to={child.path}
+                          className={({ isActive }) =>
+                            `sidebar-subitem ${isActive ? 'active' : ''}`
+                          }
+                        >
+                          {child.label}
+                        </NavLink>
+                      ))}
+                    </div>
+                  </Accordion.Panel>
+                </Accordion.Item>
+              );
+            }
+
+            return (
               <NavLink
+                key={item.label}
                 to={item.path}
                 className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}
               >
-                <Accordion.Control component="div">
-                  <span className="sidebar-icon">
-                    <img src={item.icon} alt={item.label} />
-                  </span>
+                <span className="sidebar-icon">
+                  <img src={item.icon} alt={item.label} />
+                </span>
 
-                  <span className={`sidebar-label ${collapsed ? 'hidden' : ''}`}>{item.label}</span>
-                </Accordion.Control>
+                <span className={`sidebar-label ${collapsed ? 'hidden' : ''}`}>{item.label}</span>
               </NavLink>
-
-              <Accordion.Panel />
-            </Accordion.Item>
-          ))}
+            );
+          })}
         </Accordion>
       </div>
     </aside>

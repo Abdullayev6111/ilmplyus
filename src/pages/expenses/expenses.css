@@ -1,0 +1,140 @@
+/* Exenses category start */
+
+.expenses-category {
+  max-width: 692px;
+  padding: 30px 120px;
+  border-radius: 15px;
+  border-radius: 1px solid #003366;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 70px auto;
+  align-items: center;
+}
+
+.expenses-category h1 {
+  font-family: noto-b;
+  font-size: 20px;
+  color: #003366;
+}
+
+.expenses-category form label {
+  font-family: noto-m;
+  font-size: 14px;
+  color: #003366;
+  margin-left: -115px;
+  margin-bottom: -15px;
+}
+
+.expenses-category form input {
+  height: 40px;
+  border-radius: 15px;
+  border: 1px solid #003366;
+}
+
+/* Exenses subcategory end */
+
+/* Exenses subcategory start */
+
+.expenses-subcategory {
+  max-width: 912px;
+  padding: 30px 60px;
+  border-radius: 15px;
+  border-radius: 1px solid #003366;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 70px auto;
+  align-items: center;
+}
+
+.expenses-subcategory h1 {
+  font-family: noto-b;
+  font-size: 20px;
+  color: #003366;
+}
+
+.subcategory-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.subcategory-form-group input {
+  width: 330px;
+  height: 40px;
+  border-radius: 15px;
+  border: 1px solid #003366;
+  margin-top: 9px;
+}
+
+.subcategory-form-group select {
+  width: 330px;
+  height: 40px;
+  border-radius: 15px;
+  border: 1px solid #003366;
+  margin-top: 9px;
+  padding: 8px 15px;
+  outline: none;
+}
+
+.subcategory-form label {
+  color: #003366;
+}
+
+.subcategory-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Exenses subcategory end */
+
+/* Expenses create start */
+
+.expenses-create {
+  max-width: 912px;
+  padding: 40px 76px;
+  border-radius: 15px;
+  border-radius: 1px solid #003366;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 70px auto;
+  align-items: center;
+}
+
+.expenses-create h1 {
+  font-family: noto-b;
+  font-size: 20px;
+  color: #003366;
+}
+
+.expenses-create-form {
+  display: flex;
+  flex-direction: column !important;
+  gap: 30px;
+}
+
+.create-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 100px;
+}
+
+.comment {
+  width: 100%;
+}
+
+.commment .expenses-comment {
+  width: 100%;
+}
+
+.create-form-input {
+  width: 330px;
+  height: 40px;
+}
+
+/* Expenses create end */

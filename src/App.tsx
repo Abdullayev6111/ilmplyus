@@ -10,9 +10,12 @@ import Students from './pages/students';
 import Teachers from './pages/teachers';
 import Roles from './pages/roles';
 import Payments from './pages/payments';
+import ArchivedPayments from './pages/archive';
+import Expenses from './pages/expenses';
+import ExpenseCategory from './pages/expenses/expenseCategory';
+import ExpenseSubCategory from './pages/expenses/expenseSubCategory';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
-import ArchivedPayments from './pages/archive';
 
 const App = () => {
   return (
@@ -29,6 +32,9 @@ const App = () => {
         <Route path="/teachers" element={<Teachers />} />
         <Route path="/payments" element={<Payments />} />
         <Route path="/payments/archive" element={<ArchivedPayments />} />
+        <Route path="/expenses/create" element={<Expenses />} />
+        <Route path="/expenses/category" element={<ExpenseCategory />} />
+        <Route path="/expenses/subcategory" element={<ExpenseSubCategory />} />
       </Route>
     </Routes>
   );

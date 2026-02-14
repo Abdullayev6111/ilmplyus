@@ -166,5 +166,25 @@
     "delete": "Удалить",
     "setTime": "Назначить время",
     "archive": "Архивировать"
+  },
+  "expenses": {
+    "expenseTitle": "Расходы",
+    "addNewExpense": "Добавить расход",
+    "expenseCategory": "Категория расходов",
+    "choose": "Выберите",
+    "expenseSubCategory": "Подкатегория расходов",
+    "cashier": "Кассир",
+    "amount": "Сумма",
+    "date": "Дата",
+    "branch": "Филиал",
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "confirmDelete": "Подтверждаете удаление?",
+    "delete": "Удалить",
+    "addBtn": "Добавить",
+    "category": "Категория",
+    "subCategory": "Подкатегория",
+    "actions": "Действия",
+    "comment": "Коммент"
   }
 }

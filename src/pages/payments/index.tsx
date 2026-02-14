@@ -500,7 +500,26 @@ const Payments = () => {
             </div>
 
             <div className="modal-actions center">
-              <button className="cancel" onClick={() => setShowAddModal(false)}>
+              <button
+                className="cancel"
+                onClick={() => {
+                  setShowAddModal(false);
+                  setFormData({
+                    familiya: '',
+                    ism: '',
+                    sharif: '',
+                    amount: '',
+                    payment_type: '',
+                    payment_period: '',
+                    course_id: '',
+                    teacher_id: '',
+                    cashier_id: '',
+                    branch_id: '',
+                    payment_date: '',
+                    group_id: '',
+                  });
+                }}
+              >
                 {t('payments.cancel')}
               </button>
               <button className="primary" onClick={handleFormSubmit}>

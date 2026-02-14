@@ -1,0 +1,308 @@
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { API } from '../../api/api';
+import '../users/users.css';
+import './expenses.css';
+import Loading from '../../components/Loading';
+
+interface ExpenseCategory {
+  id: number;
+  name: string;
+}
+
+interface ExpenseSubcategory {
+  id: number;
+  name: string;
+  expense_category_id: number;
+  category?: ExpenseCategory;
+}
+
+const ExpensesSubcategory = () => {
+  const queryClient = useQueryClient();
+
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<number | 'all' | null>(null);
+  const [selected, setSelected] = useState<number[]>([]);
+  const [editingItem, setEditingItem] = useState<ExpenseSubcategory | null>(null);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    expense_category_id: '',
+  });
+
+  const [archivedIds, setArchivedIds] = useState<number[]>(() => {
+    const stored = localStorage.getItem('archivedExpenseSubcategoryIds');
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  const { data: subcategories, isLoading } = useQuery<ExpenseSubcategory[]>({
+    queryKey: ['expense-subcategories'],
+    queryFn: async () => {
+      const { data } = await API.get('/expense-subcategories');
+      return data;
+    },
+  });
+
+  const { data: categories } = useQuery<ExpenseCategory[]>({
+    queryKey: ['expense-categories'],
+    queryFn: async () => {
+      const { data } = await API.get('/expense-categories');
+      return data;
+    },
+  });
+
+  const createMutation = useMutation({
+    mutationFn: async () => API.post('/expense-subcategories', formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['expense-subcategories'] });
+      setShowAddModal(false);
+      setEditingItem(null);
+      setFormData({ name: '', expense_category_id: '' });
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, payload }: { id: number; payload: typeof formData }) =>
+      API.put(`/expense-subcategories/${id}`, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['expense-subcategories'] });
+      setShowAddModal(false);
+      setEditingItem(null);
+      setFormData({ name: '', expense_category_id: '' });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => API.delete(`/expense-subcategories/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['expense-subcategories'] });
+    },
+  });
+
+  const openEditModal = (item: ExpenseSubcategory) => {
+    setEditingItem(item);
+    setFormData({
+      name: item.name,
+      expense_category_id: String(item.expense_category_id),
+    });
+    setShowAddModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (deleteTarget === 'all') {
+      selected.forEach((id) => deleteMutation.mutate(id));
+      setSelected([]);
+    }
+
+    if (typeof deleteTarget === 'number') {
+      deleteMutation.mutate(deleteTarget);
+      setSelected((p) => p.filter((x) => x !== deleteTarget));
+    }
+
+    setShowDeleteModal(false);
+    setDeleteTarget(null);
+  };
+
+  const archiveItem = (item: ExpenseSubcategory) => {
+    const newArchivedIds = [...archivedIds, item.id];
+    setArchivedIds(newArchivedIds);
+    localStorage.setItem('archivedExpenseSubcategoryIds', JSON.stringify(newArchivedIds));
+
+    const allArchived = JSON.parse(localStorage.getItem('archivedExpenseSubcategories') || '[]');
+    localStorage.setItem('archivedExpenseSubcategories', JSON.stringify([...allArchived, item]));
+  };
+
+  const toggleAll = (checked: boolean) =>
+    setSelected(checked ? subcategories?.map((c) => c.id) || [] : []);
+
+  const toggleOne = (id: number) =>
+    setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+
+  if (isLoading) return <Loading />;
+
+  return (
+    <section className="users container">
+      <h1 className="main-title">Chiqim podkategoriyasi</h1>
+
+      {showAddModal && (
+        <div className="modal-overlay">
+          <div className="expenses-subcategory">
+            <h1>Chiqim podkategoriyasi</h1>
+
+            <form
+              className="subcategory-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+
+                if (editingItem) {
+                  updateMutation.mutate({
+                    id: editingItem.id,
+                    payload: formData,
+                  });
+                } else {
+                  createMutation.mutate();
+                }
+              }}
+            >
+              <div className="subcategory-form-group">
+                <label>Chiqim podkategoriyasi</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="subcategory-form-group">
+                <label>Chiqim kategoriyasi</label>
+                <select
+                  value={formData.expense_category_id}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      expense_category_id: e.target.value,
+                    })
+                  }
+                  required
+                >
+                  <option value="">Tanlang</option>
+                  {categories?.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="cancel"
+                  onClick={() => {
+                    setShowAddModal(false);
+                    setEditingItem(null);
+                    setFormData({ name: '', expense_category_id: '' });
+                  }}
+                >
+                  Bekor qilish
+                </button>
+
+                <button className="primary" type="submit">
+                  Saqlash
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showDeleteModal && (
+        <div className="modal-overlay">
+          <div className="modal small">
+            <h3>O‘chirishni tasdiqlaysizmi?</h3>
+
+            <div className="modal-actions">
+              <button className="cancel" onClick={() => setShowDeleteModal(false)}>
+                Bekor qilish
+              </button>
+
+              <button className="danger" onClick={confirmDelete}>
+                O‘chirish
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="users-filters">
+        <button className="add-new-user" onClick={() => setShowAddModal(true)}>
+          qo‘shish
+        </button>
+
+        <button
+          className="delete-all"
+          disabled={!selected.length}
+          onClick={() => {
+            setDeleteTarget('all');
+            setShowDeleteModal(true);
+          }}
+        >
+          o‘chirish
+        </button>
+      </div>
+
+      <div className="users-table-wrapper">
+        <table className="users-table">
+          <thead>
+            <tr>
+              <th>
+                <input
+                  type="checkbox"
+                  checked={
+                    selected.length === (subcategories?.length || 0) &&
+                    (subcategories?.length || 0) > 0
+                  }
+                  onChange={(e) => toggleAll(e.target.checked)}
+                />
+              </th>
+              <th>ID</th>
+              <th>Podkategoriya</th>
+              <th>Kategoriya</th>
+              <th>Harakatlar</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {subcategories?.length ? (
+              subcategories.map((item) => (
+                <tr key={item.id}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(item.id)}
+                      onChange={() => toggleOne(item.id)}
+                    />
+                  </td>
+
+                  <td>{item.id}</td>
+                  <td>{item.name}</td>
+                  <td>{item.category?.name || '-'}</td>
+
+                  <td className="actions">
+                    <button className="user-archive-btn" onClick={() => archiveItem(item)}>
+                      <i className="fa-solid fa-box-archive"></i>
+                    </button>
+
+                    <button className="user-edit-btn" onClick={() => openEditModal(item)}>
+                      <i className="fa-solid fa-pen"></i>
+                    </button>
+
+                    <button
+                      className="user-delete-btn"
+                      onClick={() => {
+                        setDeleteTarget(item.id);
+                        setShowDeleteModal(true);
+                      }}
+                    >
+                      <i className="fa-solid fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} style={{ textAlign: 'center', padding: 20 }}>
+                  Ma'lumot mavjud emas
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+};
+
+export default ExpensesSubcategory;
