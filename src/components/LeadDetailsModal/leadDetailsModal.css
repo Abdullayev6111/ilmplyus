@@ -1,0 +1,380 @@
+.ldm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: ldm-fade-in 0.18s ease;
+}
+
+@keyframes ldm-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.ldm-container {
+  position: relative;
+  background: #f0f4fa;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 860px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px 28px 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: ldm-slide-up 0.2s ease;
+  scrollbar-width: thin;
+  scrollbar-color: #fe9100 #f0f4fa;
+}
+
+@keyframes ldm-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ldm-container::-webkit-scrollbar {
+  width: 6px;
+}
+.ldm-container::-webkit-scrollbar-thumb {
+  background: #fe9100;
+  border-radius: 4px;
+}
+
+.ldm-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #e8edf5;
+  color: #555;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.15s,
+    color 0.15s;
+  z-index: 2;
+}
+
+.ldm-close-btn:hover,
+.ldm-close-btn:focus-visible {
+  background: #fe9100;
+  color: #fff;
+  outline: none;
+}
+
+.ldm-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.ldm-avatar {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: #fff8ee;
+  border: 2px solid #ffe0b2;
+  color: #fe9100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.ldm-header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ldm-fullname {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin: 0 0 6px;
+  letter-spacing: 0.3px;
+  line-height: 1.3;
+}
+
+.ldm-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.ldm-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fe9100;
+}
+
+.ldm-meta-icon {
+  font-size: 13px;
+}
+
+.ldm-meta-label {
+  color: #fe9100;
+}
+
+.ldm-gender {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fe9100;
+}
+
+.ldm-header-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.ldm-source-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #ffb3c6;
+  color: #c0003c;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: opacity 0.15s;
+}
+
+.ldm-source-btn:hover {
+  opacity: 0.85;
+}
+
+.ldm-phone-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #e0e7f0;
+  background: #fff;
+  color: #333;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.ldm-phone-btn:hover {
+  border-color: #fe9100;
+}
+
+.ldm-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 600px) {
+  .ldm-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ldm-education {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ldm-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  color: #fe9100;
+}
+
+.ldm-section-header span {
+  color: #003366;
+  font-family: noto-b;
+  font-size: 15px;
+}
+
+.ldm-section-icon {
+  font-size: 18px;
+}
+
+.ldm-section-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #1a1a2e;
+  letter-spacing: 0.5px;
+}
+
+.ldm-edu-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #f7f9fc;
+  border-radius: 8px;
+  border: 1px solid #e8edf5;
+}
+
+.ldm-edu-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #555;
+  min-width: 70px;
+  text-transform: uppercase;
+}
+
+.ldm-edu-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fe9100;
+}
+
+.ldm-note-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ldm-note-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #888;
+  letter-spacing: 0.5px;
+}
+
+.ldm-note-textarea {
+  flex: 1;
+  min-height: 110px;
+  border: 1.5px solid #e8edf5;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #333;
+  resize: vertical;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.ldm-note-textarea:focus {
+  border-color: #fe9100;
+}
+
+.ldm-save-btn {
+  align-self: flex-end;
+  padding: 10px 32px;
+  background: #fe9100;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    transform 0.1s;
+}
+
+.ldm-save-btn:hover {
+  background: #e07e00;
+}
+
+.ldm-save-btn:active {
+  transform: scale(0.97);
+}
+
+.ldm-comments {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 600px) {
+  .ldm-comments {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ldm-comment-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ldm-comment-author {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fe9100;
+}
+
+.ldm-comment-avatar {
+  font-size: 16px;
+}
+
+.ldm-comment-text {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.ldm-comment-date {
+  font-size: 11px;
+  color: #fe9100;
+  text-align: right;
+  font-weight: 600;
+}

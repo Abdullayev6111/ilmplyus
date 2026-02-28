@@ -1,0 +1,62 @@
+{
+  "login": {
+    "logout": "Выход",
+    "login": "Вход",
+    "auth": "Двухфакторная аутентификация",
+    "authText": "Для повышения безопасности вашего аккаунта на номер +998901234567 было отправлено SMS. Введите 6-значный код",
+    "system": "ОБРАЗОВАТЕЛЬНАЯ СИСТЕМА",
+    "loginPlaceHolder": "Логин",
+    "passwordPlaceHolder": "Пароль",
+    "systemSupport": "ТЕХНИЧЕСКАЯ ПОДДЕРЖКА СИСТЕМЫ:",
+    "telegramGroup": "Telegram группа",
+    "instruction": "Руководство по системе",
+    "authorization": "Авторизация",
+    "resetPassword": "Восстановить пароль",
+    "rightReserved": "Все права защищены"
+  },
+  "header": {
+    "controlPanel": "Панель управления",
+    "tasks": "Задачи",
+    "users": "Пользователи",
+    "courses": "Цены на курсы",
+    "lids": "Лиды",
+    "reports": "Отчёты",
+    "payments": "Платежи",
+    "registration": "Регистрация",
+    "role": "Администратор",
+    "adminName": "Obidov Ibrohim"
+  },
+  "dashboard": {
+    "allLids": "ВСЕГО ЛИДОВ",
+    "conversion": "Конверсия",
+    "lidProgress": "Рост лидов",
+    "lastMonthResult": "Анализ недельной динамики за последние 30 дней",
+    "day": "День",
+    "dailyTasks": "Задачи на сегодня",
+    "allSelected": "Все",
+    "addNewTask": "ДОБАВИТЬ НОВУЮ ЗАДАЧУ",
+    "newStudents": "Новые студенты",
+    "columns": "Колонки",
+    "student": "СТУДЕНТ",
+    "field": "НАПРАВЛЕНИЕ",
+    "group": "ГРУППА",
+    "gender": "ПОЛ",
+    "branch": "ФИЛИАЛ",
+    "source": "ИСТОЧНИК",
+    "date": "ДАТА",
+    "actions": "ДЕЙСТВИЯ",
+    "loading": "Загрузка",
+    "error": "Произошла ошибка. Попробуйте снова.",
+    "notFound": "Данные не найдены",
+    "all": "Всего",
+    "piece": "шт.",
+    "pieceShown": "показано до"
+  },
+  "registration": {
+    "newRegistrated": "Новые зарегистрированные",
+    "inputPlaceholder": "Поиск информации...",
+    "registerNew": "Зарегистрировать",
+    "resultsNotFound": "Ничего не найдено",
+    "changeFilters": "Измените фильтр или параметры поиска"
+  }
+}

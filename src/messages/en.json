@@ -1,0 +1,62 @@
+{
+  "login": {
+    "logout": "Logout",
+    "login": "Login",
+    "auth": "Two-factor authentication",
+    "authText": "To improve your account security, an SMS was sent to +998901234567. Please enter the 6-digit code",
+    "system": "EDUCATION SYSTEM",
+    "loginPlaceHolder": "Login",
+    "passwordPlaceHolder": "Password",
+    "systemSupport": "SYSTEM TECHNICAL SUPPORT:",
+    "telegramGroup": "Telegram group",
+    "instruction": "System guide",
+    "authorization": "Authorization",
+    "resetPassword": "Reset password",
+    "rightReserved": "All rights reserved"
+  },
+  "header": {
+    "controlPanel": "Control Panel",
+    "tasks": "Tasks",
+    "users": "Users",
+    "courses": "Course prices",
+    "lids": "Leads",
+    "reports": "Reports",
+    "payments": "Payments",
+    "registration": "Registration",
+    "role": "Administrator",
+    "adminName": "Obidov Ibrohim"
+  },
+  "dashboard": {
+    "allLids": "TOTAL LEADS",
+    "conversion": "Conversion",
+    "lidProgress": "Lead Growth",
+    "lastMonthResult": "Weekly dynamics analysis for the last 30 days",
+    "day": "Day",
+    "dailyTasks": "Today's Tasks",
+    "allSelected": "All",
+    "addNewTask": "ADD NEW TASK",
+    "newStudents": "New Students",
+    "columns": "Columns",
+    "student": "STUDENT",
+    "field": "FIELD",
+    "group": "GROUP",
+    "gender": "GENDER",
+    "branch": "BRANCH",
+    "source": "SOURCE",
+    "date": "DATE",
+    "actions": "ACTIONS",
+    "loading": "Loading",
+    "error": "An error occurred. Please try again.",
+    "notFound": "No data found",
+    "all": "Total",
+    "piece": "items",
+    "pieceShown": "showing up to"
+  },
+  "registration": {
+    "newRegistrated": "Newly Registered",
+    "inputPlaceholder": "Search information...",
+    "registerNew": "Register",
+    "resultsNotFound": "No results found",
+    "changeFilters": "Change filter or search criteria"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "login": {
+    "logout": "Chiqish",
+    "login": "Kirish",
+    "auth": "Ikki bosqichli autentifikatsiya",
+    "authText": "Sizning akkauntingiz xavfsizligini oshirish maqsadida telefon nomeringizga +998901234567 sms yuborildi. 6ta raqamli kodni kiriting",
+    "system": "TA’LIM TIZIMI",
+    "loginPlaceHolder": "Login",
+    "passwordPlaceHolder": "Parol",
+    "systemSupport": "TIZIM BO‘YICHA TEXNIK YORDAM:",
+    "telegramGroup": "Telegram guruh",
+    "instruction": "Tizim bo’yicha qo’llanma",
+    "authorization": "Avtorizatsiya",
+    "resetPassword": "Parolni tiklash",
+    "rightReserved": "Barcha huquqlar himoyalangan"
+  },
+  "header": {
+    "controlPanel": "Boshqaruv paneli",
+    "tasks": "Vazifalar",
+    "users": "Foydalanuvchilar",
+    "courses": "Kurs narxlari",
+    "lids": "Lidlar",
+    "reports": "Hisobotlar",
+    "payments": "To‘lovlar",
+    "registration": "Ro‘yxatga olish",
+    "role": "Administrator",
+    "adminName": "Obidov Ibrohim"
+  },
+  "dashboard": {
+    "allLids": "JAMI LIDLAR",
+    "conversion": "Konversiya",
+    "lidProgress": "Lidlar o‘sishi",
+    "lastMonthResult": "Oxirgi 30 kundagi Haftalik dinamika tahlili",
+    "day": "Kun",
+    "dailyTasks": "Bugungi vazifalar",
+    "allSelected": "Hammasi",
+    "addNewTask": "YANGI VAZIFA QO‘SHISH",
+    "newStudents": "Yangi O‘quvchilar",
+    "columns": "Qatorlar",
+    "student": "O‘QUVCHI",
+    "field": "YO‘NALISH",
+    "group": "GURUH",
+    "gender": "JINSI",
+    "branch": "FILIAL",
+    "source": "MANBA",
+    "date": "SANA",
+    "actions": "AMALLAR",
+    "loading": "Yuklanmoqda",
+    "error": "Xatolik yuz berdi. Qayta urinib ko‘ring.",
+    "notFound": "Ma’lumot topilmadi",
+    "all": "Jami",
+    "piece": "tadan",
+    "pieceShown": "tagacha ko‘rsatmoqda"
+  },
+  "registration": {
+    "newRegistrated": "Yangi ro‘yhatga olinganlar",
+    "inputPlaceholder": "Ma’lumotlarni qidirish...",
+    "registerNew": "Ro‘yhatga olish",
+    "resultsNotFound": "Hech qanday natija topilmadi",
+    "changeFilters": "Filtr yoki qidiruv shartlarini o‘zgartiring"
+  }
+}
