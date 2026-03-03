@@ -1,5 +1,12 @@
 import { API } from '../../api/api';
-import type { LidsPaginatedResponse, LidsQueryParams, LidComment, LidOperator } from './lid.types';
+import type {
+  LidsPaginatedResponse,
+  LidsQueryParams,
+  LidComment,
+  LidOperator,
+  Lid,
+  LidStatus,
+} from './lid.types';
 
 export async function fetchLids(params: LidsQueryParams): Promise<LidsPaginatedResponse> {
   const { data } = await API.get<LidsPaginatedResponse>('/lids', { params });
@@ -24,4 +31,17 @@ export function getOperatorFullName(operator: LidOperator | null | undefined): s
   if (!operator) return '—';
 
   return `${operator.last_name} ${operator.first_name} `.trim();
+}
+
+export async function updateLidStatus(
+  id: number,
+  status: LidStatus,
+  operator_id: number,
+): Promise<Lid> {
+  const { data } = await API.patch<Lid>(`/lids/${id}`, {
+    status,
+    operator_id,
+  });
+
+  return data;
 }

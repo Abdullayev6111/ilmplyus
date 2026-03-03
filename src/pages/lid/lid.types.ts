@@ -89,7 +89,7 @@ export interface Lid {
   group_id: number | null;
   source_id: number | null;
   comment: string | null;
-  status: string;
+  status: LidStatus;
   created_at: string;
   updated_at: string;
   region: LidRegion | null;
@@ -130,6 +130,45 @@ export interface LidComment {
     last_name: string;
   };
 }
+
+export type IdType = number | null;
+
+export interface CreateLidPayload {
+  first_name: string;
+  last_name: string;
+  father_name: string;
+  birth_date: string;
+  gender: 'male' | 'female';
+  phone: string;
+  operator_id: string;
+  region_id: string;
+  district_id: string;
+  branch_id: string;
+  course_id: string;
+  level_id: string;
+  group_id: string;
+  source_id: string;
+  comment: string;
+  status: number;
+}
+
+export const LID_STATUS = {
+  NEW_ONLINE: 1, // Onlayn
+  NEW_OFFLINE: 2, // Ofline
+
+  CONTACTED: 3, // O‘rnatildi
+  NOT_CONTACTED: 4, // O‘rnatilmadi
+  NOT_INTERESTED: 5, // Qiziqmadi
+
+  DEMO_SCHEDULED: 6, // Kelmoqchi
+  DEMO_ATTENDED: 7, // Keldi
+  DEMO_MISSED: 8, // Kelmadi
+
+  CONTRACT_SIGNED: 9, // Shartnoma
+  PAID: 10, // To‘lov
+} as const;
+
+export type LidStatus = (typeof LID_STATUS)[keyof typeof LID_STATUS];
 
 export interface LidsQueryParams {
   page: number;

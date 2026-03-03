@@ -1,16 +1,22 @@
 import { useState } from 'react';
-import type { Lead } from '../pages/lid';
+import { LID_STATUS, type Lid } from '../pages/lid/lid.types';
 import ModalPattern from './ModalPattern';
+import type { LidStatus } from '../pages/lid/lid.types';
 
 interface AloqaModalProps {
-  lead: Lead;
-  onConfirm: (subStatus: string) => void;
+  lead: Lid;
+  onConfirm: (subStatus: LidStatus) => void;
   onCancel: () => void;
 }
 
-const STATUS_ITEMS = [
+const STATUS_ITEMS: Array<{
+  id: LidStatus;
+  title: string;
+  desc: string;
+  icon: React.ReactNode;
+}> = [
   {
-    id: 'ornatildi',
+    id: LID_STATUS.CONTACTED,
     title: "Aloqa o'rnatildi",
     desc: "Mijoz bilan aloqaga o'tkazildi",
     icon: (
@@ -26,7 +32,7 @@ const STATUS_ITEMS = [
     ),
   },
   {
-    id: 'ornatilmadi',
+    id: LID_STATUS.NOT_CONTACTED,
     title: "Aloqa o'rnatilmadi",
     desc: "Qo'ng'iroqqa javob bermadi",
     icon: (
@@ -37,7 +43,7 @@ const STATUS_ITEMS = [
     ),
   },
   {
-    id: 'qiziqmadi',
+    id: LID_STATUS.NOT_INTERESTED,
     title: 'Qiziqmadi',
     desc: "Xizmat ma'qul kelmadi",
     icon: (
@@ -57,7 +63,7 @@ const STATUS_ITEMS = [
 ];
 
 export default function AloqaModal({ lead, onConfirm, onCancel }: AloqaModalProps) {
-  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<LidStatus | null>(null);
   const [note, setNote] = useState('');
 
   const handleConfirm = () => {
@@ -81,7 +87,11 @@ export default function AloqaModal({ lead, onConfirm, onCancel }: AloqaModalProp
           </svg>
         </div>
         <div className="modal-lead-card__info">
-          <div className="modal-lead-card__name">{lead.fullName}</div>
+          <div className="modal-lead-card__name">
+            {lead.first_name && lead.last_name
+              ? `${lead.first_name} ${lead.last_name}`
+              : lead.first_name || lead.last_name || 'Noma’lum'}
+          </div>
           <div className="modal-lead-card__group">ALOQA BO'LIMI</div>
         </div>
       </div>

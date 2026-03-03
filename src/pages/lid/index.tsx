@@ -1,14 +1,14 @@
 import { useMemo, useState, useCallback } from 'react';
-import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
+import { useQuery, keepPreviousData, useQueryClient, useMutation } from '@tanstack/react-query';
 import LeadColumn from '../../components/LidColumn';
 import AloqaModal from '../../components/AloqaModal';
 import DemoModal from '../../components/DemoModal';
 import ShartnomaModal from '../../components/ShartnomaModal';
 import LeadDetailsModal from '../../components/LeadDetailsModal';
-import { SUB_STATUS_COLUMN_MAP } from '../../components/Lidconstants';
-import { fetchLids, deleteLid } from './lid.service';
-import type { Lid, LidsPaginatedResponse } from './lid.types';
+import { fetchLids, updateLidStatus } from './lid.service';
+import type { Lid, LidsPaginatedResponse, LidStatus } from './lid.types';
 import type { Column, ColumnFilter } from '../../components/LidColumn';
+import {} from './lid.service';
 import './lid.css';
 
 export type { Lid };
@@ -46,24 +46,6 @@ const COLUMNS: Column[] = [
   { id: 10, title: "To'lov", color: '#FE9100', groupId: 4 },
 ];
 
-const STATUS_COLUMN_MAP: Record<string, number> = {
-  onlayn: 1,
-  oflayn: 2,
-  ornatildi: 3,
-  ornatilmadi: 4,
-  qiziqmadi: 5,
-  kelmoqchi: 6,
-  keldi: 7,
-  kelmadi: 8,
-  shartnoma: 9,
-  boglanildi: 3,
-  tolandi: 10,
-};
-
-function getColumnIdByStatus(status: string): number {
-  return STATUS_COLUMN_MAP[status.toLowerCase()] ?? 1;
-}
-
 function getGroupIdByColumnId(columnId: number): number {
   const col = COLUMNS.find((c) => c.id === columnId);
   return col ? col.groupId : -1;
@@ -76,11 +58,6 @@ function getModalTypeForGroup(groupId: number): ModalType {
   return null;
 }
 
-function getDefaultColumnForGroup(groupId: number): number {
-  const group = GROUPS.find((g) => g.id === groupId);
-  return group ? group.columnIds[0] : -1;
-}
-
 export default function Lid() {
   const queryClient = useQueryClient();
   const [draggedId, setDraggedId] = useState<number | null>(null);
@@ -88,7 +65,6 @@ export default function Lid() {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
   const [pendingDrop, setPendingDrop] = useState<PendingDrop | null>(null);
   const [selectedLead, setSelectedLead] = useState<Lid | null>(null);
-  const [columnOverrides, setColumnOverrides] = useState<Record<number, number>>({});
 
   const { data } = useQuery<LidsPaginatedResponse>({
     queryKey: ['lids', 1, 100],
@@ -96,9 +72,40 @@ export default function Lid() {
     placeholderData: keepPreviousData,
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => deleteLid(id),
-    onSuccess: () => {
+  const { mutate: mutateStatus } = useMutation({
+    mutationFn: ({
+      id,
+      status,
+      operator_id,
+    }: {
+      id: number;
+      status: LidStatus;
+      operator_id: number;
+    }) => updateLidStatus(id, status, operator_id),
+
+    onMutate: async ({ id, status }) => {
+      await queryClient.cancelQueries({ queryKey: ['lids', 1, 100] });
+
+      const previous = queryClient.getQueryData<LidsPaginatedResponse>(['lids', 1, 100]);
+
+      queryClient.setQueryData<LidsPaginatedResponse>(['lids', 1, 100], (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          data: old.data.map((lid) => (lid.id === id ? { ...lid, status } : lid)),
+        };
+      });
+
+      return { previous };
+    },
+
+    onError: (_err, _vars, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(['lids', 1, 100], context.previous);
+      }
+    },
+
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['lids'] });
     },
   });
@@ -112,17 +119,12 @@ export default function Lid() {
         columns: COLUMNS.filter((col) => col.groupId === group.id).map((col) => {
           const filter = columnFilters[col.id] || { source: null, course: null };
 
-          const colLeads = lids.filter((l) => {
-            const overriddenCol = columnOverrides[l.id];
-            const effectiveColId =
-              overriddenCol !== undefined ? overriddenCol : getColumnIdByStatus(l.status);
-            return effectiveColId === col.id;
-          });
+          const colLeads = lids.filter((l) => l.status === col.id);
 
           return { ...col, leads: colLeads, filter };
         }),
       })),
-    [lids, columnFilters, columnOverrides],
+    [lids, columnFilters],
   );
 
   const handleDragStart = useCallback((id: number) => {
@@ -139,16 +141,15 @@ export default function Lid() {
         return;
       }
 
-      const currentColId =
-        columnOverrides[lead.id] !== undefined
-          ? columnOverrides[lead.id]
-          : getColumnIdByStatus(lead.status);
-
-      const fromGroupId = getGroupIdByColumnId(currentColId);
+      const fromGroupId = getGroupIdByColumnId(lead.status);
       const toGroupId = getGroupIdByColumnId(targetColumnId);
 
       if (fromGroupId === toGroupId) {
-        setColumnOverrides((prev) => ({ ...prev, [draggedId]: targetColumnId }));
+        mutateStatus({
+          id: lead.id,
+          status: targetColumnId as LidStatus,
+          operator_id: lead.operator?.id ?? 0,
+        });
         setDraggedId(null);
         return;
       }
@@ -159,26 +160,28 @@ export default function Lid() {
         setPendingDrop({ leadId: draggedId, targetGroupId: toGroupId });
         setActiveModal(modalType);
         setDraggedId(null);
-      } else {
-        setColumnOverrides((prev) => ({ ...prev, [draggedId]: targetColumnId }));
-        setDraggedId(null);
       }
     },
-    [draggedId, lids, columnOverrides],
+    [draggedId, lids, mutateStatus],
   );
 
   const handleModalConfirm = useCallback(
-    (subStatus: string) => {
+    (status: LidStatus) => {
       if (!pendingDrop) return;
 
-      const targetColumnId =
-        SUB_STATUS_COLUMN_MAP[subStatus] ?? getDefaultColumnForGroup(pendingDrop.targetGroupId);
+      const lead = lids.find((l) => l.id === pendingDrop.leadId);
+      if (!lead) return;
 
-      setColumnOverrides((prev) => ({ ...prev, [pendingDrop.leadId]: targetColumnId }));
+      mutateStatus({
+        id: lead.id,
+        status,
+        operator_id: lead.operator?.id ?? 0,
+      });
+
       setActiveModal(null);
       setPendingDrop(null);
     },
-    [pendingDrop],
+    [pendingDrop, mutateStatus, lids],
   );
 
   const handleModalCancel = useCallback(() => {

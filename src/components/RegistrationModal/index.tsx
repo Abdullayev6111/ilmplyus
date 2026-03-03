@@ -1,7 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import './RegistrationModal.css';
+import { API } from '../../api/api';
+import {
+  type LidRegion,
+  type LidDistrict,
+  type LidBranch,
+  type LidCourse,
+  type LidLevel,
+  type LidGroup,
+  type LidSource,
+  type CreateLidPayload,
+  type Lid,
+  LID_STATUS,
+} from '../../pages/lid/lid.types';
+import { queryClient } from '../../main';
 
-export type StudentSource = 'Instagram' | 'Telegram' | 'Website';
 export type StudentGender = 'Erkak' | 'Ayol';
 
 export interface RegistrationFormState {
@@ -11,13 +25,13 @@ export interface RegistrationFormState {
   birthDate: string;
   gender: StudentGender | '';
   phone: string;
-  region: string;
-  district: string;
-  branch: string;
-  course: string;
-  level: string;
-  group: string;
-  source: StudentSource | '';
+  regionId: string;
+  districtId: string;
+  branchId: string;
+  courseId: string;
+  levelId: string;
+  groupId: string;
+  sourceId: string;
   note: string;
 }
 
@@ -30,60 +44,15 @@ const INITIAL_FORM: RegistrationFormState = {
   birthDate: '',
   gender: '',
   phone: '',
-  region: '',
-  district: '',
-  branch: '',
-  course: '',
-  level: '',
-  group: '',
-  source: '',
+  regionId: '',
+  districtId: '',
+  branchId: '',
+  courseId: '',
+  levelId: '',
+  groupId: '',
+  sourceId: '',
   note: '',
 };
-
-const REGIONS = [
-  'Andijon viloyati',
-  'Buxoro viloyati',
-  "Farg'ona viloyati",
-  'Jizzax viloyati',
-  'Xorazm viloyati',
-  'Namangan viloyati',
-  'Navoiy viloyati',
-  'Qashqadaryo viloyati',
-  "Qoraqalpog'iston Respublikasi",
-  'Samarqand viloyati',
-  'Sirdaryo viloyati',
-  'Surxondaryo viloyati',
-  'Toshkent shahri',
-  'Toshkent viloyati',
-];
-
-const BRANCHES = [
-  'Andijon Yangi Bozor',
-  'Andijon Markaz',
-  'Buxoro Markaz',
-  "Farg'ona Markaz",
-  'Namangan Markaz',
-  "Qo'qon Markaz",
-  'Samarqand Markaz',
-  "Samarqand Ulug'bek",
-  'Toshkent Chilonzor',
-  "Toshkent Mirzo Ulug'bek",
-  'Toshkent Shayxontohur',
-  'Toshkent Yunusobod',
-];
-
-const COURSES = ['English', 'Matematika', 'Fizika', 'Kimyo', 'Dasturlash'];
-
-const LEVELS: Record<string, string[]> = {
-  English: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'IELTS'],
-  Matematika: ['1-daraja', '2-daraja', '3-daraja'],
-  Fizika: ['Asosiy', 'Olimpiya'],
-  Kimyo: ['Umumiy', 'Organik'],
-  Dasturlash: ['Python', 'JavaScript', 'Java', 'C++'],
-};
-
-const GROUPS = ['AF - 102', 'BF - 201', 'CF - 305', 'DF - 401', 'EF - 102', 'FF - 503'];
-const SOURCES: StudentSource[] = ['Instagram', 'Telegram', 'Website'];
 
 const UZ_PHONE_REGEX = /^\+998\s?\d{2}\s?\d{3}\s?\d{2}\s?\d{2}$/;
 
@@ -98,14 +67,33 @@ function validateForm(form: RegistrationFormState): FormErrors {
   } else if (!UZ_PHONE_REGEX.test(form.phone.trim())) {
     errors.phone = "Noto'g'ri format. Misol: +998 90 123 45 67";
   }
-  if (!form.region) errors.region = 'Viloyat tanlanishi shart';
-  if (!form.district.trim()) errors.district = 'Shahar/tuman kiritilishi shart';
-  if (!form.branch) errors.branch = 'Filial tanlanishi shart';
-  if (!form.course) errors.course = 'Kurs tanlanishi shart';
-  if (!form.level) errors.level = 'Bosqich tanlanishi shart';
-  if (!form.group) errors.group = 'Guruh tanlanishi shart';
-  if (!form.source) errors.source = 'Manba tanlanishi shart';
+  if (!form.regionId) errors.regionId = 'Viloyat tanlanishi shart';
+  if (!form.districtId) errors.districtId = 'Shahar/tuman kiritilishi shart';
+  if (!form.branchId) errors.branchId = 'Filial tanlanishi shart';
+  if (!form.courseId) errors.courseId = 'Kurs tanlanishi shart';
+  if (!form.levelId) errors.levelId = 'Bosqich tanlanishi shart';
+  if (!form.groupId) errors.groupId = 'Guruh tanlanishi shart';
+  if (!form.sourceId) errors.sourceId = 'Manba tanlanishi shart';
   return errors;
+}
+
+function mapLidToForm(lid: Lid): RegistrationFormState {
+  return {
+    firstName: lid.first_name,
+    lastName: lid.last_name,
+    middleName: lid.father_name ?? '',
+    birthDate: lid.birth_date ?? '',
+    gender: lid.gender === 'male' ? 'Erkak' : 'Ayol',
+    phone: lid.phone,
+    regionId: lid.region_id != null ? String(lid.region_id) : '',
+    districtId: lid.district_id != null ? String(lid.district_id) : '',
+    branchId: lid.branch_id != null ? String(lid.branch_id) : '',
+    courseId: lid.course_id != null ? String(lid.course_id) : '',
+    levelId: lid.level_id != null ? String(lid.level_id) : '',
+    groupId: lid.group_id != null ? String(lid.group_id) : '',
+    sourceId: lid.source_id != null ? String(lid.source_id) : '',
+    note: lid.comment ?? '',
+  };
 }
 
 interface FieldProps {
@@ -139,7 +127,7 @@ interface SelectFieldProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   placeholder: string;
-  options: string[];
+  options: { id: string | number; name: string }[];
   disabled?: boolean;
   required?: boolean;
   error?: boolean;
@@ -172,8 +160,8 @@ const SelectField = ({
         {placeholder}
       </option>
       {options.map((opt) => (
-        <option key={opt} value={opt}>
-          {opt}
+        <option key={opt.id} value={String(opt.id)}>
+          {opt.name}
         </option>
       ))}
     </select>
@@ -196,19 +184,114 @@ const SelectField = ({
   </div>
 );
 
-interface RegistrationModalProps {
-  onClose: () => void;
+interface AuthMe {
+  id: number;
 }
 
-export const RegistrationModal = ({ onClose }: RegistrationModalProps) => {
+interface RegistrationModalProps {
+  onClose: () => void;
+  editId?: number;
+}
+
+export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) => {
+  const isEditMode = editId != null;
   const [form, setForm] = useState<RegistrationFormState>(INITIAL_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [initialized, setInitialized] = useState(!isEditMode);
   const overlayRef = useRef<HTMLDivElement>(null);
   const firstFocusRef = useRef<HTMLInputElement>(null);
 
+  const { data: me } = useQuery<AuthMe>({
+    queryKey: ['me'],
+    queryFn: () => API.get('/me').then((res) => res.data),
+  });
+
+  const { data: lidData } = useQuery<Lid>({
+    queryKey: ['lid', editId],
+    queryFn: () => API.get(`/lids/${editId}`).then((res) => res.data),
+    enabled: isEditMode,
+  });
+
   useEffect(() => {
-    firstFocusRef.current?.focus();
+    if (isEditMode && lidData) {
+      const t = setTimeout(() => {
+        setForm(mapLidToForm(lidData));
+        setInitialized(true);
+      }, 0);
+      return () => clearTimeout(t);
+    }
+  }, [isEditMode, lidData]);
+
+  const { data: regions } = useQuery<LidRegion[]>({
+    queryKey: ['regions'],
+    queryFn: () => API.get('/regions').then((res) => res.data),
+  });
+
+  const { data: districts } = useQuery<LidDistrict[]>({
+    queryKey: ['districts', form.regionId],
+    queryFn: () => API.get(`/regions/${form.regionId}/districts`).then((res) => res.data),
+    enabled: !!form.regionId,
+  });
+
+  const { data: branches } = useQuery<LidBranch[]>({
+    queryKey: ['branches', form.districtId],
+    queryFn: () =>
+      API.get('/branches', { params: { district_id: form.districtId } }).then((res) => res.data),
+    enabled: !!form.districtId,
+  });
+
+  const { data: courses } = useQuery<LidCourse[]>({
+    queryKey: ['courses', form.branchId],
+    queryFn: () =>
+      API.get('/courses', { params: { branch_id: form.branchId } }).then((res) => res.data),
+    enabled: !!form.branchId,
+  });
+
+  const { data: levels } = useQuery<LidLevel[]>({
+    queryKey: ['levels', form.courseId],
+    queryFn: () =>
+      API.get('/levels', { params: { course_id: form.courseId } }).then((res) => res.data),
+    enabled: !!form.courseId,
+  });
+
+  const { data: groups } = useQuery<LidGroup[]>({
+    queryKey: ['groups', form.levelId],
+    queryFn: () =>
+      API.get('/groups', { params: { level_id: form.levelId } }).then((res) => res.data),
+    enabled: !!form.levelId,
+  });
+
+  const { data: sources } = useQuery<LidSource[]>({
+    queryKey: ['sources'],
+    queryFn: () => API.get('/sources').then((res) => res.data),
+  });
+
+  const createMutation = useMutation<void, Error, CreateLidPayload>({
+    mutationFn: (payload) => API.post('/lids', payload).then((res) => res.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['lids'] });
+      onClose();
+    },
+  });
+
+  const updateMutation = useMutation<void, Error, CreateLidPayload>({
+    mutationFn: (payload) => API.put(`/lids/${editId}`, payload).then((res) => res.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['lids'] });
+      onClose();
+    },
+  });
+
+  const activeMutation = isEditMode ? updateMutation : createMutation;
+
+  useEffect(() => {
+    if (initialized) {
+      firstFocusRef.current?.focus();
+    }
+  }, [initialized]);
+
+  useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = '';
@@ -253,10 +336,89 @@ export const RegistrationModal = ({ onClose }: RegistrationModalProps) => {
     [submitted],
   );
 
+  const handleRegionChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = e.target.value;
+      setForm((prev) => {
+        const next: RegistrationFormState = {
+          ...prev,
+          regionId: value,
+          districtId: '',
+          branchId: '',
+          courseId: '',
+          levelId: '',
+          groupId: '',
+        };
+        if (submitted) setErrors(validateForm(next));
+        return next;
+      });
+    },
+    [submitted],
+  );
+
+  const handleDistrictChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = e.target.value;
+      setForm((prev) => {
+        const next: RegistrationFormState = {
+          ...prev,
+          districtId: value,
+          branchId: '',
+          courseId: '',
+          levelId: '',
+          groupId: '',
+        };
+        if (submitted) setErrors(validateForm(next));
+        return next;
+      });
+    },
+    [submitted],
+  );
+
+  const handleBranchChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = e.target.value;
+      setForm((prev) => {
+        const next: RegistrationFormState = {
+          ...prev,
+          branchId: value,
+          courseId: '',
+          levelId: '',
+          groupId: '',
+        };
+        if (submitted) setErrors(validateForm(next));
+        return next;
+      });
+    },
+    [submitted],
+  );
+
   const handleCourseChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = e.target.value;
       setForm((prev) => {
-        const next = { ...prev, course: e.target.value, level: '' };
+        const next: RegistrationFormState = {
+          ...prev,
+          courseId: value,
+          levelId: '',
+          groupId: '',
+        };
+        if (submitted) setErrors(validateForm(next));
+        return next;
+      });
+    },
+    [submitted],
+  );
+
+  const handleLevelChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = e.target.value;
+      setForm((prev) => {
+        const next: RegistrationFormState = {
+          ...prev,
+          levelId: value,
+          groupId: '',
+        };
         if (submitted) setErrors(validateForm(next));
         return next;
       });
@@ -273,9 +435,27 @@ export const RegistrationModal = ({ onClose }: RegistrationModalProps) => {
         setErrors(validationErrors);
         return;
       }
-      onClose();
+      const payload: CreateLidPayload = {
+        first_name: form.firstName,
+        last_name: form.lastName,
+        father_name: form.middleName,
+        birth_date: form.birthDate,
+        gender: form.gender === 'Erkak' ? 'male' : 'female',
+        phone: form.phone,
+        region_id: form.regionId,
+        district_id: form.districtId,
+        branch_id: form.branchId,
+        course_id: form.courseId,
+        level_id: form.levelId,
+        group_id: form.groupId,
+        source_id: form.sourceId,
+        comment: form.note,
+        operator_id: String(me?.id ?? ''),
+        status: LID_STATUS.NEW_ONLINE,
+      };
+      activeMutation.mutate(payload);
     },
-    [form, onClose],
+    [form, me, activeMutation],
   );
 
   const handleCancel = useCallback(() => {
@@ -284,8 +464,6 @@ export const RegistrationModal = ({ onClose }: RegistrationModalProps) => {
     setSubmitted(false);
     onClose();
   }, [onClose]);
-
-  const availableLevels = form.course ? (LEVELS[form.course] ?? []) : [];
 
   return (
     <div
@@ -299,7 +477,7 @@ export const RegistrationModal = ({ onClose }: RegistrationModalProps) => {
       <div className="rm-modal">
         <div className="rm-modal__header">
           <h2 className="rm-modal__title" id="rm-title">
-            Ro&apos;yhatga olish
+            {isEditMode ? 'Tahrirlash' : "Ro'yhatga olish"}
           </h2>
           <button
             type="button"
@@ -512,132 +690,99 @@ export const RegistrationModal = ({ onClose }: RegistrationModalProps) => {
               </div>
             </FormField>
 
-            <FormField label="Viloyat" required error={errors.region}>
+            <FormField label="Viloyat" required error={errors.regionId}>
               <SelectField
-                id="region"
-                name="region"
-                value={form.region}
-                onChange={handleInputChange}
+                id="regionId"
+                name="regionId"
+                value={form.regionId}
+                onChange={handleRegionChange}
                 placeholder="Viloyat tanlang"
-                options={REGIONS}
+                options={regions?.map((r) => ({ id: r.id, name: r.name })) ?? []}
                 required
-                error={!!errors.region}
+                error={!!errors.regionId}
               />
             </FormField>
 
-            <FormField label="Shahar(tuman)" required error={errors.district}>
-              <div className="rm-input-wrapper">
-                <svg
-                  className="rm-input__icon"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M2 14V6l6-4 6 4v8"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <rect
-                    x="5"
-                    y="9"
-                    width="2"
-                    height="5"
-                    rx="0.5"
-                    stroke="currentColor"
-                    strokeWidth="1.2"
-                  />
-                  <rect
-                    x="9"
-                    y="9"
-                    width="2"
-                    height="5"
-                    rx="0.5"
-                    stroke="currentColor"
-                    strokeWidth="1.2"
-                  />
-                </svg>
-                <input
-                  type="text"
-                  name="district"
-                  id="district"
-                  className={`rm-input${errors.district ? ' rm-input--error' : ''}`}
-                  placeholder="Shahar yoki tuman"
-                  value={form.district}
-                  onChange={handleInputChange}
-                  aria-required="true"
-                  aria-invalid={!!errors.district}
-                />
-              </div>
+            <FormField label="Shahar(tuman)" required error={errors.districtId}>
+              <SelectField
+                id="districtId"
+                name="districtId"
+                value={form.districtId}
+                onChange={handleDistrictChange}
+                placeholder="Shahar yoki tuman"
+                options={districts?.map((d) => ({ id: d.id, name: d.name })) ?? []}
+                disabled={!form.regionId}
+                required
+                error={!!errors.districtId}
+              />
             </FormField>
 
-            <FormField label="Fillial" required error={errors.branch}>
+            <FormField label="Fillial" required error={errors.branchId}>
               <SelectField
-                id="branch"
-                name="branch"
-                value={form.branch}
-                onChange={handleInputChange}
+                id="branchId"
+                name="branchId"
+                value={form.branchId}
+                onChange={handleBranchChange}
                 placeholder="Fillial tanlang"
-                options={BRANCHES}
+                options={branches?.map((b) => ({ id: b.id, name: b.name })) ?? []}
+                disabled={!form.districtId}
                 required
-                error={!!errors.branch}
+                error={!!errors.branchId}
               />
             </FormField>
 
-            <FormField label="Kurs" required error={errors.course}>
+            <FormField label="Kurs" required error={errors.courseId}>
               <SelectField
-                id="course"
-                name="course"
-                value={form.course}
+                id="courseId"
+                name="courseId"
+                value={form.courseId}
                 onChange={handleCourseChange}
                 placeholder="Kurs tanlang"
-                options={COURSES}
+                options={courses?.map((c) => ({ id: c.id, name: c.name })) ?? []}
+                disabled={!form.branchId}
                 required
-                error={!!errors.course}
+                error={!!errors.courseId}
               />
             </FormField>
 
-            <FormField label="Bosqich" required error={errors.level}>
+            <FormField label="Bosqich" required error={errors.levelId}>
               <SelectField
-                id="level"
-                name="level"
-                value={form.level}
-                onChange={handleInputChange}
+                id="levelId"
+                name="levelId"
+                value={form.levelId}
+                onChange={handleLevelChange}
                 placeholder="Bosqich tanlang"
-                options={availableLevels}
-                disabled={!form.course}
+                options={levels?.map((l) => ({ id: l.id, name: l.name })) ?? []}
+                disabled={!form.courseId}
                 required
-                error={!!errors.level}
+                error={!!errors.levelId}
               />
             </FormField>
 
-            <FormField label="Guruh" required error={errors.group}>
+            <FormField label="Guruh" required error={errors.groupId}>
               <SelectField
-                id="group"
-                name="group"
-                value={form.group}
+                id="groupId"
+                name="groupId"
+                value={form.groupId}
                 onChange={handleInputChange}
                 placeholder="Guruh tanlang"
-                options={GROUPS}
+                options={groups?.map((g) => ({ id: g.id, name: g.name })) ?? []}
+                disabled={!form.levelId}
                 required
-                error={!!errors.group}
+                error={!!errors.groupId}
               />
             </FormField>
 
-            <FormField label="Manba" required error={errors.source}>
+            <FormField label="Manba" required error={errors.sourceId}>
               <SelectField
-                id="source"
-                name="source"
-                value={form.source}
+                id="sourceId"
+                name="sourceId"
+                value={form.sourceId}
                 onChange={handleInputChange}
                 placeholder="Manba tanlang"
-                options={SOURCES}
+                options={sources?.map((s) => ({ id: s.id, name: s.name })) ?? []}
                 required
-                error={!!errors.source}
+                error={!!errors.sourceId}
               />
             </FormField>
 
@@ -657,8 +802,12 @@ export const RegistrationModal = ({ onClose }: RegistrationModalProps) => {
             <button type="button" className="rm-btn rm-btn--cancel" onClick={handleCancel}>
               Bekor qilish
             </button>
-            <button type="submit" className="rm-btn rm-btn--submit">
-              Qo&apos;shish
+            <button
+              type="submit"
+              className="rm-btn rm-btn--submit"
+              disabled={activeMutation.isPending || (isEditMode && !initialized)}
+            >
+              {isEditMode ? 'Saqlash' : "Qo'shish"}
             </button>
           </div>
         </form>

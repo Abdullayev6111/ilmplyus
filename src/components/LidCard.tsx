@@ -1,30 +1,43 @@
 import { useCallback, useRef, memo } from 'react';
 import type { Lid } from '../pages/lid/lid.types';
-import { getName, formatGender, getSourceLabel } from '../pages/lid/lid.types';
+import { formatGender, getSourceLabel } from '../pages/lid/lid.types';
 import { getOperatorFullName } from '../pages/lid/lid.service';
+import { LID_STATUS } from '../pages/lid/lid.types';
 
 interface LeadCardProps {
   lead: Lid;
   color: string;
+  hideComment?: boolean;
   onDragStart: (id: number) => void;
   onClick: (lead: Lid) => void;
 }
 
 const DRAG_THRESHOLD = 5;
 
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr);
-  const hours = String(d.getHours()).padStart(2, '0');
-  const minutes = String(d.getMinutes()).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const year = d.getFullYear();
-  return `${hours}:${minutes} ${day}.${month}.${year}`;
+function formatDateParts(dateStr: string) {
+  const clean = dateStr.split('.')[0];
+  const [datePart, timePart] = clean.split('T');
+
+  if (!datePart || !timePart) {
+    return { time: '', date: '' };
+  }
+
+  const [year, month, day] = datePart.split('-');
+  const [hours, minutes] = timePart.split(':');
+
+  return {
+    time: `${hours}:${minutes}`,
+    date: `${day}.${month}.${year}`,
+  };
 }
 
-function LeadCard({ lead, color, onDragStart, onClick }: LeadCardProps) {
+function LeadCard({ lead, color, onDragStart, onClick, hideComment }: LeadCardProps) {
+  const { time, date } = formatDateParts(lead.created_at);
   const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
   const isDraggingRef = useRef(false);
+
+  const shouldHideComment =
+    hideComment || lead.status === LID_STATUS.NEW_ONLINE || lead.status === LID_STATUS.NEW_OFFLINE;
 
   const handleDragStart = useCallback(() => {
     isDraggingRef.current = true;
@@ -97,13 +110,25 @@ function LeadCard({ lead, color, onDragStart, onClick }: LeadCardProps) {
       <div className="lead-card__phone">{lead.phone}</div>
 
       <div className="lead-card__meta">
-        <span className="lead-card__course" style={{ color }}>
-          {getName(lead.course)}
-        </span>
-        <span className="lead-card__date">{formatDate(lead.created_at)}</span>
+        {lead.course?.name && (
+          <span className="lead-card__course" style={{ backgroundColor: color, color: '#fff' }}>
+            {lead.course.name}
+          </span>
+        )}
+
+        <div className="lead-card__date">
+          <span className="lead-card__time">{time}</span>
+          <span className="lead-card__date-text">{date}</span>
+        </div>
       </div>
 
-      {lead.comment && (
+      <div className="lead-card__group">
+        {lead.level?.name && <span className="lead-card__level">{lead.level.name}</span>}
+
+        {lead.group?.name && <span className="lead-card__group-name">{lead.group.name}</span>}
+      </div>
+
+      {!shouldHideComment && lead.comment && (
         <div className="lead-card__note-section">
           <div className="lead-card__note-label">IZOH</div>
           <div className="lead-card__note">{lead.comment}</div>

@@ -1,16 +1,22 @@
 import { useState } from 'react';
-import type { Lead } from '../pages/lid';
+import { LID_STATUS, type Lid } from '../pages/lid/lid.types';
 import ModalPattern from './ModalPattern';
+import type { LidStatus } from '../pages/lid/lid.types';
 
 interface ShartnomaModalProps {
-  lead: Lead;
-  onConfirm: (subStatus: string) => void;
+  lead: Lid;
+  onConfirm: (subStatus: LidStatus) => void;
   onCancel: () => void;
 }
 
-const STATUS_ITEMS = [
+const STATUS_ITEMS: Array<{
+  id: LidStatus;
+  title: string;
+  desc: string;
+  icon: React.ReactNode;
+}> = [
   {
-    id: 'shartnoma-qildi',
+    id: LID_STATUS.CONTRACT_SIGNED,
     title: 'Shartnoma qildi',
     desc: 'Mijoz shartnoma imzoladi',
     icon: (
@@ -32,7 +38,7 @@ const STATUS_ITEMS = [
     ),
   },
   {
-    id: 'tolov-qildi',
+    id: LID_STATUS.PAID,
     title: "To'lov qildi",
     desc: "Mijoz to'lovni amalga oshirdi",
     icon: (
@@ -45,7 +51,7 @@ const STATUS_ITEMS = [
 ];
 
 export default function ShartnomaModal({ lead, onConfirm, onCancel }: ShartnomaModalProps) {
-  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<LidStatus | null>(null);
   const [note, setNote] = useState('');
 
   const handleConfirm = () => {
@@ -69,7 +75,11 @@ export default function ShartnomaModal({ lead, onConfirm, onCancel }: ShartnomaM
           </svg>
         </div>
         <div className="modal-lead-card__info">
-          <div className="modal-lead-card__name">{lead.fullName}</div>
+          <div className="modal-lead-card__name">
+            {lead.first_name && lead.last_name
+              ? `${lead.first_name} ${lead.last_name}`
+              : lead.first_name || lead.last_name || 'Noma’lum'}
+          </div>
           <div className="modal-lead-card__group">SHARTNOMA VA TO'LOV</div>
         </div>
       </div>

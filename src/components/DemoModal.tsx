@@ -1,16 +1,22 @@
 import { useState } from 'react';
-import type { Lead } from '../pages/lid';
+import { LID_STATUS, type Lid } from '../pages/lid/lid.types';
 import ModalPattern from './ModalPattern';
+import type { LidStatus } from '../pages/lid/lid.types';
 
 interface DemoModalProps {
-  lead: Lead;
-  onConfirm: (subStatus: string) => void;
+  lead: Lid;
+  onConfirm: (subStatus: LidStatus) => void;
   onCancel: () => void;
 }
 
-const STATUS_ITEMS = [
+const STATUS_ITEMS: Array<{
+  id: LidStatus;
+  title: string;
+  desc: string;
+  icon: React.ReactNode;
+}> = [
   {
-    id: 'keldi',
+    id: LID_STATUS.DEMO_ATTENDED,
     title: 'Keldi',
     desc: 'Mijoz demo darsga keldi',
     icon: (
@@ -33,7 +39,7 @@ const STATUS_ITEMS = [
     ),
   },
   {
-    id: 'kelmoqchi',
+    id: LID_STATUS.DEMO_SCHEDULED,
     title: 'Kelmoqchi',
     desc: 'Mijozda qiziqish bor va kelmoqchi',
     icon: (
@@ -44,7 +50,7 @@ const STATUS_ITEMS = [
     ),
   },
   {
-    id: 'kelmadi',
+    id: LID_STATUS.DEMO_MISSED,
     title: 'Kelmadi',
     desc: "Xizmat ma'qul kelmadi",
     icon: (
@@ -61,7 +67,7 @@ const STATUS_ITEMS = [
 ];
 
 export default function DemoModal({ lead, onConfirm, onCancel }: DemoModalProps) {
-  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<LidStatus | null>(null);
   const [note, setNote] = useState('');
 
   const handleConfirm = () => {
@@ -85,7 +91,11 @@ export default function DemoModal({ lead, onConfirm, onCancel }: DemoModalProps)
           </svg>
         </div>
         <div className="modal-lead-card__info">
-          <div className="modal-lead-card__name">{lead.fullName}</div>
+          <div className="modal-lead-card__name">
+            {lead.first_name && lead.last_name
+              ? `${lead.first_name} ${lead.last_name}`
+              : lead.first_name || lead.last_name || 'Noma’lum'}
+          </div>
           <div className="modal-lead-card__group">DEMO DARS</div>
         </div>
       </div>

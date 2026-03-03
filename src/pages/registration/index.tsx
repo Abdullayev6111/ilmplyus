@@ -8,6 +8,7 @@ import type {
   StudentGender,
 } from '../../components/FilterDropdown/Filterdropdown.constants';
 import { RegistrationModal } from '../../components/RegistrationModal';
+import { DeleteConfirmationModal } from '../../components/RegistrationModal/DeleteConfirmModal';
 import { fetchLids, deleteLid } from '../lid/lid.service';
 import type { Lid, LidsPaginatedResponse } from '../lid/lid.types';
 import { getName, formatGender, getSourceKey, getSourceLabel } from '../lid/lid.types';
@@ -135,6 +136,8 @@ const Registration = () => {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTER);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editId, setEditId] = useState<number | undefined>(undefined);
+  const [deleteId, setDeleteId] = useState<number | undefined>(undefined);
 
   const { data, isLoading, isError } = useQuery<LidsPaginatedResponse>({
     queryKey: ['lids', currentPage, pageSize],
@@ -173,8 +176,28 @@ const Registration = () => {
     setCurrentPage(1);
   }, []);
 
-  const handleOpenModal = useCallback(() => setIsModalOpen(true), []);
-  const handleCloseModal = useCallback(() => setIsModalOpen(false), []);
+  const handleOpenModal = useCallback(() => {
+    setEditId(undefined);
+    setIsModalOpen(true);
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setIsModalOpen(false);
+    setEditId(undefined);
+  }, []);
+
+  const handleOpenEdit = useCallback((id: number) => {
+    setEditId(id);
+    setIsModalOpen(true);
+  }, []);
+
+  const handleOpenDelete = useCallback((id: number) => {
+    setDeleteId(id);
+  }, []);
+
+  const handleCloseDelete = useCallback(() => {
+    setDeleteId(undefined);
+  }, []);
 
   const startItem = total === 0 ? 0 : (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(currentPage * pageSize, total);
@@ -321,6 +344,7 @@ const Registration = () => {
                               type="button"
                               className="db-action-btn"
                               aria-label={`${fullName}ni tahrirlash`}
+                              onClick={() => handleOpenEdit(student.id)}
                             >
                               <i className="fa-solid fa-pen" />
                             </button>
@@ -335,7 +359,7 @@ const Registration = () => {
                               type="button"
                               className="db-action-btn db-action-btn--danger"
                               aria-label={`${fullName}ni o'chirish`}
-                              onClick={() => deleteMutation.mutate(student.id)}
+                              onClick={() => handleOpenDelete(student.id)}
                               disabled={deleteMutation.isPending}
                             >
                               <i className="fa-solid fa-trash" />
@@ -380,7 +404,9 @@ const Registration = () => {
         </div>
       </section>
 
-      {isModalOpen && <RegistrationModal onClose={handleCloseModal} />}
+      {isModalOpen && <RegistrationModal onClose={handleCloseModal} editId={editId} />}
+
+      {deleteId != null && <DeleteConfirmationModal lidId={deleteId} onClose={handleCloseDelete} />}
     </>
   );
 };
