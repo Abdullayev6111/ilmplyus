@@ -37,7 +37,7 @@ export interface LoginResponse {
 const LoginPage = () => {
   const { t } = useTranslation();
   const [seconds, setSeconds] = useState(180);
-  const [opened, { open, close }] = useDisclosure(false);
+  const [opened, { close }] = useDisclosure(false);
   const isMobile = useMediaQuery('(max-width: 50em)');
   const [code, setCode] = useState('');
   const [resetOpened, resetHandlers] = useDisclosure(false);
@@ -46,11 +46,6 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
-
-  const handleOpen = () => {
-    setSeconds(180);
-    open();
-  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -248,6 +243,7 @@ const LoginPage = () => {
               onChange={(e) => setLogin(e.target.value)}
               placeholder={t('login.loginPlaceHolder')}
             />
+
             <div className="password-wrapper">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -264,29 +260,21 @@ const LoginPage = () => {
                 <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
               </button>
             </div>
+
+            <Link
+              to=""
+              onClick={(e) => {
+                e.preventDefault();
+                handleResetOpen();
+              }}
+            >
+              {t('login.resetPassword')}
+            </Link>
+
+            <button type="submit" className="login-btn" disabled={loginMutation.isPending}>
+              {loginMutation.isPending ? 'Loading...' : t('login.login')}
+            </button>
           </form>
-          <Link
-            to=""
-            onClick={(e) => {
-              e.preventDefault();
-              handleResetOpen();
-            }}
-          >
-            {t('login.resetPassword')}
-          </Link>
-          <button
-            type="submit"
-            className="login-btn"
-            disabled={loginMutation.isPending}
-            onClick={() =>
-              loginMutation.mutate({
-                username: login,
-                password,
-              })
-            }
-          >
-            {loginMutation.isPending ? 'Loading...' : t('login.login')}
-          </button>
         </div>
 
         <div

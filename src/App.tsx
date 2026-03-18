@@ -11,6 +11,8 @@ import LoginPage from './pages/login';
 import useAuthStore from './store/useAuthStore';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
+import Attendance from './pages/attendance';
+import Groups from './pages/groups';
 
 import './index.css';
 import '@mantine/core/styles.css';
@@ -30,8 +32,10 @@ const App = () => {
           <Route path="/payments" element={<Payments />} />
           <Route path="/registration" element={<Registration />} />
           <Route path="/courses" element={<Courses />} />
+          <Route path="/groups" element={<Groups />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/tasks" element={<Tasks />} />
+          <Route path="/attendance" element={<Attendance />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Route>

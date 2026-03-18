@@ -2,6 +2,19 @@ import { useLocation } from 'react-router-dom';
 import LanguageSelect from './LanguageSelect/LanguageSelect';
 import adminImg from '../assets/images/admin-img.svg';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
+import { API } from '../api/api';
+
+type Role = {
+  id: number;
+  name: string;
+};
+
+type MeResponse = {
+  id: number;
+  full_name: string;
+  roles: Role[];
+};
 
 const Header = () => {
   const { t } = useTranslation();
@@ -16,7 +29,19 @@ const Header = () => {
     '/reports': t('header.reports'),
     '/payments': t('header.payments'),
     '/registration': t('header.registration'),
+    '/groups': t('header.groups'),
+    '/attendance': t('header.attendance'),
   };
+
+  const { data } = useQuery({
+    queryKey: ['me'],
+    queryFn: async (): Promise<MeResponse> => {
+      const { data } = await API.get('/me');
+      return data;
+    },
+  });
+
+  const [firstName, lastName] = data?.full_name?.split(' ') ?? [];
 
   const title = pageTitles[pathname] ?? t('header.controlPanel');
 
@@ -48,8 +73,10 @@ const Header = () => {
 
         <div className="header-right-admin">
           <div style={{ textAlign: 'right' }}>
-            <h1>{t('header.adminName')}</h1>
-            <h3>{t('header.role')}</h3>
+            <h1>
+              {firstName} {lastName}
+            </h1>
+            <h3>{data?.roles?.[0].name}</h3>
           </div>
           <div className="header-right-admin-card">
             <img src={adminImg} alt="admin avatar" />

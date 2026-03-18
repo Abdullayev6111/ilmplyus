@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
-import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { ResponsiveContainer, AreaChart, Area, CartesianGrid, XAxis, Tooltip } from 'recharts';
-import { fetchLids, deleteLid } from '../lid/lid.service';
+import { fetchLids } from '../lid/lid.service';
 import type { Lid, LidsPaginatedResponse } from '../lid/lid.types';
 import { getName, formatGender, getSourceKey, getSourceLabel } from '../lid/lid.types';
 import './dashboard.css';
@@ -177,7 +177,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
 
 const Dashboard = () => {
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
   const [activeRange, setActiveRange] = useState<'7' | '30'>('30');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<PageSize>(10);
@@ -191,13 +190,6 @@ const Dashboard = () => {
     queryKey: ['lids', currentPage, pageSize],
     queryFn: () => fetchLids({ page: currentPage, per_page: pageSize }),
     placeholderData: keepPreviousData,
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => deleteLid(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['lids'] });
-    },
   });
 
   const lids: Lid[] = data?.data ?? [];
@@ -431,7 +423,6 @@ const Dashboard = () => {
                 <th scope="col">{t('dashboard.branch')}</th>
                 <th scope="col">{t('dashboard.source')}</th>
                 <th scope="col">{t('dashboard.date')}</th>
-                <th scope="col">{t('dashboard.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -507,34 +498,6 @@ const Dashboard = () => {
 
                       <td>
                         <span className="db-date-cell">{formatDate(student.created_at)}</span>
-                      </td>
-
-                      <td>
-                        <div className="db-actions-cell">
-                          <button
-                            type="button"
-                            className="db-action-btn"
-                            aria-label={`${fullName}ni tahrirlash`}
-                          >
-                            <i className="fa-solid fa-pen" />
-                          </button>
-                          <button
-                            type="button"
-                            className="db-action-btn"
-                            aria-label={`${fullName}ni arxivlash`}
-                          >
-                            <i className="fa-solid fa-box-archive" />
-                          </button>
-                          <button
-                            type="button"
-                            className="db-action-btn db-action-btn--danger"
-                            aria-label={`${fullName}ni o'chirish`}
-                            onClick={() => deleteMutation.mutate(student.id)}
-                            disabled={deleteMutation.isPending}
-                          >
-                            <i className="fa-solid fa-trash" />
-                          </button>
-                        </div>
                       </td>
                     </tr>
                   );

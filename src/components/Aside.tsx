@@ -13,6 +13,8 @@ import registrationIcon from '../assets/images/registration-icon.svg';
 import coursesIcon from '../assets/images/courses-icon.svg';
 import reportsIcon from '../assets/images/reports-icon.svg';
 import tasksIcon from '../assets/images/tasks-icon.svg';
+import attendanceIcon from '../assets/images/user-clock-solid-full.svg';
+import groupIcon from '../assets/images/graduation-cap-solid-full.svg';
 import { Accordion } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 // import { useTranslation } from 'react-i18next';
@@ -23,11 +25,13 @@ const Aside = ({ collapsed, onOpen, onClose }: Props) => {
   const menu = [
     { label: 'Dashboard', icon: dashboardIcon, path: '/' },
     { label: 'LIDlar', icon: lidsIcon, path: '/lids' },
+    { label: 'Vazifalar', icon: tasksIcon, path: '/tasks' },
     { label: "To'lovlar", icon: paymentsIcon, path: '/payments' },
     { label: "Ro'yhatga olish", icon: registrationIcon, path: '/registration' },
     { label: 'Kurslar', icon: coursesIcon, path: '/courses' },
+    { label: 'Guruhlar', icon: groupIcon, path: '/groups' },
     { label: 'Hisobotlar', icon: reportsIcon, path: '/reports' },
-    { label: 'Vazifalar', icon: tasksIcon, path: '/tasks' },
+    { label: 'Davomat', icon: attendanceIcon, path: '/attendance' },
   ];
 
   return (
