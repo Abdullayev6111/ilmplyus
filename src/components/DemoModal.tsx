@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { LID_STATUS, type Lid } from '../pages/lid/lid.types';
 import ModalPattern from './ModalPattern';
 import type { LidStatus } from '../pages/lid/lid.types';
@@ -17,8 +18,8 @@ const STATUS_ITEMS: Array<{
 }> = [
   {
     id: LID_STATUS.DEMO_ATTENDED,
-    title: 'Keldi',
-    desc: 'Mijoz demo darsga keldi',
+    title: 'lid.statuses.demoAttended.title',
+    desc: 'lid.statuses.demoAttended.desc',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path
@@ -40,8 +41,8 @@ const STATUS_ITEMS: Array<{
   },
   {
     id: LID_STATUS.DEMO_SCHEDULED,
-    title: 'Kelmoqchi',
-    desc: 'Mijozda qiziqish bor va kelmoqchi',
+    title: 'lid.statuses.demoScheduled.title',
+    desc: 'lid.statuses.demoScheduled.desc',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
@@ -51,8 +52,8 @@ const STATUS_ITEMS: Array<{
   },
   {
     id: LID_STATUS.DEMO_MISSED,
-    title: 'Kelmadi',
-    desc: "Xizmat ma'qul kelmadi",
+    title: 'lid.statuses.demoMissed.title',
+    desc: 'lid.statuses.demoMissed.desc',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path
@@ -67,6 +68,7 @@ const STATUS_ITEMS: Array<{
 ];
 
 export default function DemoModal({ lead, onConfirm, onCancel }: DemoModalProps) {
+  const { t } = useTranslation();
   const [selectedStatus, setSelectedStatus] = useState<LidStatus | null>(null);
   const [note, setNote] = useState('');
 
@@ -76,7 +78,7 @@ export default function DemoModal({ lead, onConfirm, onCancel }: DemoModalProps)
   };
 
   return (
-    <ModalPattern title="HOLATNI TAHRIRLASH" onCancel={onCancel}>
+    <ModalPattern title={t('lid.modals.editStatus')} onCancel={onCancel}>
       <div className="modal-lead-card">
         <div className="modal-lead-card__icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -94,26 +96,26 @@ export default function DemoModal({ lead, onConfirm, onCancel }: DemoModalProps)
           <div className="modal-lead-card__name">
             {lead.first_name && lead.last_name
               ? `${lead.first_name} ${lead.last_name}`
-              : lead.first_name || lead.last_name || 'Noma’lum'}
+              : lead.first_name || lead.last_name || t('lid.modals.unknown')}
           </div>
-          <div className="modal-lead-card__group">DEMO DARS</div>
+          <div className="modal-lead-card__group">{t('lid.modals.demoClass')}</div>
         </div>
       </div>
 
       <div className="modal-tabs">
         <button className="modal-tab" type="button">
-          Shartnoma va to'lov
+          {t('lid.modals.tabContract')}
         </button>
         <button className="modal-tab" type="button">
-          Aloqa
+          {t('lid.modals.tabContact')}
         </button>
         <button className="modal-tab modal-tab--active" type="button">
-          Demo dars
+          {t('lid.modals.tabDemo')}
         </button>
       </div>
 
       <div className="modal-section">
-        <div className="modal-section-title">Sub-status</div>
+        <div className="modal-section-title">{t('lid.modals.subStatus')}</div>
         {STATUS_ITEMS.map((item) => {
           const isSelected = selectedStatus === item.id;
           return (
@@ -128,8 +130,8 @@ export default function DemoModal({ lead, onConfirm, onCancel }: DemoModalProps)
                 {item.icon}
               </div>
               <div className="modal-status-card__content">
-                <div className="modal-status-card__title">{item.title}</div>
-                <div className="modal-status-card__desc">{item.desc}</div>
+                <div className="modal-status-card__title">{t(item.title)}</div>
+                <div className="modal-status-card__desc">{t(item.desc)}</div>
               </div>
               {isSelected && (
                 <div className="modal-status-card__check" aria-hidden="true">
@@ -150,10 +152,10 @@ export default function DemoModal({ lead, onConfirm, onCancel }: DemoModalProps)
       </div>
 
       <div className="modal-section">
-        <div className="modal-section-title">Izoh(IXTIYORIY)</div>
+        <div className="modal-section-title">{t('lid.modals.noteOptional')}</div>
         <textarea
           className="modal-textarea"
-          placeholder="Izoh yozing..."
+          placeholder={t('lid.modals.writeNote')}
           value={note}
           onChange={(e) => setNote(e.target.value)}
           rows={4}
@@ -162,7 +164,7 @@ export default function DemoModal({ lead, onConfirm, onCancel }: DemoModalProps)
 
       <div className="modal-actions">
         <button className="modal-btn modal-btn--cancel" onClick={onCancel} type="button">
-          Bekor qilish
+          {t('lid.modals.cancel')}
         </button>
         <button
           className="modal-btn modal-btn--confirm"
@@ -170,7 +172,7 @@ export default function DemoModal({ lead, onConfirm, onCancel }: DemoModalProps)
           type="button"
           disabled={!selectedStatus}
         >
-          Saqlash
+          {t('lid.modals.save')}
         </button>
       </div>
     </ModalPattern>

@@ -11,6 +11,7 @@ import type {
 } from './courses.types';
 import { EMPTY_COURSES_FILTER } from './courses.types';
 import './courses.css';
+import { useTranslation } from 'react-i18next';
 
 const CURRENT_ROLE: Role = 'operator';
 
@@ -81,6 +82,7 @@ interface FilterPanelProps {
 }
 
 function FilterPanel({ filter, onChange, onReset }: FilterPanelProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   const handleField = useCallback(
@@ -102,14 +104,14 @@ function FilterPanel({ filter, onChange, onReset }: FilterPanelProps) {
         aria-label="Filtrlar"
       >
         <i className="fa-solid fa-sliders" aria-hidden="true" />
-        Saralash
+        {t('course.filter')}
         {hasActive && <span className="courses-filter__dot" aria-hidden="true" />}
       </button>
 
       {open && (
         <div className="courses-filter__panel" role="region" aria-label="Filter panel">
           <div className="courses-filter__panel-header">
-            <span className="courses-filter__panel-title">Saralash</span>
+            <span className="courses-filter__panel-title">{t('course.filter')}</span>
             <button
               type="button"
               className="courses-filter__close-btn"
@@ -122,7 +124,7 @@ function FilterPanel({ filter, onChange, onReset }: FilterPanelProps) {
           <div className="courses-filter__row">
             <div className="courses-filter__field">
               <label htmlFor="cf-course" className="courses-filter__label">
-                Kurs nomi
+                {t('course.courseName')}
               </label>
               <input
                 id="cf-course"
@@ -137,7 +139,7 @@ function FilterPanel({ filter, onChange, onReset }: FilterPanelProps) {
             </div>
             <div className="courses-filter__field">
               <label htmlFor="cf-level" className="courses-filter__label">
-                Daraja (Level)
+                {t('course.level')} (Level)
               </label>
               <input
                 id="cf-level"
@@ -152,7 +154,7 @@ function FilterPanel({ filter, onChange, onReset }: FilterPanelProps) {
             </div>
             <div className="courses-filter__field">
               <label htmlFor="cf-branch" className="courses-filter__label">
-                Filial
+                {t('course.branch')}
               </label>
               <input
                 id="cf-branch"
@@ -167,7 +169,7 @@ function FilterPanel({ filter, onChange, onReset }: FilterPanelProps) {
             </div>
             <div className="courses-filter__field">
               <label htmlFor="cf-date-from" className="courses-filter__label">
-                Sana (dan)
+                {t('course.date')} {t('course.from')}
               </label>
               <input
                 id="cf-date-from"
@@ -180,7 +182,7 @@ function FilterPanel({ filter, onChange, onReset }: FilterPanelProps) {
             </div>
             <div className="courses-filter__field">
               <label htmlFor="cf-date-to" className="courses-filter__label">
-                Sana (gacha)
+                {t('course.date')} {t('course.to')}
               </label>
               <input
                 id="cf-date-to"
@@ -201,7 +203,7 @@ function FilterPanel({ filter, onChange, onReset }: FilterPanelProps) {
                 setOpen(false);
               }}
             >
-              Tozalash
+              {t('course.clear')}
             </button>
           </div>
         </div>
@@ -244,6 +246,7 @@ interface PaginationProps {
 }
 
 function Pagination({ currentPage, lastPage, from, to, total, onPageChange }: PaginationProps) {
+  const { t } = useTranslation();
   const pages = useMemo<(number | '...')[]>(() => {
     if (lastPage <= 6) return Array.from({ length: lastPage }, (_, i) => i + 1);
     return [1, 2, 3, '...', lastPage];
@@ -252,7 +255,9 @@ function Pagination({ currentPage, lastPage, from, to, total, onPageChange }: Pa
   return (
     <div className="courses-pagination">
       <span className="courses-pagination__info">
-        Jami: {total}tadan {from}-{to}tagacha ko'rsatmoqda
+        {t('course.jami')}: {total}
+        {t('course.from')} {from}-{to}
+        {t('course.to')} {t('course.showing')}
       </span>
       <div className="courses-pagination__controls">
         <button
@@ -357,6 +362,7 @@ interface OperatorTableProps {
 }
 
 function OperatorTable({ rows, selectedIds, onToggleOne, onToggleAll }: OperatorTableProps) {
+  const { t } = useTranslation();
   const allSelected = rows.length > 0 && rows.every((r) => selectedIds.has(r.id));
   const someSelected = rows.some((r) => selectedIds.has(r.id)) && !allSelected;
   const cbRef = useRef<HTMLInputElement | null>(null);
@@ -381,16 +387,16 @@ function OperatorTable({ rows, selectedIds, onToggleOne, onToggleAll }: Operator
               />
             </th>
             <th className="courses-table__th">#</th>
-            <th className="courses-table__th">Kurs nomi</th>
-            <th className="courses-table__th">Daraja</th>
-            <th className="courses-table__th">Eski narx</th>
-            <th className="courses-table__th">Yangi narx</th>
-            <th className="courses-table__th">Dars soni</th>
-            <th className="courses-table__th">O'zgarish</th>
-            <th className="courses-table__th">O'zgarish sanasi</th>
-            <th className="courses-table__th">Filial</th>
-            <th className="courses-table__th">Sana</th>
-            <th className="courses-table__th">Holat</th>
+            <th className="courses-table__th">{t('course.courseName')}</th>
+            <th className="courses-table__th">{t('course.level')}</th>
+            <th className="courses-table__th">{t('course.oldPrice')}</th>
+            <th className="courses-table__th">{t('course.newPrice')}</th>
+            <th className="courses-table__th">{t('course.lessonCount')}</th>
+            <th className="courses-table__th">{t('course.change')}</th>
+            <th className="courses-table__th">{t('course.changeDate')}</th>
+            <th className="courses-table__th">{t('course.branch')}</th>
+            <th className="courses-table__th">{t('course.date')}</th>
+            <th className="courses-table__th">{t('course.state')}</th>
           </tr>
         </thead>
         <tbody>
@@ -415,6 +421,7 @@ interface ManagerRowProps {
 }
 
 function ManagerRow({ row, onApprove, onReject }: ManagerRowProps) {
+  const { t } = useTranslation();
   return (
     <tr className="courses-table__row">
       <td className="courses-table__td">{row.id}</td>
@@ -452,7 +459,7 @@ function ManagerRow({ row, onApprove, onReject }: ManagerRowProps) {
           onClick={() => onApprove(row.id)}
           aria-label={`${row.course.name} tasdiqlash`}
         >
-          Tasdiqlash
+          {t('course.confirm')}
         </button>
         <button
           type="button"
@@ -460,7 +467,7 @@ function ManagerRow({ row, onApprove, onReject }: ManagerRowProps) {
           onClick={() => onReject(row.id)}
           aria-label={`${row.course.name} rad etish`}
         >
-          Rad etish
+          {t('course.cancel')}
         </button>
       </td>
     </tr>
@@ -474,22 +481,23 @@ interface ManagerTableProps {
 }
 
 function ManagerTable({ rows, onApprove, onReject }: ManagerTableProps) {
+  const { t } = useTranslation();
   return (
     <div className="courses-table-wrap">
       <table className="courses-table" aria-label="Menejer kurslari jadvali">
         <thead className="courses-table__head">
           <tr>
             <th className="courses-table__th">#</th>
-            <th className="courses-table__th">Kurs nomi</th>
-            <th className="courses-table__th">Daraja</th>
-            <th className="courses-table__th">Eski narx</th>
-            <th className="courses-table__th">Yangi narx</th>
-            <th className="courses-table__th">Dars soni</th>
-            <th className="courses-table__th">O'zgarish</th>
-            <th className="courses-table__th">O'zgarish sanasi</th>
-            <th className="courses-table__th">Filial</th>
-            <th className="courses-table__th">Sana</th>
-            <th className="courses-table__th">Amallar</th>
+            <th className="courses-table__th">{t('course.courseName')}</th>
+            <th className="courses-table__th">{t('course.level')}</th>
+            <th className="courses-table__th">{t('course.oldPrice')}</th>
+            <th className="courses-table__th">{t('course.newPrice')}</th>
+            <th className="courses-table__th">{t('course.lessonCount')}</th>
+            <th className="courses-table__th">{t('course.change')}</th>
+            <th className="courses-table__th">{t('course.changeDate')}</th>
+            <th className="courses-table__th">{t('course.branch')}</th>
+            <th className="courses-table__th">{t('course.date')}</th>
+            <th className="courses-table__th">{t('course.actions')}</th>
           </tr>
         </thead>
         <tbody>
@@ -543,6 +551,7 @@ interface PaginationMeta {
 }
 
 export default function Courses() {
+  const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
   const [coursesFilter, setCoursesFilter] = useState<CoursesFilterState>(EMPTY_COURSES_FILTER);
@@ -600,11 +609,11 @@ export default function Courses() {
         return {
           ...item,
           holat: isActivationDay
-            ? (localHolat[item.id] ?? 'Tasdiqlangan')
-            : (localHolat[item.id] ?? item.holat ?? 'Jarayonda'),
+            ? (localHolat[item.id] ?? t('course.confirmed'))
+            : (localHolat[item.id] ?? item.holat ?? t('course.inProcess')),
         };
       }),
-    [rawRows, localHolat, todayDDMM],
+    [rawRows, localHolat, todayDDMM, t],
   );
 
   const displayedRows = useMemo(
@@ -678,7 +687,7 @@ export default function Courses() {
             disabled={selectedIds.size === 0}
             aria-label="Tasdiqlashga yuborish"
           >
-            Tasdiqlashga yuborish
+            {t('course.sendToConfirm')}
           </button>
         )}
         {!isOperator && <div aria-hidden="true" />}
@@ -710,7 +719,7 @@ export default function Courses() {
             onClick={() => setIsModalOpen(true)}
             aria-label="Yangi kurs narxini qo'shish"
           >
-            Qo'shish
+            {t('course.add')}
           </button>
         </div>
       </div>
@@ -718,18 +727,18 @@ export default function Courses() {
       <div className="courses-content">
         {isLoading && (
           <div className="courses-loading" role="status" aria-live="polite">
-            Yuklanmoqda...
+            {t('course.loading')}...
           </div>
         )}
 
         {isError && (
           <div className="courses-error" role="alert">
-            Xatolik: {errorMessage}
+            {t('course.error')}: {errorMessage}
           </div>
         )}
 
         {!isLoading && !isError && displayedRows.length === 0 && (
-          <div className="courses-empty">Ma'lumot topilmadi</div>
+          <div className="courses-empty">{t('course.notFound')}</div>
         )}
 
         {!isLoading && !isError && displayedRows.length > 0 && (

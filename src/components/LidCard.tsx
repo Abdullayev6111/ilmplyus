@@ -1,4 +1,5 @@
 import { useCallback, useRef, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Lid } from '../pages/lid/lid.types';
 import { formatGender, getSourceLabel } from '../pages/lid/lid.types';
 import { getOperatorFullName } from '../pages/lid/lid.service';
@@ -32,6 +33,7 @@ function formatDateParts(dateStr: string) {
 }
 
 function LeadCard({ lead, color, onDragStart, onClick, hideComment }: LeadCardProps) {
+  const { t } = useTranslation();
   const { time, date } = formatDateParts(lead.created_at);
   const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
   const isDraggingRef = useRef(false);
@@ -95,9 +97,8 @@ function LeadCard({ lead, color, onDragStart, onClick, hideComment }: LeadCardPr
           {getSourceLabel(lead.source)}
         </span>
         <span
-          className={`lead-card__badge lead-card__badge--${
-            lead.gender === 'male' ? 'male' : 'female'
-          }`}
+          className={`lead-card__badge lead-card__badge--${lead.gender === 'male' ? 'male' : 'female'
+            }`}
         >
           {formatGender(lead.gender)}
         </span>
@@ -130,12 +131,12 @@ function LeadCard({ lead, color, onDragStart, onClick, hideComment }: LeadCardPr
 
       {!shouldHideComment && lead.comment && (
         <div className="lead-card__note-section">
-          <div className="lead-card__note-label">IZOH</div>
+          <div className="lead-card__note-label">{t('lid.card.comment')}</div>
           <div className="lead-card__note">{lead.comment}</div>
         </div>
       )}
 
-      <div className="lead-card__operator">Operator: {getOperatorFullName(lead.operator)}</div>
+      <div className="lead-card__operator">{t('lid.card.operator')}: {getOperatorFullName(lead.operator)}</div>
     </div>
   );
 }

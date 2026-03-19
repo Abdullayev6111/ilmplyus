@@ -76,7 +76,7 @@ const Header = () => {
             <h1>
               {firstName} {lastName}
             </h1>
-            <h3>{data?.roles?.[0].name}</h3>
+            <h3>{data?.roles?.[0]?.name}</h3>
           </div>
           <div className="header-right-admin-card">
             <img src={adminImg} alt="admin avatar" />

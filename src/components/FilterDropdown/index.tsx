@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DIRECTIONS, EMPTY_FILTER, GENDERS, SOURCES } from './Filterdropdown.constants';
 import type {
   DirectionNode,
@@ -62,6 +63,7 @@ const DirectionSection = ({
   onMainToggle,
   onSubToggle,
 }: DirectionSectionProps) => {
+  const { t } = useTranslation();
   const isMainChecked = selectedMain.includes(node.label);
   const activeSubs = node.sub.filter((s) => selectedSub.includes(s));
   const isIndeterminate = !isMainChecked && activeSubs.length > 0;
@@ -85,7 +87,7 @@ const DirectionSection = ({
           className={`fd-expand-btn${expanded ? ' fd-expand-btn--open' : ''}`}
           onClick={handleToggleExpand}
           aria-expanded={expanded}
-          aria-label={`${node.label} kichik yo'nalishlarini ${expanded ? 'yopish' : 'ochish'}`}
+          aria-label={expanded ? t('filterDropdown.closeSubDirections', { name: node.label }) : t('filterDropdown.openSubDirections', { name: node.label })}
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
             <path
@@ -102,7 +104,7 @@ const DirectionSection = ({
         <div
           className="fd-direction-section__subs"
           role="group"
-          aria-label={`${node.label} kichik yo'nalishlari`}
+          aria-label={t('filterDropdown.subDirections', { name: node.label })}
         >
           {node.sub.map((sub) => (
             <CheckboxItem
@@ -125,6 +127,7 @@ interface FilterDropdownProps {
 }
 
 const FilterDropdown = ({ filters, onChange }: FilterDropdownProps) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const activeCount = countActiveFilters(filters);
@@ -208,9 +211,9 @@ const FilterDropdown = ({ filters, onChange }: FilterDropdownProps) => {
             strokeLinecap="round"
           />
         </svg>
-        Saralash
+        {t('filterDropdown.sort')}
         {activeCount > 0 && (
-          <span className="fd-badge" aria-label={`${activeCount} ta faol filtr`}>
+          <span className="fd-badge" aria-label={t('filterDropdown.activeFiltersBadge', { count: activeCount })}>
             {activeCount}
           </span>
         )}
@@ -221,11 +224,11 @@ const FilterDropdown = ({ filters, onChange }: FilterDropdownProps) => {
           id="filter-dropdown-panel"
           className="fd-panel"
           role="menu"
-          aria-label="Filtrlar paneli"
+          aria-label={t('filterDropdown.filterPanel')}
         >
           <section className="fd-section" aria-labelledby="fd-source-heading">
             <h3 className="fd-section__title" id="fd-source-heading">
-              Manba
+              {t('filterDropdown.source')}
             </h3>
             <div className="fd-section__body" role="group" aria-labelledby="fd-source-heading">
               {SOURCES.map((src) => (
@@ -244,7 +247,7 @@ const FilterDropdown = ({ filters, onChange }: FilterDropdownProps) => {
 
           <section className="fd-section" aria-labelledby="fd-gender-heading">
             <h3 className="fd-section__title" id="fd-gender-heading">
-              Jinsi
+              {t('filterDropdown.gender')}
             </h3>
             <div className="fd-section__body" role="group" aria-labelledby="fd-gender-heading">
               {GENDERS.map((g) => (
@@ -263,7 +266,7 @@ const FilterDropdown = ({ filters, onChange }: FilterDropdownProps) => {
 
           <section className="fd-section" aria-labelledby="fd-direction-heading">
             <h3 className="fd-section__title" id="fd-direction-heading">
-              Yo&apos;nalish
+              {t('filterDropdown.direction')}
             </h3>
             <div className="fd-section__body">
               {DIRECTIONS.map((node) => (
@@ -284,9 +287,9 @@ const FilterDropdown = ({ filters, onChange }: FilterDropdownProps) => {
               <div className="fd-divider" role="separator" />
               <div className="fd-footer">
                 <button type="button" className="fd-reset-btn" onClick={handleReset}>
-                  Tozalash
+                  {t('filterDropdown.clear')}
                 </button>
-                <span className="fd-footer__count">{activeCount} ta filtr faol</span>
+                <span className="fd-footer__count">{t('filterDropdown.activeFilters', { count: activeCount })}</span>
               </div>
             </>
           )}

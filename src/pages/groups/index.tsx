@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import './groups.css';
 import { API } from '../../api/api';
 
@@ -148,8 +149,8 @@ const DAY_INDEX: Record<WeekDayKey, number> = {
   saturday: 6,
 };
 
-function formatDays(days: string[]): string {
-  return days?.map((d) => DAY_SHORT[d] ?? d).join(', ');
+function formatDays(days: string[], t: any): string {
+  return days?.map((d) => t(`groups.days.${d}Short`, { defaultValue: DAY_SHORT[d] ?? d })).join(', ');
 }
 
 function parseTimeToMinutes(time: string): number {
@@ -428,6 +429,7 @@ function TimeInput({ value, onChange }: TimeInputProps) {
 }
 
 function GroupModal({ onClose, onCreated, groups }: GroupModalProps) {
+  const { t } = useTranslation();
   const [branchId, setBranchId] = useState<number | null>(null);
   const [courseId, setCourseId] = useState<number | null>(null);
   const [levelId, setLevelId] = useState<number | null>(null);
@@ -511,14 +513,14 @@ function GroupModal({ onClose, onCreated, groups }: GroupModalProps) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <span className="modal-header-title">Guruh yaratish</span>
+          <span className="modal-header-title">{t('groups.createGroupTitle')}</span>
           <span className="modal-header-date">📅 {formatDate(new Date())}</span>
         </div>
 
         <div className="modal-body">
           <div className="modal-row">
             <div className="modal-field">
-              <label>Fillial tanlang</label>
+              <label>{t('groups.selectBranch')}</label>
               <select
                 value={branchId ?? ''}
                 onChange={(e) => {
@@ -527,7 +529,7 @@ function GroupModal({ onClose, onCreated, groups }: GroupModalProps) {
                   setLevelId(null);
                 }}
               >
-                <option value="">Tanlang</option>
+                <option value="">{t('groups.selectOption')}</option>
                 {branches?.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.name}
@@ -537,7 +539,7 @@ function GroupModal({ onClose, onCreated, groups }: GroupModalProps) {
             </div>
 
             <div className="modal-field">
-              <label>Kursni tanlang</label>
+              <label>{t('groups.selectCourse')}</label>
               <select
                 value={courseId ?? ''}
                 disabled={!branchId}
@@ -546,7 +548,7 @@ function GroupModal({ onClose, onCreated, groups }: GroupModalProps) {
                   setLevelId(null);
                 }}
               >
-                <option value="">Tanlang</option>
+                <option value="">{t('groups.selectOption')}</option>
                 {courses?.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
@@ -556,13 +558,13 @@ function GroupModal({ onClose, onCreated, groups }: GroupModalProps) {
             </div>
 
             <div className="modal-field">
-              <label>Daraja</label>
+              <label>{t('groups.level')}</label>
               <select
                 value={levelId ?? ''}
                 disabled={!courseId}
                 onChange={(e) => setLevelId(Number(e.target.value) || null)}
               >
-                <option value="">Tanlang</option>
+                <option value="">{t('groups.selectOption')}</option>
                 {levels?.map((l) => (
                   <option key={l.id} value={l.id}>
                     {l.name}
@@ -574,7 +576,7 @@ function GroupModal({ onClose, onCreated, groups }: GroupModalProps) {
 
           <div className="modal-row">
             <div className="modal-field">
-              <label>Guruh nomi</label>
+              <label>{t('groups.groupName')}</label>
               <input
                 type="text"
                 value={finalGroupName}
@@ -587,12 +589,12 @@ function GroupModal({ onClose, onCreated, groups }: GroupModalProps) {
             </div>
 
             <div className="modal-field">
-              <label>Xona</label>
+              <label>{t('groups.room')}</label>
               <select
                 value={roomId ?? ''}
                 onChange={(e) => setRoomId(Number(e.target.value) || null)}
               >
-                <option value="">Tanlang</option>
+                <option value="">{t('groups.selectOption')}</option>
                 {rooms?.map((r) => (
                   <option key={r.id} value={r.id}>
                     {r.name}
@@ -601,13 +603,13 @@ function GroupModal({ onClose, onCreated, groups }: GroupModalProps) {
               </select>
               {selectedRoom !== null && (
                 <span className="modal-field-hint">
-                  max o'quvchilar soni: {selectedRoom.capacity}
+                  {t('groups.maxStudents')} {selectedRoom.capacity}
                 </span>
               )}
             </div>
 
             <div className="modal-field">
-              <label>Hafta kunlari</label>
+              <label>{t('groups.weekDays')}</label>
               <div className="modal-days">
                 {WEEK_DAYS?.map((d) => (
                   <button
@@ -616,29 +618,29 @@ function GroupModal({ onClose, onCreated, groups }: GroupModalProps) {
                     className={`modal-day-btn${days.includes(d.key) ? ' modal-day-btn--active' : ''}`}
                     onClick={() => toggleDay(d.key)}
                   >
-                    {d.short}
+                    {t(`groups.days.${d.key}Short`, { defaultValue: d.short })}
                   </button>
                 ))}
               </div>
-              <span className="modal-field-hint">📅 Hafta davomida dars kunlari</span>
+              <span className="modal-field-hint">{t('groups.weekDaysHint')}</span>
             </div>
           </div>
 
           <div className="modal-row">
             <div className="modal-field">
-              <label>Dars boshlanish sanasi</label>
+              <label>{t('groups.startDate')}</label>
               <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-              <span className="modal-field-hint">Birinchi dars kuni (Demo dars)</span>
+              <span className="modal-field-hint">{t('groups.startDateHint')}</span>
             </div>
 
             <div className="modal-field">
-              <label>Dars tugash sanasi</label>
+              <label>{t('groups.endDate')}</label>
               <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-              <span className="modal-field-hint">Kursni eng oxirgi darsi</span>
+              <span className="modal-field-hint">{t('groups.endDateHint')}</span>
             </div>
 
             <div className="modal-field">
-              <label>Boshlanish va tugash vaqti</label>
+              <label>{t('groups.startAndEndTime')}</label>
               <div className="modal-time-row">
                 <TimeInput value={startTime} onChange={setStartTime} />
                 <TimeInput value={endTime} onChange={setEndTime} />
@@ -648,21 +650,21 @@ function GroupModal({ onClose, onCreated, groups }: GroupModalProps) {
 
           <div className="modal-row modal-row--two">
             <div className="modal-field">
-              <label>Kurs davomiyligi</label>
+              <label>{t('groups.courseDuration')}</label>
               <div className="modal-duration-wrap">
                 <input type="number" value={duration} readOnly />
-                <span className="modal-duration-unit">soat</span>
+                <span className="modal-duration-unit">{t('groups.hours')}</span>
               </div>
-              <span className="modal-field-hint">📅 avtomatik oyda hisoblab oladi</span>
+              <span className="modal-field-hint">{t('groups.durationHint')}</span>
             </div>
 
             <div className="modal-field">
-              <label>O'qtuvchi</label>
+              <label>{t('groups.teacherModal')}</label>
               <select
                 value={teacherId ?? ''}
                 onChange={(e) => setTeacherId(Number(e.target.value) || null)}
               >
-                <option value="">Tanlang</option>
+                <option value="">{t('groups.selectOption')}</option>
                 {employees?.map((emp) => (
                   <option key={emp.id} value={emp.id}>
                     {emp.first_name} {emp.last_name}
@@ -675,10 +677,10 @@ function GroupModal({ onClose, onCreated, groups }: GroupModalProps) {
 
         <div className="modal-footer">
           <button className="modal-cancel-btn" onClick={onClose}>
-            Bekor qilish
+            {t('groups.cancel')}
           </button>
           <button className="modal-save-btn" onClick={handleSubmit} disabled={mutation.isPending}>
-            {mutation.isPending ? 'Saqlanmoqda...' : 'Saqlash'}
+            {mutation.isPending ? t('groups.saving') : t('groups.save')}
           </button>
         </div>
       </div>
@@ -694,6 +696,7 @@ interface FilterPopoverProps {
 }
 
 function FilterPopover({ filter, setFilter, onClose, employees }: FilterPopoverProps) {
+  const { t } = useTranslation();
   const { data: allCourses } = useAllCourses();
   console.log(allCourses);
 
@@ -712,7 +715,7 @@ function FilterPopover({ filter, setFilter, onClose, employees }: FilterPopoverP
   return (
     <div className="filter-popover">
       <div className="filter-popover-header">
-        <span className="filter-popover-title">Filtr</span>
+        <span className="filter-popover-title">{t('groups.filterTitle')}</span>
         <button className="filter-popover-close" onClick={onClose}>
           ✕
         </button>
@@ -720,7 +723,7 @@ function FilterPopover({ filter, setFilter, onClose, employees }: FilterPopoverP
 
       <div className="filter-popover-body">
         <div className="filter-popover-field">
-          <label>Kurs bo'yicha</label>
+          <label>{t('groups.filterCourse')}</label>
           <select
             value={filter.courseId}
             onChange={(e) =>
@@ -732,7 +735,7 @@ function FilterPopover({ filter, setFilter, onClose, employees }: FilterPopoverP
               }))
             }
           >
-            <option value="">Kurs tanlang</option>
+            <option value="">{t('groups.selectCourseOption')}</option>
             {allCourses?.map((c) => (
               <option key={c.id} value={String(c.id)}>
                 {c.name}
@@ -743,7 +746,7 @@ function FilterPopover({ filter, setFilter, onClose, employees }: FilterPopoverP
 
         {filter.courseId && (
           <div className="filter-popover-field">
-            <label>Daraja bo'yicha</label>
+            <label>{t('groups.filterLevel')}</label>
             <select
               value={filter.levelId}
               onChange={(e) =>
@@ -753,7 +756,7 @@ function FilterPopover({ filter, setFilter, onClose, employees }: FilterPopoverP
                 }))
               }
             >
-              <option value="">Daraja tanlang</option>
+              <option value="">{t('groups.selectLevelOption')}</option>
 
               {courseLevels.map((l) => (
                 <option key={l.id} value={String(l.id)}>
@@ -765,7 +768,7 @@ function FilterPopover({ filter, setFilter, onClose, employees }: FilterPopoverP
         )}
 
         <div className="filter-popover-field">
-          <label>O'qituvchi bo'yicha</label>
+          <label>{t('groups.filterTeacher')}</label>
           <select
             value={filter.teacherId}
             onChange={(e) =>
@@ -777,7 +780,7 @@ function FilterPopover({ filter, setFilter, onClose, employees }: FilterPopoverP
               }))
             }
           >
-            <option value="">O'qituvchi tanlang</option>
+            <option value="">{t('groups.selectTeacherOption')}</option>
             {employees?.map((emp) => (
               <option key={emp.id} value={String(emp.id)}>
                 {emp.first_name} {emp.last_name}
@@ -789,7 +792,7 @@ function FilterPopover({ filter, setFilter, onClose, employees }: FilterPopoverP
 
       <div className="filter-popover-footer">
         <button className="filter-popover-clear" onClick={handleClear}>
-          Filterni tozalash
+          {t('groups.clearFilter')}
         </button>
       </div>
     </div>
@@ -799,6 +802,7 @@ function FilterPopover({ filter, setFilter, onClose, employees }: FilterPopoverP
 const VISIBLE_PAGES = [1, 2, 3];
 
 const Groups = () => {
+  const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [page, setPage] = useState(1);
@@ -843,7 +847,7 @@ const Groups = () => {
   return (
     <section className="groups container">
       <div className="groups-top">
-        <h1 className="groups-top-title">Guruh yaratih</h1>
+        <h1 className="groups-top-title">{t('groups.createGroupHeader')}</h1>
         <div className="groups-top-right">
           <div className="groups-search">
             <svg
@@ -860,7 +864,7 @@ const Groups = () => {
             </svg>
             <input
               type="text"
-              placeholder="Ma'lumotlarni qidirish..."
+              placeholder={t('groups.searchPlaceholder')}
               value={filter.search}
               onChange={(e) => setFilter((prev) => ({ ...prev, search: e.target.value }))}
             />
@@ -880,7 +884,7 @@ const Groups = () => {
                 <line x1="8" y1="12" x2="16" y2="12" />
                 <line x1="12" y1="18" x2="12" y2="18" />
               </svg>
-              Saralash
+              {t('groups.filterButton')}
             </button>
 
             {filterOpen && (
@@ -894,7 +898,7 @@ const Groups = () => {
           </div>
 
           <button className="groups-add-btn" onClick={() => setModalOpen(true)}>
-            Guruh yaratish
+            {t('groups.createGroupTitle')}
           </button>
         </div>
       </div>
@@ -903,27 +907,27 @@ const Groups = () => {
         <table className="groups-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Guruh nomi</th>
-              <th>Kurs</th>
-              <th>Daraja</th>
-              <th>Kurs davomiyligi</th>
-              <th>O'quvchilar soni</th>
-              <th>Hafta kunlari</th>
-              <th>O'qituvchi</th>
+              <th>{t('groups.tableId')}</th>
+              <th>{t('groups.tableGroupName')}</th>
+              <th>{t('groups.tableCourse')}</th>
+              <th>{t('groups.tableLevel')}</th>
+              <th>{t('groups.tableDuration')}</th>
+              <th>{t('groups.tableStudentsCount')}</th>
+              <th>{t('groups.tableWeekDays')}</th>
+              <th>{t('groups.tableTeacher')}</th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
               <tr>
                 <td colSpan={8} className="groups-table-loading">
-                  Yuklanmoqda...
+                  {t('groups.loading')}
                 </td>
               </tr>
             ) : !groups || groups.length === 0 ? (
               <tr>
                 <td colSpan={8} className="groups-table-empty">
-                  Ma'lumot topilmadi
+                  {t('groups.noData')}
                 </td>
               </tr>
             ) : (
@@ -933,9 +937,9 @@ const Groups = () => {
                   <td>{group.name}</td>
                   <td>{group.course?.name}</td>
                   <td>{group.level?.name}</td>
-                  <td>{group.duration} soat</td>
+                  <td>{group.duration} {t('groups.hours')}</td>
                   <td>{group.max_students}</td>
-                  <td>{formatDays(group.days)}</td>
+                  <td>{formatDays(group.days, t)}</td>
                   <td>
                     {group.teacher ? `${group.teacher.first_name} ${group.teacher.last_name}` : '—'}
                   </td>

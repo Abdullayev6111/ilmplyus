@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import './RegistrationModal.css';
 import { API } from '../../api/api';
 import {
@@ -56,24 +57,24 @@ const INITIAL_FORM: RegistrationFormState = {
 
 const UZ_PHONE_REGEX = /^\+998\s?\d{2}\s?\d{3}\s?\d{2}\s?\d{2}$/;
 
-function validateForm(form: RegistrationFormState): FormErrors {
+function validateForm(form: RegistrationFormState, t: any): FormErrors {
   const errors: FormErrors = {};
-  if (!form.lastName.trim()) errors.lastName = 'Familiya kiritilishi shart';
-  if (!form.firstName.trim()) errors.firstName = 'Ism kiritilishi shart';
-  if (!form.birthDate) errors.birthDate = "Tug'ilgan sana kiritilishi shart";
-  if (!form.gender) errors.gender = 'Jinsi tanlanishi shart';
+  if (!form.lastName.trim()) errors.lastName = t('registrationModal.errors.lastName');
+  if (!form.firstName.trim()) errors.firstName = t('registrationModal.errors.firstName');
+  if (!form.birthDate) errors.birthDate = t('registrationModal.errors.birthDate');
+  if (!form.gender) errors.gender = t('registrationModal.errors.gender');
   if (!form.phone.trim()) {
-    errors.phone = 'Telefon raqami kiritilishi shart';
+    errors.phone = t('registrationModal.errors.phone');
   } else if (!UZ_PHONE_REGEX.test(form.phone.trim())) {
-    errors.phone = "Noto'g'ri format. Misol: +998 90 123 45 67";
+    errors.phone = t('registrationModal.errors.phoneFormat');
   }
-  if (!form.regionId) errors.regionId = 'Viloyat tanlanishi shart';
-  if (!form.districtId) errors.districtId = 'Shahar/tuman kiritilishi shart';
-  if (!form.branchId) errors.branchId = 'Filial tanlanishi shart';
-  if (!form.courseId) errors.courseId = 'Kurs tanlanishi shart';
-  if (!form.levelId) errors.levelId = 'Bosqich tanlanishi shart';
-  if (!form.groupId) errors.groupId = 'Guruh tanlanishi shart';
-  if (!form.sourceId) errors.sourceId = 'Manba tanlanishi shart';
+  if (!form.regionId) errors.regionId = t('registrationModal.errors.regionId');
+  if (!form.districtId) errors.districtId = t('registrationModal.errors.districtId');
+  if (!form.branchId) errors.branchId = t('registrationModal.errors.branchId');
+  if (!form.courseId) errors.courseId = t('registrationModal.errors.courseId');
+  if (!form.levelId) errors.levelId = t('registrationModal.errors.levelId');
+  if (!form.groupId) errors.groupId = t('registrationModal.errors.groupId');
+  if (!form.sourceId) errors.sourceId = t('registrationModal.errors.sourceId');
   return errors;
 }
 
@@ -194,6 +195,7 @@ interface RegistrationModalProps {
 }
 
 export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) => {
+  const { t } = useTranslation();
   const isEditMode = editId != null;
   const [form, setForm] = useState<RegistrationFormState>(INITIAL_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -318,7 +320,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
       const { name, value } = e.target;
       setForm((prev) => {
         const next = { ...prev, [name]: value };
-        if (submitted) setErrors(validateForm(next));
+        if (submitted) setErrors(validateForm(next, t));
         return next;
       });
     },
@@ -329,7 +331,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
     (value: StudentGender) => {
       setForm((prev) => {
         const next = { ...prev, gender: value };
-        if (submitted) setErrors(validateForm(next));
+        if (submitted) setErrors(validateForm(next, t));
         return next;
       });
     },
@@ -349,7 +351,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
           levelId: '',
           groupId: '',
         };
-        if (submitted) setErrors(validateForm(next));
+        if (submitted) setErrors(validateForm(next, t));
         return next;
       });
     },
@@ -368,7 +370,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
           levelId: '',
           groupId: '',
         };
-        if (submitted) setErrors(validateForm(next));
+        if (submitted) setErrors(validateForm(next, t));
         return next;
       });
     },
@@ -386,7 +388,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
           levelId: '',
           groupId: '',
         };
-        if (submitted) setErrors(validateForm(next));
+        if (submitted) setErrors(validateForm(next, t));
         return next;
       });
     },
@@ -403,7 +405,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
           levelId: '',
           groupId: '',
         };
-        if (submitted) setErrors(validateForm(next));
+        if (submitted) setErrors(validateForm(next, t));
         return next;
       });
     },
@@ -419,7 +421,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
           levelId: value,
           groupId: '',
         };
-        if (submitted) setErrors(validateForm(next));
+        if (submitted) setErrors(validateForm(next, t));
         return next;
       });
     },
@@ -430,7 +432,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
     (e: React.FormEvent) => {
       e.preventDefault();
       setSubmitted(true);
-      const validationErrors = validateForm(form);
+      const validationErrors = validateForm(form, t);
       if (Object.keys(validationErrors).length > 0) {
         setErrors(validationErrors);
         return;
@@ -477,13 +479,13 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
       <div className="rm-modal">
         <div className="rm-modal__header">
           <h2 className="rm-modal__title" id="rm-title">
-            {isEditMode ? 'Tahrirlash' : "Ro'yhatga olish"}
+            {isEditMode ? t('registrationModal.edit') : t('registrationModal.create')}
           </h2>
           <button
             type="button"
             className="rm-modal__close"
             onClick={onClose}
-            aria-label="Modalni yopish"
+            aria-label={t('registrationModal.closeModal')}
           >
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <path
@@ -498,7 +500,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
 
         <form className="rm-form" onSubmit={handleSubmit} noValidate>
           <div className="rm-form__grid">
-            <FormField label="Familya" required error={errors.lastName}>
+            <FormField label={t('registrationModal.fields.lastName')} required error={errors.lastName}>
               <div className="rm-input-wrapper">
                 <svg
                   className="rm-input__icon"
@@ -522,7 +524,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
                   name="lastName"
                   id="lastName"
                   className={`rm-input${errors.lastName ? ' rm-input--error' : ''}`}
-                  placeholder="Aliev"
+                  placeholder={t('registrationModal.placeholders.lastName')}
                   value={form.lastName}
                   onChange={handleInputChange}
                   aria-required="true"
@@ -531,7 +533,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
               </div>
             </FormField>
 
-            <FormField label="Ism" required error={errors.firstName}>
+            <FormField label={t('registrationModal.fields.firstName')} required error={errors.firstName}>
               <div className="rm-input-wrapper">
                 <svg
                   className="rm-input__icon"
@@ -554,7 +556,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
                   name="firstName"
                   id="firstName"
                   className={`rm-input${errors.firstName ? ' rm-input--error' : ''}`}
-                  placeholder="Alijon"
+                  placeholder={t('registrationModal.placeholders.firstName')}
                   value={form.firstName}
                   onChange={handleInputChange}
                   aria-required="true"
@@ -563,7 +565,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
               </div>
             </FormField>
 
-            <FormField label="Otasining ismi">
+            <FormField label={t('registrationModal.fields.middleName')}>
               <div className="rm-input-wrapper">
                 <svg
                   className="rm-input__icon"
@@ -586,14 +588,14 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
                   name="middleName"
                   id="middleName"
                   className="rm-input"
-                  placeholder="Aliyevich"
+                  placeholder={t('registrationModal.placeholders.middleName')}
                   value={form.middleName}
                   onChange={handleInputChange}
                 />
               </div>
             </FormField>
 
-            <FormField label="Tug'ilgan sana" required error={errors.birthDate}>
+            <FormField label={t('registrationModal.fields.birthDate')} required error={errors.birthDate}>
               <div className="rm-select-wrapper">
                 <svg
                   className="rm-input__icon rm-input__icon--left"
@@ -632,8 +634,8 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
               </div>
             </FormField>
 
-            <FormField label="Jinsi" required error={errors.gender}>
-              <div className="rm-gender-group" role="group" aria-label="Jinsini tanlang">
+            <FormField label={t('registrationModal.fields.gender')} required error={errors.gender}>
+              <div className="rm-gender-group" role="group" aria-label={t('registrationModal.fields.gender')}>
                 {(['Erkak', 'Ayol'] as StudentGender[]).map((g) => (
                   <label
                     key={g}
@@ -648,7 +650,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
                       aria-required="true"
                       className="rm-gender-radio"
                     />
-                    {g}
+                    {g === 'Erkak' ? t('registrationModal.gender.male') : t('registrationModal.gender.female')}
                     <span
                       className={`rm-gender-box${form.gender === g ? ' rm-gender-box--checked' : ''}`}
                       aria-hidden="true"
@@ -658,7 +660,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
               </div>
             </FormField>
 
-            <FormField label="Telefon raqami" required error={errors.phone}>
+            <FormField label={t('registrationModal.fields.phone')} required error={errors.phone}>
               <div className="rm-input-wrapper">
                 <svg
                   className="rm-input__icon"
@@ -690,26 +692,26 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
               </div>
             </FormField>
 
-            <FormField label="Viloyat" required error={errors.regionId}>
+            <FormField label={t('registrationModal.fields.regionId')} required error={errors.regionId}>
               <SelectField
                 id="regionId"
                 name="regionId"
                 value={form.regionId}
                 onChange={handleRegionChange}
-                placeholder="Viloyat tanlang"
+                placeholder={t('registrationModal.placeholders.regionId')}
                 options={regions?.map((r) => ({ id: r.id, name: r.name })) ?? []}
                 required
                 error={!!errors.regionId}
               />
             </FormField>
 
-            <FormField label="Shahar(tuman)" required error={errors.districtId}>
+            <FormField label={t('registrationModal.fields.districtId')} required error={errors.districtId}>
               <SelectField
                 id="districtId"
                 name="districtId"
                 value={form.districtId}
                 onChange={handleDistrictChange}
-                placeholder="Shahar yoki tuman"
+                placeholder={t('registrationModal.placeholders.districtId')}
                 options={districts?.map((d) => ({ id: d.id, name: d.name })) ?? []}
                 disabled={!form.regionId}
                 required
@@ -717,13 +719,13 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
               />
             </FormField>
 
-            <FormField label="Fillial" required error={errors.branchId}>
+            <FormField label={t('registrationModal.fields.branchId')} required error={errors.branchId}>
               <SelectField
                 id="branchId"
                 name="branchId"
                 value={form.branchId}
                 onChange={handleBranchChange}
-                placeholder="Fillial tanlang"
+                placeholder={t('registrationModal.placeholders.branchId')}
                 options={branches?.map((b) => ({ id: b.id, name: b.name })) ?? []}
                 disabled={!form.districtId}
                 required
@@ -731,13 +733,13 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
               />
             </FormField>
 
-            <FormField label="Kurs" required error={errors.courseId}>
+            <FormField label={t('registrationModal.fields.courseId')} required error={errors.courseId}>
               <SelectField
                 id="courseId"
                 name="courseId"
                 value={form.courseId}
                 onChange={handleCourseChange}
-                placeholder="Kurs tanlang"
+                placeholder={t('registrationModal.placeholders.courseId')}
                 options={courses?.map((c) => ({ id: c.id, name: c.name })) ?? []}
                 disabled={!form.branchId}
                 required
@@ -745,13 +747,13 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
               />
             </FormField>
 
-            <FormField label="Bosqich" required error={errors.levelId}>
+            <FormField label={t('registrationModal.fields.levelId')} required error={errors.levelId}>
               <SelectField
                 id="levelId"
                 name="levelId"
                 value={form.levelId}
                 onChange={handleLevelChange}
-                placeholder="Bosqich tanlang"
+                placeholder={t('registrationModal.placeholders.levelId')}
                 options={levels?.map((l) => ({ id: l.id, name: l.name })) ?? []}
                 disabled={!form.courseId}
                 required
@@ -759,13 +761,13 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
               />
             </FormField>
 
-            <FormField label="Guruh" required error={errors.groupId}>
+            <FormField label={t('registrationModal.fields.groupId')} required error={errors.groupId}>
               <SelectField
                 id="groupId"
                 name="groupId"
                 value={form.groupId}
                 onChange={handleInputChange}
-                placeholder="Guruh tanlang"
+                placeholder={t('registrationModal.placeholders.groupId')}
                 options={groups?.map((g) => ({ id: g.id, name: g.name })) ?? []}
                 disabled={!form.levelId}
                 required
@@ -773,20 +775,20 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
               />
             </FormField>
 
-            <FormField label="Manba" required error={errors.sourceId}>
+            <FormField label={t('registrationModal.fields.sourceId')} required error={errors.sourceId}>
               <SelectField
                 id="sourceId"
                 name="sourceId"
                 value={form.sourceId}
                 onChange={handleInputChange}
-                placeholder="Manba tanlang"
+                placeholder={t('registrationModal.placeholders.sourceId')}
                 options={sources?.map((s) => ({ id: s.id, name: s.name })) ?? []}
                 required
                 error={!!errors.sourceId}
               />
             </FormField>
 
-            <FormField label="Izoh(ixtiyoriy)">
+            <FormField label={t('registrationModal.fields.noteOptional')}>
               <textarea
                 name="note"
                 id="note"
@@ -800,14 +802,14 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
 
           <div className="rm-form__actions">
             <button type="button" className="rm-btn rm-btn--cancel" onClick={handleCancel}>
-              Bekor qilish
+              {t('registrationModal.cancel')}
             </button>
             <button
               type="submit"
               className="rm-btn rm-btn--submit"
               disabled={activeMutation.isPending || (isEditMode && !initialized)}
             >
-              {isEditMode ? 'Saqlash' : "Qo'shish"}
+              {isEditMode ? t('registrationModal.save') : t('registrationModal.add')}
             </button>
           </div>
         </form>

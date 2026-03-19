@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import '../pages/tasks/tasks.css';
 import { API } from '../api/api';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import type { Task } from './TaskCard';
 
 interface LidResult {
@@ -100,6 +101,7 @@ function isOperator(user: OperatorUser): boolean {
 }
 
 export default function TaskModal({ onClose, editTask }: TaskModalProps) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const isEdit = !!editTask;
 
@@ -217,7 +219,7 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
     >
       <div className="modal">
         <div className="modal__title">
-          {isEdit ? 'Vazifani tahrirlash' : 'Yangi vazifa yaratish'}
+          {isEdit ? t('taskModal.editTitle') : t('taskModal.createTitle')}
         </div>
 
         <button className="modal__close" onClick={onClose}>
@@ -226,12 +228,12 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
 
         {!isEdit && (
           <div className="modal__field">
-            <label className="modal__label">Lidni tanlang</label>
+            <label className="modal__label">{t('taskModal.selectLid')}</label>
 
             <div className="modal__search-wrap">
               <input
                 className="modal__input"
-                placeholder="FISH yoki lid id raqami yozing..."
+                placeholder={t('taskModal.lidPlaceholder')}
                 value={lidSearch}
                 onChange={(e) => {
                   setLidSearch(e.target.value);
@@ -262,7 +264,7 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
         )}
 
         <div className="modal__field">
-          <label className="modal__label">Vazifa ustuvorligi</label>
+          <label className="modal__label">{t('taskModal.priority')}</label>
 
           <div className="modal__priority-group">
             {PRIORITY_OPTIONS.map((opt) => (
@@ -272,7 +274,7 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
                 onClick={() => setPriority(opt.value)}
                 type="button"
               >
-                {opt.label}
+                {t(`taskModal.priorityOptions.${opt.value}`)}
               </button>
             ))}
           </div>
@@ -280,7 +282,7 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
 
         <div className="modal__row">
           <div className="modal__field">
-            <label className="modal__label">Sana</label>
+            <label className="modal__label">{t('taskModal.date')}</label>
 
             <input
               type="date"
@@ -291,7 +293,7 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
           </div>
 
           <div className="modal__field">
-            <label className="modal__label">Vaqt</label>
+            <label className="modal__label">{t('taskModal.time')}</label>
 
             <input
               className={`modal__input${timeError ? ' modal__input--error' : ''}`}
@@ -304,14 +306,14 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
         </div>
 
         <div className="modal__field">
-          <label className="modal__label">Mas'ul operator</label>
+          <label className="modal__label">{t('taskModal.operator')}</label>
 
           <select
             className="modal__select"
             value={operatorId}
             onChange={(e) => setOperatorId(e.target.value === '' ? '' : Number(e.target.value))}
           >
-            <option value="">Operatorni tanlang</option>
+            <option value="">{t('taskModal.selectOperator')}</option>
 
             {operators.map((u) => (
               <option key={u.id} value={u.id}>
@@ -322,7 +324,7 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
         </div>
 
         <div className="modal__field">
-          <label className="modal__label">Izoh</label>
+          <label className="modal__label">{t('taskModal.comment')}</label>
 
           <textarea
             className="modal__textarea"
@@ -332,7 +334,7 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
         </div>
 
         <button className="modal__save-btn" onClick={handleSubmit} disabled={isSaving}>
-          {isSaving ? 'Saqlanmoqda...' : 'Vazifani saqlash'}
+          {isSaving ? t('taskModal.saving') : t('taskModal.saveBtn')}
         </button>
       </div>
     </div>

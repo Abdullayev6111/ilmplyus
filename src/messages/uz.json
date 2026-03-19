@@ -60,5 +60,376 @@
     "registerNew": "Ro‘yhatga olish",
     "resultsNotFound": "Hech qanday natija topilmadi",
     "changeFilters": "Filtr yoki qidiruv shartlarini o‘zgartiring"
+  },
+  "attendance": {
+    "weekdays": {
+      "sun": "Ya",
+      "mon": "Du",
+      "tues": "Se",
+      "wed": "Ch",
+      "thurs": "Pa",
+      "fri": "Ju",
+      "sat": "Sh"
+    },
+    "month": {
+      "jan": "Yanvar",
+      "feb": "Fevral",
+      "mar": "Mart",
+      "apr": "Aprel",
+      "may": "May",
+      "jun": "Iyyun",
+      "jul": "Iyyul",
+      "aug": "Avgust",
+      "sept": "Sentabr",
+      "oct": "Oktabr",
+      "nov": "Noyabr",
+      "dec": "Dekabr"
+    },
+    "attendanceStatus": {
+      "come": "-keldi",
+      "late": "-kechqolgan",
+      "notCome": "-kelmagan",
+      "notComeWithReason": "-sababli kelmagan"
+    },
+    "fish": "FISH"
+  },
+  "course": {
+    "filter": "Saralash",
+    "courseName": "Kurs nomi",
+    "level": "Daraja",
+    "branch": "Filial",
+    "date": "Sana",
+    "from": "(dan)",
+    "to": "(gacha)",
+    "clear": "Tozalash",
+    "total": "Jami",
+    "showing": "koʻrsatmqoda",
+    "state": "Holat",
+    "changeDate": "Oʻzgarish sanasi",
+    "change": "Oʻzgarish",
+    "lessonCount": "Dars soni",
+    "oldPrice": "Eski narx",
+    "newPrice": "Yangi narx",
+    "confirm": "Tasdiqlash",
+    "cancel": "Rad etish",
+    "actions": "Amallar",
+    "confirmed": "Tasdiqlangan",
+    "inProcess": "Jarayonda",
+    "sendToConfirm": "Tasdiqlashga yuborish",
+    "add": "Qoʻshish",
+    "loading": "Yuklanmoqda",
+    "error": "Xatolik",
+    "notFound": "Ma’lumot topilmadi",
+    "selectBranch": "Filial tanlang",
+    "chooseCourse": "Kursni tanlang",
+    "addNewPrice": "Yangi narxni kiriting",
+    "enterLessonCount": "Darslar sonini kiriting",
+    "chooseDayOrMonth": "Kun va oyni tanlang",
+    "courseTitle": "Kurs narxi belgilash",
+    "choose": "Tanlang",
+    "waiting": "kutilmoqda",
+    "priceChanging": "Narx oʻzgarish",
+    "lessonsInMonth": "Bir oyda nechta dars boʻlishi",
+    "oneLessonPrice": "Bitta dars summasi",
+    "changingPercentage": "Oʻzgaruvchi foiz",
+    "fixedTerm": "Belgilangan muddatda summa oshishi foizda",
+    "day": "Kun",
+    "month": "Oy",
+    "changeTerm": "Oʻzgarish muddati (kun.oy)",
+    "comment": "Izoh",
+    "cancelBtn": "Bekor qilish",
+    "savingBtn": "Saqlanmoqda",
+    "saveBtn": "Saqlash"
+  },
+  "groups": {
+    "createGroupTitle": "Guruh yaratish",
+    "createGroupHeader": "Guruh yaratih",
+    "selectBranch": "Fillial tanlang",
+    "selectOption": "Tanlang",
+    "selectCourse": "Kursni tanlang",
+    "level": "Daraja",
+    "groupName": "Guruh nomi",
+    "room": "Xona",
+    "maxStudents": "max o'quvchilar soni:",
+    "weekDays": "Hafta kunlari",
+    "weekDaysHint": "📅 Hafta davomida dars kunlari",
+    "startDate": "Dars boshlanish sanasi",
+    "startDateHint": "Birinchi dars kuni (Demo dars)",
+    "endDate": "Dars tugash sanasi",
+    "endDateHint": "Kursni eng oxirgi darsi",
+    "startAndEndTime": "Boshlanish va tugash vaqti",
+    "courseDuration": "Kurs davomiyligi",
+    "hours": "soat",
+    "durationHint": "📅 avtomatik oyda hisoblab oladi",
+    "teacherModal": "O'qtuvchi",
+    "cancel": "Bekor qilish",
+    "saving": "Saqlanmoqda...",
+    "save": "Saqlash",
+    "filterTitle": "Filtr",
+    "filterCourse": "Kurs bo'yicha",
+    "selectCourseOption": "Kurs tanlang",
+    "filterLevel": "Daraja bo'yicha",
+    "selectLevelOption": "Daraja tanlang",
+    "filterTeacher": "O'qituvchi bo'yicha",
+    "selectTeacherOption": "O'qituvchi tanlang",
+    "clearFilter": "Filterni tozalash",
+    "searchPlaceholder": "Ma'lumotlarni qidirish...",
+    "filterButton": "Saralash",
+    "tableId": "ID",
+    "tableGroupName": "Guruh nomi",
+    "tableCourse": "Kurs",
+    "tableLevel": "Daraja",
+    "tableDuration": "Kurs davomiyligi",
+    "tableStudentsCount": "O'quvchilar soni",
+    "tableWeekDays": "Hafta kunlari",
+    "tableTeacher": "O'qituvchi",
+    "loading": "Yuklanmoqda...",
+    "noData": "Ma'lumot topilmadi",
+    "days": {
+      "mondayShort": "Du",
+      "tuesdayShort": "Se",
+      "wednesdayShort": "Ch",
+      "thursdayShort": "Pa",
+      "fridayShort": "Ju",
+      "saturdayShort": "Sha"
+    }
+  },
+  "components": {
+    "comment": "IZOH",
+    "operator": "Operator"
+  },
+  "lid": {
+    "groups": {
+      "registered": "RO'YXATDAN O'TGANLAR",
+      "contact": "ALOQA",
+      "demoClass": "DEMO DARS",
+      "contractAndPayment": "SHARTNOMA VA TO'LOV"
+    },
+    "columns": {
+      "online": "Onlayn",
+      "offline": "Oflayn",
+      "contactEstablished": "O'rnatildi",
+      "contactNotEstablished": "O'rnatilmadi",
+      "notInterested": "Qiziqmadi",
+      "willCome": "Kelmoqchi",
+      "came": "Keldi",
+      "didNotCome": "Kelmadi",
+      "contract": "Shartnoma",
+      "payment": "To'lov"
+    },
+    "statuses": {
+      "demoAttended": {
+        "title": "Keldi",
+        "desc": "Mijoz demo darsga keldi"
+      },
+      "demoScheduled": {
+        "title": "Kelmoqchi",
+        "desc": "Mijozda qiziqish bor va kelmoqchi"
+      },
+      "demoMissed": {
+        "title": "Kelmadi",
+        "desc": "Xizmat ma'qul kelmadi"
+      },
+      "contacted": {
+        "title": "Aloqa o'rnatildi",
+        "desc": "Mijoz bilan aloqaga o'tkazildi"
+      },
+      "notContacted": {
+        "title": "Aloqa o'rnatilmadi",
+        "desc": "Qo'ng'iroqqa javob bermadi"
+      },
+      "notInterested": {
+        "title": "Qiziqmadi",
+        "desc": "Xizmat ma'qul kelmadi"
+      }
+    },
+    "modals": {
+      "editStatus": "HOLATNI TAHRIRLASH",
+      "unknown": "Noma’lum",
+      "demoClass": "DEMO DARS",
+      "contactDepartment": "ALOQA BO'LIMI",
+      "tabContract": "Shartnoma va to'lov",
+      "tabContact": "Aloqa",
+      "tabDemo": "Demo dars",
+      "subStatus": "Sub-status",
+      "noteOptional": "Izoh(IXTIYORIY)",
+      "writeNote": "Izoh yozing...",
+      "cancel": "Bekor qilish",
+      "save": "Saqlash",
+      "confirmDelete": "O'chirishni tasdiqlaysizmi?",
+      "confirm": "Tasdiqlash"
+    }
+  },
+  "filterDropdown": {
+    "sort": "Saralash",
+    "activeFiltersBadge": "{{count}} ta faol filtr",
+    "filterPanel": "Filtrlar paneli",
+    "source": "Manba",
+    "gender": "Jinsi",
+    "direction": "Yo'nalish",
+    "clear": "Tozalash",
+    "activeFilters": "{{count}} ta filtr faol",
+    "openSubDirections": "{{name}} kichik yo'nalishlarini ochish",
+    "closeSubDirections": "{{name}} kichik yo'nalishlarini yopish",
+    "subDirections": "{{name}} kichik yo'nalishlari"
+  },
+  "leadDetailsModal": {
+    "closeModal": "Modalni yopish",
+    "registrationTime": "REGISTRATSIYA VAQTI",
+    "education": "TA'LIM",
+    "course": "KURS",
+    "level": "BOSQICH",
+    "group": "GURUH",
+    "note": "IZOH",
+    "save": "SAQLASH",
+    "id": "ID"
+  },
+  "lidColumn": {
+    "columnAria": "{{title}} ustuni",
+    "menuAria": "{{title}} ustuni menyusi",
+    "source": "MANBA",
+    "courses": "KURSLAR"
+  },
+  "modalPattern": {
+    "close": "Yopish"
+  },
+  "shartnomaModal": {
+    "signedContract": {
+      "title": "Shartnoma qildi",
+      "desc": "Mijoz shartnoma imzoladi"
+    },
+    "paid": {
+      "title": "To'lov qildi",
+      "desc": "Mijoz to'lovni amalga oshirdi"
+    },
+    "editStatus": "HOLATNI TAHRIRLASH",
+    "unknown": "Noma’lum",
+    "contractAndPayment": "SHARTNOMA VA TO'LOV",
+    "tabContract": "Shartnoma va to'lov",
+    "tabContact": "Aloqa",
+    "tabDemo": "Demo dars",
+    "subStatus": "Sub-status",
+    "noteOptional": "Izoh(IXTIYORIY)",
+    "writeNote": "Izoh yozing...",
+    "cancel": "Bekor qilish",
+    "save": "Saqlash"
+  },
+  "registrationModal": {
+    "errors": {
+      "lastName": "Familiya kiritilishi shart",
+      "firstName": "Ism kiritilishi shart",
+      "birthDate": "Tug'ilgan sana kiritilishi shart",
+      "gender": "Jinsi tanlanishi shart",
+      "phone": "Telefon raqami kiritilishi shart",
+      "phoneFormat": "Noto'g'ri format. Misol: +998 90 123 45 67",
+      "regionId": "Viloyat tanlanishi shart",
+      "districtId": "Shahar/tuman kiritilishi shart",
+      "branchId": "Filial tanlanishi shart",
+      "courseId": "Kurs tanlanishi shart",
+      "levelId": "Bosqich tanlanishi shart",
+      "groupId": "Guruh tanlanishi shart",
+      "sourceId": "Manba tanlanishi shart"
+    },
+    "edit": "Tahrirlash",
+    "create": "Ro'yhatga olish",
+    "closeModal": "Modalni yopish",
+    "fields": {
+      "lastName": "Familya",
+      "firstName": "Ism",
+      "middleName": "Otasining ismi",
+      "birthDate": "Tug'ilgan sana",
+      "gender": "Jinsi",
+      "phone": "Telefon raqami",
+      "regionId": "Viloyat",
+      "districtId": "Shahar(tuman)",
+      "branchId": "Fillial",
+      "courseId": "Kurs",
+      "levelId": "Bosqich",
+      "groupId": "Guruh",
+      "sourceId": "Manba",
+      "noteOptional": "Izoh(ixtiyoriy)"
+    },
+    "placeholders": {
+      "lastName": "Aliev",
+      "firstName": "Alijon",
+      "middleName": "Aliyevich",
+      "regionId": "Viloyat tanlang",
+      "districtId": "Shahar yoki tuman",
+      "branchId": "Fillial tanlang",
+      "courseId": "Kurs tanlang",
+      "levelId": "Bosqich tanlang",
+      "groupId": "Guruh tanlang",
+      "sourceId": "Manba tanlang"
+    },
+    "gender": {
+      "male": "Erkak",
+      "female": "Ayol"
+    },
+    "cancel": "Bekor qilish",
+    "save": "Saqlash",
+    "add": "Qo'shish"
+  },
+  "taskCard": {
+    "priority": {
+      "urgent": "Shoshilinch",
+      "medium": "O'rta",
+      "low": "Bemalol"
+    },
+    "lidId": "Lid id",
+    "managerComment": "Menejer izohi",
+    "operatorComment": "Operator izohi",
+    "editBtn": "Tahrirlash",
+    "deleteBtn": "O'chirish",
+    "status": {
+      "completed": "Yakunlangan",
+      "failed": "Bajarilmadi",
+      "inProgress": "Bajarilmoqda"
+    },
+    "btn": {
+      "start": "Bajarish",
+      "done": "Bajarildi",
+      "notDone": "Bajarilmadi",
+      "cancel": "Bekor"
+    },
+    "writeCommentPlaceholder": "Izoh yozing..."
+  },
+  "taskModal": {
+    "editTitle": "Vazifani tahrirlash",
+    "createTitle": "Yangi vazifa yaratish",
+    "selectLid": "Lidni tanlang",
+    "lidPlaceholder": "FISH yoki lid id raqami yozing...",
+    "priority": "Vazifa ustuvorligi",
+    "priorityOptions": {
+      "shoshilinch": "Shoshilinch",
+      "orta": "O'rta",
+      "sekin": "Bemalol"
+    },
+    "date": "Sana",
+    "time": "Vaqt",
+    "operator": "Mas'ul operator",
+    "selectOperator": "Operatorni tanlang",
+    "comment": "Izoh",
+    "saving": "Saqlanmoqda...",
+    "saveBtn": "Vazifani saqlash"
+  },
+  "tasks": {
+    "filter": {
+      "barchasi": "Barchasi",
+      "bajarish": "Bajarilmoqda",
+      "bajarildi": "Yakunlangan",
+      "bajarilmadi": "Bajarilmadi"
+    },
+    "allOperators": "Barcha operatorlar",
+    "role": "Rol",
+    "createTask": "Vazifa yaratish",
+    "taskList": "Vazifalar ro'yhati",
+    "loading": "Yuklanmoqda...",
+    "error": "Ma'lumotlarni yuklashda xatolik yuz berdi.",
+    "noTasks": "Vazifalar topilmadi."
+  },
+  "notFound": {
+    "404": "404",
+    "page": "sahifa",
+    "notFound": "topilmadi"
   }
 }

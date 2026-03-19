@@ -1,4 +1,5 @@
 import { useCallback, useState, useRef, useEffect, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Lid } from '../pages/lid/lid.types';
 import LeadCard from './LidCard';
 
@@ -57,6 +58,7 @@ function LeadColumn({
   onFilterChange,
   onLeadClick,
 }: LeadColumnProps) {
+  const { t } = useTranslation();
   const [filterOpen, setFilterOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -121,7 +123,7 @@ function LeadColumn({
       className="lead-column"
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      aria-label={`${column.title} ustuni`}
+      aria-label={t('lidColumn.columnAria', { title: column.title })}
     >
       <div className="lead-column__header" style={{ background: column.color }}>
         <span className="lead-column__title">{column.title}</span>
@@ -131,7 +133,7 @@ function LeadColumn({
             ref={buttonRef}
             className="lead-column__menu-btn"
             type="button"
-            aria-label={`${column.title} ustuni menyusi`}
+            aria-label={t('lidColumn.menuAria', { title: column.title })}
             onClick={toggleFilter}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -146,7 +148,7 @@ function LeadColumn({
       {filterOpen && (
         <div ref={filterRef} className="filter-panel">
           <div className="filter-section">
-            <div className="filter-section__title">MANBA</div>
+            <div className="filter-section__title">{t('lidColumn.source')}</div>
             <div className="filter-section__buttons">
               {SOURCES.map((source) => (
                 <button
@@ -162,7 +164,7 @@ function LeadColumn({
           </div>
 
           <div className="filter-section">
-            <div className="filter-section__title">KURSLAR</div>
+            <div className="filter-section__title">{t('lidColumn.courses')}</div>
             <div className="filter-section__buttons">
               {COURSES.map((course) => (
                 <button

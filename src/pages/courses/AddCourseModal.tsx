@@ -8,6 +8,7 @@ import type {
   CoursePrice,
   SaveCoursePayload,
 } from './courses.types';
+import { useTranslation } from 'react-i18next';
 
 interface AddCourseModalProps {
   coursePrices: CoursePrice[];
@@ -25,21 +26,6 @@ const EMPTY_FORM: AddCourseFormState = {
   comment: '',
 };
 
-const MONTHS = [
-  { value: '01', label: 'Yanvar' },
-  { value: '02', label: 'Fevral' },
-  { value: '03', label: 'Mart' },
-  { value: '04', label: 'Aprel' },
-  { value: '05', label: 'May' },
-  { value: '06', label: 'Iyun' },
-  { value: '07', label: 'Iyul' },
-  { value: '08', label: 'Avgust' },
-  { value: '09', label: 'Sentabr' },
-  { value: '10', label: 'Oktabr' },
-  { value: '11', label: 'Noyabr' },
-  { value: '12', label: 'Dekabr' },
-];
-
 function getDaysInMonth(month: string): number {
   if (!month) return 31;
   const m = parseInt(month, 10);
@@ -54,6 +40,23 @@ export default function AddCourseModal({
   onClose,
   onSave,
 }: AddCourseModalProps) {
+  const { t } = useTranslation();
+
+  const MONTHS = [
+    { value: '01', label: t('attendance.month.jan') },
+    { value: '02', label: t('attendance.month.feb') },
+    { value: '03', label: t('attendance.month.mar') },
+    { value: '04', label: t('attendance.month.apr') },
+    { value: '05', label: t('attendance.month.may') },
+    { value: '06', label: t('attendance.month.jun') },
+    { value: '07', label: t('attendance.month.jul') },
+    { value: '08', label: t('attendance.month.aug') },
+    { value: '09', label: t('attendance.month.sept') },
+    { value: '10', label: t('attendance.month.oct') },
+    { value: '11', label: t('attendance.month.nov') },
+    { value: '12', label: t('attendance.month.dec') },
+  ];
+
   const [form, setForm] = useState<AddCourseFormState>(EMPTY_FORM);
   const [errors, setErrors] = useState<AddCourseFormErrors>({});
   const [startDay, setStartDay] = useState('');
@@ -204,15 +207,15 @@ export default function AddCourseModal({
 
   const validate = useCallback((): boolean => {
     const next: AddCourseFormErrors = {};
-    if (!form.filial) next.filial = 'Filialni tanlang';
-    if (!form.kurs) next.kurs = 'Kursni tanlang';
-    if (!form.new_price || Number(form.new_price) <= 0) next.new_price = 'Yangi narxni kiriting';
+    if (!form.filial) next.filial = t('course.selectBranch');
+    if (!form.kurs) next.kurs = t('course.chooseCourse');
+    if (!form.new_price || Number(form.new_price) <= 0) next.new_price = t('course.addNewPrice');
     if (!form.lessons_count || Number(form.lessons_count) <= 0)
-      next.lessons_count = 'Darslar sonini kiriting';
-    if (!form.start_date) next.start_date = 'Kun va oyni tanlang';
+      next.lessons_count = t('course.enterLessonCount');
+    if (!form.start_date) next.start_date = t('course.chooseDayOrMonth');
     setErrors(next);
     return Object.keys(next).length === 0;
-  }, [form]);
+  }, [form, t]);
 
   const handleSave = useCallback(async () => {
     if (!validate()) return;
@@ -265,20 +268,20 @@ export default function AddCourseModal({
       <div className="courses-modal">
         <div className="courses-modal__header">
           <h2 className="courses-modal__title" id="courses-modal-title">
-            Kurs narxi belgilash
+            {t('course.courseTitle')}
           </h2>
           <span className="courses-modal__date">📅 {todayLabel}</span>
         </div>
 
         <div className="courses-modal__body">
           {isLoadingData ? (
-            <div className="courses-modal__loading">Yuklanmoqda...</div>
+            <div className="courses-modal__loading">{t('course.loading')}...</div>
           ) : (
             <>
               <div className="courses-modal__row">
                 <div className="courses-modal__field">
                   <label htmlFor="cm-filial" className="courses-modal__label">
-                    Fillial tanlang
+                    {t('course.selectBranch')}
                   </label>
                   <select
                     id="cm-filial"
@@ -288,7 +291,7 @@ export default function AddCourseModal({
                     onChange={handleChange}
                     disabled={isSaving}
                   >
-                    <option value="">Tanlang</option>
+                    <option value="">{t('course.choose')}</option>
                     {branches.map((b) => (
                       <option key={b.id} value={String(b.id)}>
                         {b.name}
@@ -300,7 +303,7 @@ export default function AddCourseModal({
 
                 <div className="courses-modal__field">
                   <label htmlFor="cm-kurs" className="courses-modal__label">
-                    Kursni tanlang
+                    {t('course.chooseCourse')}
                   </label>
                   <select
                     id="cm-kurs"
@@ -309,7 +312,7 @@ export default function AddCourseModal({
                     onChange={handleChange}
                     disabled={isSaving || !form.filial}
                   >
-                    <option value="">Tanlang</option>
+                    <option value="">{t('course.choose')}</option>
 
                     {filteredCourses.map((c) => (
                       <option key={c.id} value={String(c.id)}>
@@ -325,7 +328,7 @@ export default function AddCourseModal({
               <div className="courses-modal__row">
                 <div className="courses-modal__field">
                   <label htmlFor="cm-old-price" className="courses-modal__label">
-                    Eski narx
+                    {t('course.oldPrice')}
                   </label>
                   <div className="courses-modal__input-wrap">
                     <input
@@ -342,7 +345,7 @@ export default function AddCourseModal({
 
                 <div className="courses-modal__field">
                   <label htmlFor="cm-new-price" className="courses-modal__label">
-                    Yangi narx
+                    {t('course.newPrice')}
                   </label>
                   <div className="courses-modal__input-wrap">
                     <input
@@ -362,7 +365,7 @@ export default function AddCourseModal({
                     <span
                       className={`courses-modal__hint${foizIsUp ? ' courses-modal__hint--up' : ' courses-modal__hint--down'}`}
                     >
-                      Narx o'zgarish: {ozgaruvchiFoiz} kutilmoqda
+                      {t('course.priceChanging')}: {ozgaruvchiFoiz} {t('course.waiting')}
                     </span>
                   )}
                   {errors.new_price && (
@@ -374,7 +377,7 @@ export default function AddCourseModal({
               <div className="courses-modal__row">
                 <div className="courses-modal__field">
                   <label htmlFor="cm-lessons" className="courses-modal__label">
-                    Darslar soni
+                    {t('course.lessonCount')}
                   </label>
                   <input
                     id="cm-lessons"
@@ -387,7 +390,7 @@ export default function AddCourseModal({
                     min={1}
                     disabled={isSaving}
                   />
-                  <span className="courses-modal__hint">Bir oyda nechta dars bo'lishi</span>
+                  <span className="courses-modal__hint">{t('course.lessonsInMonth')}</span>
                   {errors.lessons_count && (
                     <span className="courses-modal__error">{errors.lessons_count}</span>
                   )}
@@ -395,7 +398,7 @@ export default function AddCourseModal({
 
                 <div className="courses-modal__field">
                   <label htmlFor="cm-lesson-price" className="courses-modal__label">
-                    Bitta dars summasi
+                    {t('course.oneLessonPrice')}
                   </label>
                   <div className="courses-modal__input-wrap">
                     <input
@@ -414,7 +417,7 @@ export default function AddCourseModal({
               <div className="courses-modal__row">
                 <div className="courses-modal__field">
                   <label htmlFor="cm-foiz" className="courses-modal__label">
-                    O'zgaruvchi foiz
+                    {t('course.changingPercantage')}
                   </label>
                   <input
                     id="cm-foiz"
@@ -424,13 +427,11 @@ export default function AddCourseModal({
                     readOnly
                     placeholder="0%"
                   />
-                  <span className="courses-modal__hint">
-                    Belgilangan muddatda summa oshishi foizda
-                  </span>
+                  <span className="courses-modal__hint">{t('course.fixedTerm')}</span>
                 </div>
 
                 <div className="courses-modal__field">
-                  <label className="courses-modal__label">O'zgaruvchi muddat</label>
+                  <label className="courses-modal__label">{t('course.changeDate')}</label>
                   <div className="courses-modal__date-row">
                     <select
                       id="cm-start-day"
@@ -439,7 +440,7 @@ export default function AddCourseModal({
                       onChange={handleDayChange}
                       disabled={isSaving}
                     >
-                      <option value="">Kun</option>
+                      <option value="">{t('course.day')}</option>
                       {dayOptions.map((d) => (
                         <option key={d.value} value={d.value}>
                           {d.label}
@@ -453,7 +454,7 @@ export default function AddCourseModal({
                       onChange={handleMonthChange}
                       disabled={isSaving}
                     >
-                      <option value="">Oy</option>
+                      <option value="">{t('course.month')}</option>
                       {MONTHS.map((m) => (
                         <option key={m.value} value={m.value}>
                           {m.label}
@@ -461,7 +462,7 @@ export default function AddCourseModal({
                       ))}
                     </select>
                   </div>
-                  <span className="courses-modal__hint">O'zgarish muddati (kun.oy)</span>
+                  <span className="courses-modal__hint">{t('course.changeTerm')}</span>
                   {errors.start_date && (
                     <span className="courses-modal__error">{errors.start_date}</span>
                   )}
@@ -470,7 +471,7 @@ export default function AddCourseModal({
 
               <div className="courses-modal__field courses-modal__field--full">
                 <label htmlFor="cm-comment" className="courses-modal__label">
-                  Izoh
+                  {t('course.comment')}
                 </label>
                 <textarea
                   id="cm-comment"
@@ -494,7 +495,7 @@ export default function AddCourseModal({
             onClick={onClose}
             disabled={isSaving}
           >
-            Bekor qilish
+            {t('course.cancelBtn')}
           </button>
           <button
             type="button"
@@ -502,7 +503,7 @@ export default function AddCourseModal({
             onClick={handleSave}
             disabled={isSaving || isLoadingData}
           >
-            {isSaving ? 'Saqlanmoqda...' : 'Saqlash'}
+            {isSaving ? t('course.savingBtn') : t('course.saveBtn')}
           </button>
         </div>
       </div>

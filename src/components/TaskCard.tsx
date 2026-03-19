@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import '../pages/tasks/tasks.css';
 import { API } from '../api/api';
 
@@ -65,9 +66,9 @@ const priorityClassMap: Record<Task['priority'], string> = {
 };
 
 const priorityLabelMap: Record<Task['priority'], string> = {
-  shoshilinch: 'Shoshilinch',
-  orta: "O'rta",
-  sekin: 'Bemalol',
+  shoshilinch: 'taskCard.priority.urgent',
+  orta: "taskCard.priority.medium",
+  sekin: 'taskCard.priority.low',
 };
 
 function formatDeadline(dateStr: string): string {
@@ -86,6 +87,7 @@ function getShortName(fullName: string): string {
 }
 
 export default function TaskCard({ task, role, currentUserId, onEdit }: TaskCardProps) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const comments = task.comments ?? [];
   const [pendingStatus, setPendingStatus] = useState<'bajarildi' | 'bajarilmadi' | null>(null);
@@ -139,10 +141,10 @@ export default function TaskCard({ task, role, currentUserId, onEdit }: TaskCard
     <div className="task-card">
       <div className="task-card__header">
         <span className={`task-card__priority ${priorityClassMap[task.priority]}`}>
-          {priorityLabelMap[task.priority]}
+          {t(priorityLabelMap[task.priority])}
         </span>
         <div className="task-card__header-right">
-          <span className="task-card__lid">Lid id:{task.lid_id}</span>
+          <span className="task-card__lid">{t('taskCard.lidId')}:{task.lid_id}</span>
           <span className="task-card__deadline">{formatDeadline(task.deadline)}</span>
         </div>
       </div>
@@ -159,14 +161,14 @@ export default function TaskCard({ task, role, currentUserId, onEdit }: TaskCard
 
       {task.description ? (
         <div className="task-card__comment-box">
-          <span className="task-card__comment-label">Menejer izohi:</span> {task.description}
+          <span className="task-card__comment-label">{t('taskCard.managerComment')}:</span> {task.description}
           <span className="task-card__comment-time">{formatDeadline(task.created_at)}</span>
         </div>
       ) : null}
 
       {comments.map((c) => (
         <div key={c.id} className="task-card__comment-box">
-          <span className="task-card__comment-label">Operator izohi:</span> {c.comment}
+          <span className="task-card__comment-label">{t('taskCard.operatorComment')}:</span> {c.comment}
           <span className="task-card__comment-time">{formatDeadline(c.created_at)}</span>
         </div>
       ))}
@@ -190,7 +192,7 @@ export default function TaskCard({ task, role, currentUserId, onEdit }: TaskCard
             className="task-card__btn task-card__btn--tahrirlash"
             onClick={() => onEdit(task)}
           >
-            ✏ Tahrirlash
+            ✏ {t('taskCard.editBtn')}
           </button>
           <button
             type="button"
@@ -198,7 +200,7 @@ export default function TaskCard({ task, role, currentUserId, onEdit }: TaskCard
             onClick={handleDelete}
             disabled={deleteMutation.isPending}
           >
-            ✕ O'chirish
+            ✕ {t('taskCard.deleteBtn')}
           </button>
         </div>
       )}
@@ -225,10 +227,12 @@ function OperatorSection({
   onCommentAndFinish,
   loading,
 }: OperatorSectionProps) {
+  const { t } = useTranslation();
+
   if (status === 'bajarildi') {
     return (
       <div className="task-card__status-label task-card__status-label--yakunlangan">
-        Yakunlangan
+        {t('taskCard.status.completed')}
       </div>
     );
   }
@@ -236,7 +240,7 @@ function OperatorSection({
   if (status === 'bajarilmadi') {
     return (
       <div className="task-card__status-label task-card__status-label--bajarilmadi">
-        ✕ Bajarilmadi
+        ✕ {t('taskCard.status.failed')}
       </div>
     );
   }
@@ -250,7 +254,7 @@ function OperatorSection({
           onClick={onStart}
           disabled={loading}
         >
-          ▶ Bajarish
+          ▶ {t('taskCard.btn.start')}
         </button>
         <button
           type="button"
@@ -258,7 +262,7 @@ function OperatorSection({
           onClick={() => onRequestFinish('bajarildi')}
           disabled={loading}
         >
-          ✓ Bajarildi
+          ✓ {t('taskCard.btn.done')}
         </button>
         <button
           type="button"
@@ -266,7 +270,7 @@ function OperatorSection({
           onClick={() => onRequestFinish('bajarilmadi')}
           disabled={loading}
         >
-          ✕ Bajarilmadi
+          ✕ {t('taskCard.btn.notDone')}
         </button>
       </div>
     );
@@ -287,7 +291,7 @@ function OperatorSection({
     return (
       <div className="task-card__actions">
         <div className="task-card__status-label task-card__status-label--bajarilmoqda">
-          Bajarilmoqda
+          {t('taskCard.status.inProgress')}
         </div>
         <button
           type="button"
@@ -295,7 +299,7 @@ function OperatorSection({
           onClick={() => onRequestFinish('bajarildi')}
           disabled={loading}
         >
-          ✓ Bajarildi
+          ✓ {t('taskCard.btn.done')}
         </button>
         <button
           type="button"
@@ -303,7 +307,7 @@ function OperatorSection({
           onClick={() => onRequestFinish('bajarilmadi')}
           disabled={loading}
         >
-          ✕ Bajarilmadi
+          ✕ {t('taskCard.btn.notDone')}
         </button>
       </div>
     );
@@ -325,6 +329,7 @@ function CommentBeforeFinish({
   onCancel,
   loading,
 }: CommentBeforeFinishProps) {
+  const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = () => {
@@ -341,7 +346,7 @@ function CommentBeforeFinish({
       ? 'task-card__btn task-card__btn--bajarildi'
       : 'task-card__btn task-card__btn--bajarilmadi';
 
-  const btnLabel = pendingStatus === 'bajarildi' ? '✓ Bajarildi' : '✕ Bajarilmadi';
+  const btnLabel = pendingStatus === 'bajarildi' ? `✓ ${t('taskCard.btn.done')}` : `✕ ${t('taskCard.btn.notDone')}`;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -349,7 +354,7 @@ function CommentBeforeFinish({
         <input
           ref={inputRef}
           className="task-card__comment-input"
-          placeholder="Izoh yozing..."
+          placeholder={t('taskCard.writeCommentPlaceholder')}
           onKeyDown={handleKeyDown}
           autoFocus
         />
@@ -362,7 +367,7 @@ function CommentBeforeFinish({
           disabled={loading}
           style={{ flex: '0 0 auto', padding: '10px 16px' }}
         >
-          Bekor
+          {t('taskCard.btn.cancel')}
         </button>
         <button type="button" className={btnClass} onClick={handleSubmit} disabled={loading}>
           {loading ? '...' : btnLabel}

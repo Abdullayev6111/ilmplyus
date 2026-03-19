@@ -17,21 +17,21 @@ import attendanceIcon from '../assets/images/user-clock-solid-full.svg';
 import groupIcon from '../assets/images/graduation-cap-solid-full.svg';
 import { Accordion } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const Aside = ({ collapsed, onOpen, onClose }: Props) => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
 
   const menu = [
-    { label: 'Dashboard', icon: dashboardIcon, path: '/' },
-    { label: 'LIDlar', icon: lidsIcon, path: '/lids' },
-    { label: 'Vazifalar', icon: tasksIcon, path: '/tasks' },
-    { label: "To'lovlar", icon: paymentsIcon, path: '/payments' },
-    { label: "Ro'yhatga olish", icon: registrationIcon, path: '/registration' },
-    { label: 'Kurslar', icon: coursesIcon, path: '/courses' },
-    { label: 'Guruhlar', icon: groupIcon, path: '/groups' },
-    { label: 'Hisobotlar', icon: reportsIcon, path: '/reports' },
-    { label: 'Davomat', icon: attendanceIcon, path: '/attendance' },
+    { label: t('header.controlPanel'), icon: dashboardIcon, path: '/' },
+    { label: t('header.lids'), icon: lidsIcon, path: '/lids' },
+    { label: t('header.tasks'), icon: tasksIcon, path: '/tasks' },
+    { label: t('header.payments'), icon: paymentsIcon, path: '/payments' },
+    { label: t('header.registration'), icon: registrationIcon, path: '/registration' },
+    { label: t('header.courses'), icon: coursesIcon, path: '/courses' },
+    { label: t('header.groups'), icon: groupIcon, path: '/groups' },
+    { label: t('header.reports'), icon: reportsIcon, path: '/reports' },
+    { label: t('header.attendance'), icon: attendanceIcon, path: '/attendance' },
   ];
 
   return (

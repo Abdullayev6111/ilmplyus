@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { API } from '../../api/api';
 import { queryClient } from '../../main';
 import './DeleteConfirmModal.css';
@@ -10,6 +11,7 @@ interface DeleteConfirmationModalProps {
 }
 
 export const DeleteConfirmationModal = ({ lidId, onClose }: DeleteConfirmationModalProps) => {
+  const { t } = useTranslation();
   const overlayRef = useRef<HTMLDivElement>(null);
 
   const mutation = useMutation<void, Error, number>({
@@ -54,7 +56,7 @@ export const DeleteConfirmationModal = ({ lidId, onClose }: DeleteConfirmationMo
     >
       <div className="dcm-modal">
         <h2 className="dcm-modal__title" id="dcm-title">
-          O&apos;chirishni tasdiqlaysizmi?
+          {t('lid.modals.confirmDelete')}
         </h2>
         <div className="dcm-modal__actions">
           <button
@@ -63,7 +65,7 @@ export const DeleteConfirmationModal = ({ lidId, onClose }: DeleteConfirmationMo
             onClick={onClose}
             disabled={mutation.isPending}
           >
-            Bekor qilish
+            {t('lid.modals.cancel')}
           </button>
           <button
             type="button"
@@ -71,7 +73,7 @@ export const DeleteConfirmationModal = ({ lidId, onClose }: DeleteConfirmationMo
             onClick={handleConfirm}
             disabled={mutation.isPending}
           >
-            Tasdiqlash
+            {t('lid.modals.confirm')}
           </button>
         </div>
       </div>

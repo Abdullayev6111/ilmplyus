@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import TaskCard, { type Task } from '../../components/TaskCard';
 import TaskModal from '../../components/TaskModal';
 import './tasks.css';
@@ -28,6 +29,7 @@ const FILTER_OPTIONS: { label: string; value: FilterStatus }[] = [
 const CURRENT_USER_ID = 1;
 
 export default function Tasks() {
+  const { t } = useTranslation();
   const [role, setRole] = useState<Role>('manager');
   const [activeFilter, setActiveFilter] = useState<FilterStatus>('barchasi');
   const [operatorFilter, setOperatorFilter] = useState<number | ''>('');
@@ -96,7 +98,7 @@ export default function Tasks() {
                   className={`tasks-filter-btn${activeFilter === opt.value ? ' active' : ''}`}
                   onClick={() => setActiveFilter(opt.value)}
                 >
-                  {opt.label}
+                  {t(`tasks.filter.${opt.value}`)}
                 </button>
               ))}
             </div>
@@ -108,7 +110,7 @@ export default function Tasks() {
                 setOperatorFilter(e.target.value === '' ? '' : Number(e.target.value))
               }
             >
-              <option value="">Barcha operatorlar</option>
+              <option value="">{t('tasks.allOperators')}</option>
 
               {operators.map((u) => (
                 <option key={u.id} value={u.id}>
@@ -120,7 +122,7 @@ export default function Tasks() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <div className="tasks-role-toggle">
-              <span>Rol:</span>
+              <span>{t('tasks.role')}:</span>
 
               <select value={role} onChange={(e) => setRole(e.target.value as Role)}>
                 <option value="manager">Manager</option>
@@ -129,7 +131,7 @@ export default function Tasks() {
             </div>
 
             <button className="tasks-create-btn" onClick={handleOpenCreate}>
-              ＋ Vazifa yaratish
+              ＋ {t('tasks.createTask')}
             </button>
           </div>
         </div>
@@ -137,7 +139,7 @@ export default function Tasks() {
 
       {role === 'operator' && (
         <div className="tasks-top">
-          <h2 className="tasks-title">Vazifalar ro'yhati</h2>
+          <h2 className="tasks-title">{t('tasks.taskList')}</h2>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div className="tasks-filters">
@@ -147,13 +149,13 @@ export default function Tasks() {
                   className={`tasks-filter-btn${activeFilter === opt.value ? ' active' : ''}`}
                   onClick={() => setActiveFilter(opt.value)}
                 >
-                  {opt.label}
+                  {t(`tasks.filter.${opt.value}`)}
                 </button>
               ))}
             </div>
 
             <div className="tasks-role-toggle">
-              <span>Rol:</span>
+              <span>{t('tasks.role')}:</span>
 
               <select value={role} onChange={(e) => setRole(e.target.value as Role)}>
                 <option value="manager">Manager</option>
@@ -164,14 +166,14 @@ export default function Tasks() {
         </div>
       )}
 
-      {isLoading && <div className="tasks-state loading">Yuklanmoqda...</div>}
+      {isLoading && <div className="tasks-state loading">{t('tasks.loading')}</div>}
 
       {isError && (
-        <div className="tasks-state error">Ma'lumotlarni yuklashda xatolik yuz berdi.</div>
+        <div className="tasks-state error">{t('tasks.error')}</div>
       )}
 
       {!isLoading && !isError && filteredTasks.length === 0 && (
-        <div className="tasks-state">Vazifalar topilmadi.</div>
+        <div className="tasks-state">{t('tasks.noTasks')}</div>
       )}
 
       {!isLoading && !isError && filteredTasks.length > 0 && (

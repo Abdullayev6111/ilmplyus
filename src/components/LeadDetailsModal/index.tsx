@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback, memo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import type { ReactElement } from 'react';
 import type { Lid, LidComment } from '../../pages/lid/lid.types';
 import { getName, formatGender } from '../../pages/lid/lid.types';
@@ -18,6 +19,7 @@ const SOURCE_ICONS: Record<string, ReactElement> = {
 };
 
 function LeadDetailsModal({ lead, onClose }: LeadDetailsModalProps) {
+  const { t } = useTranslation();
   const [note, setNote] = useState<string>('');
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
@@ -126,7 +128,7 @@ function LeadDetailsModal({ lead, onClose }: LeadDetailsModalProps) {
           className="ldm-close-btn"
           type="button"
           onClick={onClose}
-          aria-label="Modalni yopish"
+          aria-label={t('leadDetailsModal.closeModal')}
         >
           <i className="fa-solid fa-xmark" />
         </button>
@@ -149,7 +151,7 @@ function LeadDetailsModal({ lead, onClose }: LeadDetailsModalProps) {
 
               <span className="ldm-meta-item">
                 <i className="fa-solid fa-calendar ldm-meta-icon" />
-                <span className="ldm-meta-label">REGISTRATSIYA VAQTI: {registrationDate}</span>
+                <span className="ldm-meta-label">{t('leadDetailsModal.registrationTime')}: {registrationDate}</span>
               </span>
             </div>
 
@@ -179,33 +181,33 @@ function LeadDetailsModal({ lead, onClose }: LeadDetailsModalProps) {
           <div className="ldm-education">
             <div className="ldm-section-header">
               <i className="fa-solid fa-graduation-cap ldm-section-icon" />
-              <span className="ldm-section-title">TA'LIM</span>
+              <span className="ldm-section-title">{t('leadDetailsModal.education')}</span>
             </div>
 
             <div className="ldm-edu-field">
-              <span className="ldm-edu-label">KURS:</span>
+              <span className="ldm-edu-label">{t('leadDetailsModal.course')}:</span>
               <span className="ldm-edu-value">{getName(lead.course)}</span>
             </div>
 
             <div className="ldm-edu-field">
-              <span className="ldm-edu-label">BOSQICH:</span>
+              <span className="ldm-edu-label">{t('leadDetailsModal.level')}:</span>
               <span className="ldm-edu-value">{getName(lead.level)}</span>
             </div>
 
             <div className="ldm-edu-field">
-              <span className="ldm-edu-label">GURUH:</span>
+              <span className="ldm-edu-label">{t('leadDetailsModal.group')}:</span>
               <span className="ldm-edu-value">{getName(lead.group)}</span>
             </div>
           </div>
 
           <div className="ldm-note-section">
-            <div className="ldm-note-label">IZOH:</div>
+            <div className="ldm-note-label">{t('leadDetailsModal.note')}:</div>
 
             <textarea
               className="ldm-note-textarea"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              aria-label="Izoh"
+              aria-label={t('leadDetailsModal.note')}
             />
 
             <button
@@ -214,7 +216,7 @@ function LeadDetailsModal({ lead, onClose }: LeadDetailsModalProps) {
               onClick={handleSave}
               disabled={addCommentMutation.isPending}
             >
-              SAQLASH
+              {t('leadDetailsModal.save')}
             </button>
           </div>
         </div>

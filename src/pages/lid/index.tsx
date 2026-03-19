@@ -1,5 +1,6 @@
 import { useMemo, useState, useCallback } from 'react';
 import { useQuery, keepPreviousData, useQueryClient, useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import LeadColumn from '../../components/LidColumn';
 import AloqaModal from '../../components/AloqaModal';
 import DemoModal from '../../components/DemoModal';
@@ -27,23 +28,23 @@ export interface PendingDrop {
 type ModalType = 'aloqa' | 'demo' | 'shartnoma' | null;
 
 const GROUPS: Group[] = [
-  { id: 1, title: "RO'YXATDAN O'TGANLAR", columnIds: [1, 2] },
-  { id: 2, title: 'ALOQA', columnIds: [3, 4, 5] },
-  { id: 3, title: 'DEMO DARS', columnIds: [6, 7, 8] },
-  { id: 4, title: "SHARTNOMA VA TO'LOV", columnIds: [9, 10] },
+  { id: 1, title: "lid.groups.registered", columnIds: [1, 2] },
+  { id: 2, title: "lid.groups.contact", columnIds: [3, 4, 5] },
+  { id: 3, title: "lid.groups.demoClass", columnIds: [6, 7, 8] },
+  { id: 4, title: "lid.groups.contractAndPayment", columnIds: [9, 10] },
 ];
 
 const COLUMNS: Column[] = [
-  { id: 1, title: 'Onlayn', color: '#FE9100', groupId: 1 },
-  { id: 2, title: 'Oflayn', color: '#FE9100', groupId: 1 },
-  { id: 3, title: "O'rnatildi", color: '#FE9100', groupId: 2 },
-  { id: 4, title: "O'rnatilmadi", color: '#FE9100', groupId: 2 },
-  { id: 5, title: 'Qiziqmadi', color: '#FE9100', groupId: 2 },
-  { id: 6, title: 'Kelmoqchi', color: '#FE9100', groupId: 3 },
-  { id: 7, title: 'Keldi', color: '#FE9100', groupId: 3 },
-  { id: 8, title: 'Kelmadi', color: '#FE9100', groupId: 3 },
-  { id: 9, title: 'Shartnoma', color: '#FE9100', groupId: 4 },
-  { id: 10, title: "To'lov", color: '#FE9100', groupId: 4 },
+  { id: 1, title: 'lid.columns.online', color: '#FE9100', groupId: 1 },
+  { id: 2, title: 'lid.columns.offline', color: '#FE9100', groupId: 1 },
+  { id: 3, title: "lid.columns.contactEstablished", color: '#FE9100', groupId: 2 },
+  { id: 4, title: "lid.columns.contactNotEstablished", color: '#FE9100', groupId: 2 },
+  { id: 5, title: 'lid.columns.notInterested', color: '#FE9100', groupId: 2 },
+  { id: 6, title: 'lid.columns.willCome', color: '#FE9100', groupId: 3 },
+  { id: 7, title: 'lid.columns.came', color: '#FE9100', groupId: 3 },
+  { id: 8, title: 'lid.columns.didNotCome', color: '#FE9100', groupId: 3 },
+  { id: 9, title: 'lid.columns.contract', color: '#FE9100', groupId: 4 },
+  { id: 10, title: "lid.columns.payment", color: '#FE9100', groupId: 4 },
 ];
 
 function getGroupIdByColumnId(columnId: number): number {
@@ -59,6 +60,7 @@ function getModalTypeForGroup(groupId: number): ModalType {
 }
 
 export default function Lid() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [draggedId, setDraggedId] = useState<number | null>(null);
   const [columnFilters, setColumnFilters] = useState<Record<number, ColumnFilter>>({});
@@ -206,13 +208,13 @@ export default function Lid() {
           {grouped.map((group) => (
             <div key={group.id} className="lids-group">
               <div className="lids-group__header">
-                <span className="lids-group__title">{group.title}</span>
+                <span className="lids-group__title">{t(group.title)}</span>
               </div>
               <div className="lids-group__columns">
                 {group.columns.map((col) => (
                   <LeadColumn
                     key={col.id}
-                    column={col}
+                    column={{ ...col, title: t(col.title) }}
                     leads={col.leads}
                     filter={col.filter}
                     onDrop={handleDrop}

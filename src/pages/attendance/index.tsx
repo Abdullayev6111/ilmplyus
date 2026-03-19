@@ -2,6 +2,7 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '../../api/api';
 import './attendance.css';
+import { useTranslation } from 'react-i18next';
 
 type AttendanceStatus = 'present' | 'late' | 'absent' | 'excused';
 
@@ -45,32 +46,8 @@ const STATUS_COLORS: Record<AttendanceStatus, string> = {
   excused: '#3f88c9',
 };
 
-const UZ_WEEKDAYS = ['Ya', 'Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh'];
-
-const UZ_MONTHS = [
-  'Yanvar',
-  'Fevral',
-  'Mart',
-  'Aprel',
-  'May',
-  'Iyun',
-  'Iyul',
-  'Avgust',
-  'Sentabr',
-  'Oktabr',
-  'Noyabr',
-  'Dekabr',
-];
-
 const YEAR_RANGE_START = 2020;
 const YEAR_RANGE_END = 2030;
-
-const LEGEND_ITEMS: { status: AttendanceStatus; label: string }[] = [
-  { status: 'present', label: '-keldi' },
-  { status: 'late', label: '-kech qolgan' },
-  { status: 'absent', label: '-kelmagan' },
-  { status: 'excused', label: '-sababli kelmagan' },
-];
 
 const normalizeArray = <T,>(value: unknown): T[] => {
   if (Array.isArray(value)) return value as T[];
@@ -107,6 +84,40 @@ const formatDate = (date: Date): string => {
 };
 
 const Attendance = () => {
+  const { t } = useTranslation();
+
+  const UZ_WEEKDAYS = [
+    t('attendance.weekdays.sun'),
+    t('attendance.weekdays.mon'),
+    t('attendance.weekdays.tues'),
+    t('attendance.weekdays.wed'),
+    t('attendance.weekdays.thurs'),
+    t('attendance.weekdays.fri'),
+    t('attendance.weekdays.sat'),
+  ];
+
+  const UZ_MONTHS = [
+    t('attendance.month.jan'),
+    t('attendance.month.feb'),
+    t('attendance.month.mar'),
+    t('attendance.month.apr'),
+    t('attendance.month.may'),
+    t('attendance.month.jun'),
+    t('attendance.month.jul'),
+    t('attendance.month.aug'),
+    t('attendance.month.sept'),
+    t('attendance.month.oct'),
+    t('attendance.month.nov'),
+    t('attendance.month.dec'),
+  ];
+
+  const LEGEND_ITEMS: { status: AttendanceStatus; label: string }[] = [
+    { status: 'present', label: t('attendance.attendanceStatus.come') },
+    { status: 'late', label: t('attendance.attendanceStatus.late') },
+    { status: 'absent', label: t('attendance.attendanceStatus.notCome') },
+    { status: 'excused', label: t('attendance.attendanceStatus.notComeWithReason') },
+  ];
+
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth() + 1);
@@ -305,7 +316,7 @@ const Attendance = () => {
           style={{ '--day-count': days.length } as React.CSSProperties}
         >
           <div className="attendance-table-header">
-            <div className="attendance-col-employee">FISH</div>
+            <div className="attendance-col-employee">{t('attendance.fish')}</div>
             {days.map((day) => (
               <div key={formatDate(day)} className="attendance-col-day">
                 <span className="day-weekday">{UZ_WEEKDAYS[day.getDay()]}</span>

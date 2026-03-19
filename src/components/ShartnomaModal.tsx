@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { LID_STATUS, type Lid } from '../pages/lid/lid.types';
 import ModalPattern from './ModalPattern';
 import type { LidStatus } from '../pages/lid/lid.types';
@@ -17,8 +18,8 @@ const STATUS_ITEMS: Array<{
 }> = [
   {
     id: LID_STATUS.CONTRACT_SIGNED,
-    title: 'Shartnoma qildi',
-    desc: 'Mijoz shartnoma imzoladi',
+    title: 'shartnomaModal.signedContract.title',
+    desc: 'shartnomaModal.signedContract.desc',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path
@@ -39,8 +40,8 @@ const STATUS_ITEMS: Array<{
   },
   {
     id: LID_STATUS.PAID,
-    title: "To'lov qildi",
-    desc: "Mijoz to'lovni amalga oshirdi",
+    title: 'shartnomaModal.paid.title',
+    desc: 'shartnomaModal.paid.desc',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <rect x="1" y="4" width="22" height="16" rx="2" stroke="currentColor" strokeWidth="2" />
@@ -51,6 +52,7 @@ const STATUS_ITEMS: Array<{
 ];
 
 export default function ShartnomaModal({ lead, onConfirm, onCancel }: ShartnomaModalProps) {
+  const { t } = useTranslation();
   const [selectedStatus, setSelectedStatus] = useState<LidStatus | null>(null);
   const [note, setNote] = useState('');
 
@@ -60,7 +62,7 @@ export default function ShartnomaModal({ lead, onConfirm, onCancel }: ShartnomaM
   };
 
   return (
-    <ModalPattern title="HOLATNI TAHRIRLASH" onCancel={onCancel}>
+    <ModalPattern title={t('shartnomaModal.editStatus')} onCancel={onCancel}>
       <div className="modal-lead-card">
         <div className="modal-lead-card__icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -78,26 +80,26 @@ export default function ShartnomaModal({ lead, onConfirm, onCancel }: ShartnomaM
           <div className="modal-lead-card__name">
             {lead.first_name && lead.last_name
               ? `${lead.first_name} ${lead.last_name}`
-              : lead.first_name || lead.last_name || 'Noma’lum'}
+              : lead.first_name || lead.last_name || t('shartnomaModal.unknown')}
           </div>
-          <div className="modal-lead-card__group">SHARTNOMA VA TO'LOV</div>
+          <div className="modal-lead-card__group">{t('shartnomaModal.contractAndPayment')}</div>
         </div>
       </div>
 
       <div className="modal-tabs">
         <button className="modal-tab modal-tab--active" type="button">
-          Shartnoma va to'lov
+          {t('shartnomaModal.tabContract')}
         </button>
         <button className="modal-tab" type="button">
-          Aloqa
+          {t('shartnomaModal.tabContact')}
         </button>
         <button className="modal-tab" type="button">
-          Demo dars
+          {t('shartnomaModal.tabDemo')}
         </button>
       </div>
 
       <div className="modal-section">
-        <div className="modal-section-title">Sub-status</div>
+        <div className="modal-section-title">{t('shartnomaModal.subStatus')}</div>
         {STATUS_ITEMS.map((item) => {
           const isSelected = selectedStatus === item.id;
           return (
@@ -112,8 +114,8 @@ export default function ShartnomaModal({ lead, onConfirm, onCancel }: ShartnomaM
                 {item.icon}
               </div>
               <div className="modal-status-card__content">
-                <div className="modal-status-card__title">{item.title}</div>
-                <div className="modal-status-card__desc">{item.desc}</div>
+                <div className="modal-status-card__title">{t(item.title)}</div>
+                <div className="modal-status-card__desc">{t(item.desc)}</div>
               </div>
               {isSelected && (
                 <div className="modal-status-card__check" aria-hidden="true">
@@ -134,10 +136,10 @@ export default function ShartnomaModal({ lead, onConfirm, onCancel }: ShartnomaM
       </div>
 
       <div className="modal-section">
-        <div className="modal-section-title">Izoh(IXTIYORIY)</div>
+        <div className="modal-section-title">{t('shartnomaModal.noteOptional')}</div>
         <textarea
           className="modal-textarea"
-          placeholder="Izoh yozing..."
+          placeholder={t('shartnomaModal.writeNote')}
           value={note}
           onChange={(e) => setNote(e.target.value)}
           rows={4}
@@ -146,7 +148,7 @@ export default function ShartnomaModal({ lead, onConfirm, onCancel }: ShartnomaM
 
       <div className="modal-actions">
         <button className="modal-btn modal-btn--cancel" onClick={onCancel} type="button">
-          Bekor qilish
+          {t('shartnomaModal.cancel')}
         </button>
         <button
           className="modal-btn modal-btn--confirm"
@@ -154,7 +156,7 @@ export default function ShartnomaModal({ lead, onConfirm, onCancel }: ShartnomaM
           type="button"
           disabled={!selectedStatus}
         >
-          Saqlash
+          {t('shartnomaModal.save')}
         </button>
       </div>
     </ModalPattern>
