@@ -26,7 +26,8 @@
     "role": "Администратор",
     "adminName": "Obidov Ibrohim",
     "groups": "Группы",
-    "attendance": "Посещаемость"
+    "attendance": "Посещаемость",
+    "contracts": "Договоры"
   },
   "dashboard": {
     "allLids": "ВСЕГО ЛИДОВ",
@@ -431,5 +432,25 @@
     "404": "404",
     "page": "страница",
     "notFound": "не найдена"
+  },
+  "contractsValidation": {
+    "required": "Обязательно",
+    "maxLength50": "Не должно превышать 50 символов",
+    "invalidType": "Неверный тип",
+    "mustBeGreater": "Должно быть больше",
+    "numbersOnly": "Только цифры (Например: 123)",
+    "fields": {
+      "contractNumber": "Номер договора",
+      "contractType": "Тип договора",
+      "vacationType": "Тип отпуска"
+    },
+    "options": {
+      "doimiy": "Постоянный",
+      "muddatli": "Срочный",
+      "sinov": "Испытательный",
+      "annual": "Ежегодный осн. отпуск",
+      "partial": "Частичный",
+      "other": "Другое"
+    }
   }
 }

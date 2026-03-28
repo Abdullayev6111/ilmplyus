@@ -27,20 +27,97 @@ body,
 .lids-board {
   display: flex;
   flex-direction: row;
-  gap: 0;
   align-items: stretch;
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
+  min-width: max-content;
+}
+
+.lids-main-sections {
+  display: flex;
+  flex: 1;
+  min-width: max-content;
 }
 
 .lids-group {
   display: flex;
   flex-direction: column;
-  margin-right: 2px;
+  flex: 1;
+  border-right: 2px solid #cbd5e1;
 }
 
 .lids-group:last-child {
-  margin-right: 0;
+  border-left: 2px solid #cbd5e1;
+}
+
+.lids-group:last-child {
+  border-right: none;
+}
+
+.lids-sidebar-section {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 370px;
+  min-width: 370px;
+  transition:
+    width 0.3s ease,
+    min-width 0.3s ease;
+  overflow: hidden;
+}
+
+.lids-sidebar-section.is-collapsed {
+  width: 44px;
+  min-width: 44px;
+  cursor: pointer;
+  background: #0b2e59;
+  border-radius: 10px;
+  align-items: center;
+}
+
+.lids-sidebar-section.is-collapsed:hover {
+  background: #0d3b73;
+}
+
+.lids-group--sidebar {
+  border-right: none;
+  width: 100%;
+}
+
+.lids-sidebar-toggle {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  margin-left: auto;
+}
+
+.lids-sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lids-sidebar-collapsed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  gap: 10px;
+}
+
+.lids-sidebar-collapsed-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  color: white;
+  font-family: noto-b, "Segoe UI", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .lids-group__header {
@@ -51,12 +128,24 @@ body,
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 38px;
+  min-height: 38px !important;
+  flex-shrink: 0;
+}
+
+.lids-group__header--sidebar {
+  background: #0b2e59;
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px !important;
   flex-shrink: 0;
 }
 
 .lids-group__title {
-  font-family: noto-b, 'Segoe UI', sans-serif;
+  font-family: noto-b, "Segoe UI", sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.07em;
@@ -77,9 +166,8 @@ body,
 }
 
 .lead-column {
-  width: 170px;
+  flex: 1;
   min-width: 170px;
-  max-width: 170px;
   background: #eaedf0;
   border-radius: 12px;
   display: flex;
@@ -98,7 +186,7 @@ body,
 }
 
 .lead-column__title {
-  font-family: noto-m, 'Segoe UI', sans-serif;
+  font-family: noto-m, "Segoe UI", sans-serif;
   font-size: 11px;
   font-weight: 600;
   color: #ffffff;
@@ -122,7 +210,7 @@ body,
   justify-content: center;
   background: rgba(255, 255, 255, 0.9);
   color: #fe9100;
-  font-family: noto-b, 'Segoe UI', sans-serif;
+  font-family: noto-b, "Segoe UI", sans-serif;
   font-size: 10px;
   font-weight: 700;
   min-width: 18px;
@@ -162,6 +250,8 @@ body,
   flex-direction: column;
   gap: 8px;
   flex: 1;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .filter-panel {
@@ -186,7 +276,7 @@ body,
 }
 
 .filter-section__title {
-  font-family: noto-b, 'Segoe UI', sans-serif;
+  font-family: noto-b, "Segoe UI", sans-serif;
   font-size: 11px;
   font-weight: 700;
   color: #1e293b;
@@ -205,7 +295,7 @@ body,
   background: #f1f5f9;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
-  font-family: noto-m, 'Segoe UI', sans-serif;
+  font-family: noto-m, "Segoe UI", sans-serif;
   font-size: 11px;
   font-weight: 500;
   color: #475569;
@@ -326,6 +416,7 @@ body,
   color: #003366;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   flex-shrink: 0;
@@ -432,6 +523,7 @@ body,
   border-radius: 5px;
   display: -webkit-box;
   -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-transform: uppercase;
@@ -485,7 +577,7 @@ body,
 }
 
 .modal-title {
-  font-family: noto-b, 'Segoe UI', sans-serif;
+  font-family: noto-b, "Segoe UI", sans-serif;
   font-size: 16px;
   font-weight: 700;
   color: #1e293b;
@@ -541,7 +633,7 @@ body,
 }
 
 .modal-lead-card__name {
-  font-family: noto-b, 'Segoe UI', sans-serif;
+  font-family: noto-b, "Segoe UI", sans-serif;
   font-size: 13px;
   font-weight: 700;
   color: #1e293b;
@@ -551,7 +643,7 @@ body,
 }
 
 .modal-lead-card__group {
-  font-family: noto-m, 'Segoe UI', sans-serif;
+  font-family: noto-m, "Segoe UI", sans-serif;
   font-size: 10px;
   color: #fe9100;
   text-transform: uppercase;
@@ -573,7 +665,7 @@ body,
   background: transparent;
   border: none;
   border-radius: 8px;
-  font-family: noto-m, 'Segoe UI', sans-serif;
+  font-family: noto-m, "Segoe UI", sans-serif;
   font-size: 11px;
   font-weight: 500;
   color: #64748b;
@@ -597,7 +689,7 @@ body,
 }
 
 .modal-section-title {
-  font-family: noto-b, 'Segoe UI', sans-serif;
+  font-family: noto-b, "Segoe UI", sans-serif;
   font-size: 12px;
   font-weight: 700;
   color: #475569;
@@ -660,14 +752,14 @@ body,
 }
 
 .modal-status-card__title {
-  font-family: noto-b, 'Segoe UI', sans-serif;
+  font-family: noto-b, "Segoe UI", sans-serif;
   font-size: 13px;
   font-weight: 700;
   color: #1e293b;
 }
 
 .modal-status-card__desc {
-  font-family: noto-r, 'Segoe UI', sans-serif;
+  font-family: noto-r, "Segoe UI", sans-serif;
   font-size: 11px;
   color: #64748b;
   margin-top: 2px;
@@ -691,7 +783,7 @@ body,
   background: #f8fafc;
   border: 1.5px solid #e2e8f0;
   border-radius: 10px;
-  font-family: noto-r, 'Segoe UI', sans-serif;
+  font-family: noto-r, "Segoe UI", sans-serif;
   font-size: 13px;
   color: #1e293b;
   resize: vertical;
@@ -718,7 +810,7 @@ body,
   padding: 12px;
   border: none;
   border-radius: 10px;
-  font-family: noto-b, 'Segoe UI', sans-serif;
+  font-family: noto-b, "Segoe UI", sans-serif;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -792,5 +884,55 @@ body,
   .filter-panel {
     width: 180px;
     right: 4px;
+  }
+}
+
+/* Responsive Scaling: 1920px -> 1200px */
+@media (max-width: 1600px) {
+  .lids-sidebar-section {
+    width: 330px;
+    min-width: 330px;
+  }
+  .lead-column {
+    min-width: 160px;
+  }
+  .lead-card {
+    width: 140px;
+  }
+  .lead-column__body {
+    padding: 6px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .lids-sidebar-section {
+    width: 300px;
+    min-width: 300px;
+  }
+  .lead-column {
+    min-width: 150px;
+  }
+  .lead-card {
+    width: 130px;
+  }
+  .filter-panel {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .lids-sidebar-section {
+    width: 280px;
+    min-width: 280px;
+  }
+  .lead-column {
+    min-width: 140px;
+  }
+  .lead-card {
+    width: 125px;
+    padding: 5px;
+  }
+  .lead-card__badge {
+    padding: 3px 6px;
   }
 }

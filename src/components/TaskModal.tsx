@@ -24,14 +24,14 @@ interface CreateTaskPayload {
   operator_id: number;
   deadline: string;
   priority: string;
-  comment: string;
+  description: string;
 }
 
 interface UpdateTaskPayload {
   priority: string;
   deadline: string;
   operator_id: number;
-  comment: string;
+  description: string;
 }
 
 interface OperatorRole {
@@ -87,17 +87,17 @@ function isValidTime(time: string): boolean {
   return true;
 }
 
-function getShortName(fullName: string): string {
-  const parts = fullName.trim().split(' ');
+function getShortName(full_name: string): string {
+  const parts = full_name.trim().split(' ');
   return `${parts[0] ?? ''} ${parts[1] ?? ''}`.trim();
 }
 
 function isOperator(user: OperatorUser): boolean {
-  if (user.role_id === 2) return true;
+  if (user.role_id === 1 || user.role_id === 2) return true;
   if (Array.isArray(user.roles)) {
-    return user.roles.some((r) => r.name === 'Operator' || r.name === 'operator');
+    return user.roles.some((r) => r.id === 1 || r.id === 2 || /operator|admin/i.test(r.name));
   }
-  return false;
+  return true; // fallback if no roles defined
 }
 
 export default function TaskModal({ onClose, editTask }: TaskModalProps) {
@@ -184,6 +184,7 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
   const handleSubmit = () => {
     if (!date || !time || timeError) return;
     if (operatorId === '') return;
+    if (!comment.trim()) return;
 
     const deadline = buildDeadline(date, time);
 
@@ -192,7 +193,7 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
         priority,
         deadline,
         operator_id: operatorId,
-        comment,
+        description: comment,
       });
       return;
     }
@@ -204,7 +205,7 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
       operator_id: operatorId,
       deadline,
       priority,
-      comment,
+      description: comment,
     });
   };
 
@@ -222,9 +223,7 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
           {isEdit ? t('taskModal.editTitle') : t('taskModal.createTitle')}
         </div>
 
-        <button className="modal__close" onClick={onClose}>
-          ✕
-        </button>
+
 
         {!isEdit && (
           <div className="modal__field">
@@ -332,10 +331,17 @@ export default function TaskModal({ onClose, editTask }: TaskModalProps) {
             onChange={(e) => setComment(e.target.value)}
           />
         </div>
+        <div style={{ display: "flex", gap: 20, justifyContent: "center" }}>
 
-        <button className="modal__save-btn" onClick={handleSubmit} disabled={isSaving}>
-          {isSaving ? t('taskModal.saving') : t('taskModal.saveBtn')}
-        </button>
+          <button className="modal__close" onClick={onClose}>
+            Bekor qilish
+          </button>
+
+          <button className="modal__save-btn" onClick={handleSubmit} disabled={isSaving}>
+            {isSaving ? t('taskModal.saving') : t('taskModal.saveBtn')}
+          </button>
+        </div>
+
       </div>
     </div>
   );

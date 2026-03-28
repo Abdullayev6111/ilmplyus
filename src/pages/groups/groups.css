@@ -531,3 +531,73 @@ input[type='time']::-webkit-datetime-edit-millisecond-field,
 input[type='time']::-webkit-datetime-edit-ampm-field {
   display: none;
 }
+
+/* Responsive Scaling: 1920px -> 1200px */
+@media (max-width: 1600px) {
+  .groups {
+    margin-left: 100px !important;
+    gap: 40px;
+  }
+  .groups-table th, .groups-table td {
+    padding: 12px 14px;
+  }
+  .modal {
+    width: 650px;
+  }
+  .modal-body {
+    padding: 20px 24px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .groups {
+    margin-left: 80px !important;
+    gap: 30px;
+  }
+  .groups-top-title {
+    font-size: 24px;
+  }
+  .groups-search {
+    width: 220px;
+    padding: 8px 14px;
+  }
+  .groups-table th, .groups-table td {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  .modal {
+    width: 580px;
+  }
+  .modal-body {
+    padding: 16px 20px;
+    gap: 14px;
+  }
+  .modal-row {
+    gap: 12px;
+  }
+  .modal-field input[type='text'], .modal-field input[type='date'], .modal-field input[type='time'], .modal-field input[type='number'], .modal-field select {
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .groups {
+    margin-left: 60px !important;
+    gap: 20px;
+  }
+  .groups-top-title {
+    font-size: 22px;
+  }
+  .groups-search {
+    width: 200px;
+  }
+  .groups-add-btn {
+    padding: 8px 18px;
+  }
+  .groups-table th, .groups-table td {
+    padding: 8px 10px;
+  }
+  .modal {
+    width: 520px;
+  }
+}

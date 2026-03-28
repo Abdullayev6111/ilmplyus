@@ -343,3 +343,72 @@
   font-weight: 600;
   margin-top: 8px;
 }
+
+/* Responsive Scaling: 1920px -> 1200px */
+@media (max-width: 1600px) {
+  .attendance {
+    margin-left: 100px !important;
+  }
+  .attendance-table-header {
+    grid-template-columns: 180px repeat(var(--day-count, 31), 1fr);
+  }
+  .attendance-row {
+    grid-template-columns: 180px repeat(var(--day-count, 31), 1fr);
+  }
+  .attendance-top {
+    padding: 16px 32px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .attendance {
+    margin-left: 80px !important;
+  }
+  .attendance-table-header {
+    grid-template-columns: 150px repeat(var(--day-count, 31), 1fr);
+  }
+  .attendance-row {
+    grid-template-columns: 150px repeat(var(--day-count, 31), 1fr);
+  }
+  .attendance-top {
+    padding: 14px 24px;
+  }
+  .employee-avatar {
+    width: 36px;
+    height: 36px;
+  }
+  .employee-name {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .attendance {
+    margin-left: 60px !important;
+  }
+  .attendance-table-header {
+    grid-template-columns: 130px repeat(var(--day-count, 31), 1fr);
+  }
+  .attendance-row {
+    grid-template-columns: 130px repeat(var(--day-count, 31), 1fr);
+  }
+  .employee-avatar {
+    width: 32px;
+    height: 32px;
+  }
+  .employee-name {
+    font-size: 12px;
+  }
+  .attendance-col-employee {
+    padding: 10px 12px;
+  }
+  .day-number {
+    font-size: 12px;
+  }
+  .day-weekday {
+    font-size: 11px;
+  }
+  .attendance-time {
+    font-size: 10px;
+  }
+}

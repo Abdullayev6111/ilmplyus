@@ -1,29 +1,34 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
-import Dashboard from './pages/dashboard';
-import Lids from './pages/lid';
-import Payments from './pages/payments';
-import Courses from './pages/courses';
-import Reports from './pages/reports';
-import Tasks from './pages/tasks';
-import Registration from './pages/registration';
-import NotFound from './pages/notFound';
-import LoginPage from './pages/login';
-import useAuthStore from './store/useAuthStore';
-import Layout from './components/Layout';
-import ProtectedRoute from './components/ProtectedRoute';
-import Attendance from './pages/attendance';
-import Groups from './pages/groups';
+import { Navigate, Route, Routes } from "react-router-dom";
+import Dashboard from "./pages/dashboard";
+import Lids from "./pages/lid";
+import Payments from "./pages/payments";
+import Courses from "./pages/courses";
+import Reports from "./pages/reports";
+import Tasks from "./pages/tasks";
+import Registration from "./pages/registration";
+import NotFound from "./pages/notFound";
+import LoginPage from "./pages/login";
+import useAuthStore from "./store/useAuthStore";
+import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Attendance from "./pages/attendance";
+import Groups from "./pages/groups";
+import Contracts from "./pages/contracts";
 
-import './index.css';
-import '@mantine/core/styles.css';
-import '@mantine/notifications/styles.css';
+import "./index.css";
+import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
+import ContractsCreate from "./pages/contracts/ContractsCreate";
 
 const App = () => {
   const isAuth = useAuthStore((state) => state.isAuth);
 
   return (
     <Routes>
-      <Route path="/login" element={isAuth ? <Navigate to="/" replace /> : <LoginPage />} />
+      <Route
+        path="/login"
+        element={isAuth ? <Navigate to="/" replace /> : <LoginPage />}
+      />
 
       <Route element={<ProtectedRoute />}>
         <Route element={<Layout />}>
@@ -36,6 +41,8 @@ const App = () => {
           <Route path="/reports" element={<Reports />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/attendance" element={<Attendance />} />
+          <Route path="/contracts" element={<Contracts />} />
+          <Route path="/contracts/create" element={<ContractsCreate />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Route>

@@ -26,7 +26,8 @@
     "attendance": "Davomat",
     "groups": "Guruhlar",
     "role": "Administrator",
-    "adminName": "Obidov Ibrohim"
+    "adminName": "Obidov Ibrohim",
+    "contracts": "Shartnomalar"
   },
   "dashboard": {
     "allLids": "JAMI LIDLAR",
@@ -431,5 +432,25 @@
     "404": "404",
     "page": "sahifa",
     "notFound": "topilmadi"
+  },
+  "contractsValidation": {
+    "required": "Majburiy",
+    "maxLength50": "50 belgidan oshmasligi kerak",
+    "invalidType": "Noto'g'ri tur",
+    "mustBeGreater": "Katta bo'lishi kerak",
+    "numbersOnly": "Faqat raqam (Masalan: 123)",
+    "fields": {
+      "contractNumber": "Shartnoma raqami",
+      "contractType": "Shartnoma turi",
+      "vacationType": "Ta'til turi"
+    },
+    "options": {
+      "doimiy": "Doimiy",
+      "muddatli": "Muddatli",
+      "sinov": "Sinov",
+      "annual": "Yillik asosi ta'til",
+      "partial": "Qisman",
+      "other": "Boshqa"
+    }
   }
 }

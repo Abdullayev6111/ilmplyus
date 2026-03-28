@@ -1,16 +1,21 @@
-import { useMemo, useState, useCallback } from 'react';
-import { useQuery, keepPreviousData, useQueryClient, useMutation } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
-import LeadColumn from '../../components/LidColumn';
-import AloqaModal from '../../components/AloqaModal';
-import DemoModal from '../../components/DemoModal';
-import ShartnomaModal from '../../components/ShartnomaModal';
-import LeadDetailsModal from '../../components/LeadDetailsModal';
-import { fetchLids, updateLidStatus } from './lid.service';
-import type { Lid, LidsPaginatedResponse, LidStatus } from './lid.types';
-import type { Column, ColumnFilter } from '../../components/LidColumn';
-import {} from './lid.service';
-import './lid.css';
+import { useMemo, useState, useCallback } from "react";
+import {
+  useQuery,
+  keepPreviousData,
+  useQueryClient,
+  useMutation,
+} from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import LeadColumn from "../../components/LidColumn";
+import AloqaModal from "../../components/AloqaModal";
+import DemoModal from "../../components/DemoModal";
+import ShartnomaModal from "../../components/ShartnomaModal";
+import LeadDetailsModal from "../../components/LeadDetailsModal";
+import { fetchLids, updateLidStatus } from "./lid.service";
+import type { Lid, LidsPaginatedResponse, LidStatus } from "./lid.types";
+import type { Column, ColumnFilter } from "../../components/LidColumn";
+import {} from "./lid.service";
+import "./lid.css";
 
 export type { Lid };
 
@@ -25,7 +30,7 @@ export interface PendingDrop {
   targetGroupId: number;
 }
 
-type ModalType = 'aloqa' | 'demo' | 'shartnoma' | null;
+type ModalType = "aloqa" | "demo" | "shartnoma" | null;
 
 const GROUPS: Group[] = [
   { id: 1, title: "lid.groups.registered", columnIds: [1, 2] },
@@ -35,16 +40,26 @@ const GROUPS: Group[] = [
 ];
 
 const COLUMNS: Column[] = [
-  { id: 1, title: 'lid.columns.online', color: '#FE9100', groupId: 1 },
-  { id: 2, title: 'lid.columns.offline', color: '#FE9100', groupId: 1 },
-  { id: 3, title: "lid.columns.contactEstablished", color: '#FE9100', groupId: 2 },
-  { id: 4, title: "lid.columns.contactNotEstablished", color: '#FE9100', groupId: 2 },
-  { id: 5, title: 'lid.columns.notInterested', color: '#FE9100', groupId: 2 },
-  { id: 6, title: 'lid.columns.willCome', color: '#FE9100', groupId: 3 },
-  { id: 7, title: 'lid.columns.came', color: '#FE9100', groupId: 3 },
-  { id: 8, title: 'lid.columns.didNotCome', color: '#FE9100', groupId: 3 },
-  { id: 9, title: 'lid.columns.contract', color: '#FE9100', groupId: 4 },
-  { id: 10, title: "lid.columns.payment", color: '#FE9100', groupId: 4 },
+  { id: 1, title: "lid.columns.online", color: "#FE9100", groupId: 1 },
+  { id: 2, title: "lid.columns.offline", color: "#FE9100", groupId: 1 },
+  {
+    id: 3,
+    title: "lid.columns.contactEstablished",
+    color: "#FE9100",
+    groupId: 2,
+  },
+  {
+    id: 4,
+    title: "lid.columns.contactNotEstablished",
+    color: "#FE9100",
+    groupId: 2,
+  },
+  { id: 5, title: "lid.columns.notInterested", color: "#FE9100", groupId: 2 },
+  { id: 6, title: "lid.columns.willCome", color: "#FE9100", groupId: 3 },
+  { id: 7, title: "lid.columns.came", color: "#FE9100", groupId: 3 },
+  { id: 8, title: "lid.columns.didNotCome", color: "#FE9100", groupId: 3 },
+  { id: 9, title: "lid.columns.contract", color: "#FE9100", groupId: 4 },
+  { id: 10, title: "lid.columns.payment", color: "#FE9100", groupId: 4 },
 ];
 
 function getGroupIdByColumnId(columnId: number): number {
@@ -53,9 +68,9 @@ function getGroupIdByColumnId(columnId: number): number {
 }
 
 function getModalTypeForGroup(groupId: number): ModalType {
-  if (groupId === 2) return 'aloqa';
-  if (groupId === 3) return 'demo';
-  if (groupId === 4) return 'shartnoma';
+  if (groupId === 2) return "aloqa";
+  if (groupId === 3) return "demo";
+  if (groupId === 4) return "shartnoma";
   return null;
 }
 
@@ -63,13 +78,23 @@ export default function Lid() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [draggedId, setDraggedId] = useState<number | null>(null);
-  const [columnFilters, setColumnFilters] = useState<Record<number, ColumnFilter>>({});
+  const [columnFilters, setColumnFilters] = useState<
+    Record<number, ColumnFilter>
+  >({});
   const [activeModal, setActiveModal] = useState<ModalType>(null);
   const [pendingDrop, setPendingDrop] = useState<PendingDrop | null>(null);
   const [selectedLead, setSelectedLead] = useState<Lid | null>(null);
 
+  // Layout State
+  const [isPaymentSectionOpen, setIsPaymentSectionOpen] = useState<boolean>(
+    () => {
+      const saved = localStorage.getItem("isPaymentSectionOpen");
+      return saved !== null ? JSON.parse(saved) : true;
+    },
+  );
+
   const { data } = useQuery<LidsPaginatedResponse>({
-    queryKey: ['lids', 1, 100],
+    queryKey: ["lids", 1, 100],
     queryFn: () => fetchLids({ page: 1, per_page: 100 }),
     placeholderData: keepPreviousData,
   });
@@ -86,29 +111,38 @@ export default function Lid() {
     }) => updateLidStatus(id, status, operator_id),
 
     onMutate: async ({ id, status }) => {
-      await queryClient.cancelQueries({ queryKey: ['lids', 1, 100] });
+      await queryClient.cancelQueries({ queryKey: ["lids", 1, 100] });
 
-      const previous = queryClient.getQueryData<LidsPaginatedResponse>(['lids', 1, 100]);
+      const previous = queryClient.getQueryData<LidsPaginatedResponse>([
+        "lids",
+        1,
+        100,
+      ]);
 
-      queryClient.setQueryData<LidsPaginatedResponse>(['lids', 1, 100], (old) => {
-        if (!old) return old;
-        return {
-          ...old,
-          data: old.data.map((lid) => (lid.id === id ? { ...lid, status } : lid)),
-        };
-      });
+      queryClient.setQueryData<LidsPaginatedResponse>(
+        ["lids", 1, 100],
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            data: old.data.map((lid) =>
+              lid.id === id ? { ...lid, status } : lid,
+            ),
+          };
+        },
+      );
 
       return { previous };
     },
 
     onError: (_err, _vars, context) => {
       if (context?.previous) {
-        queryClient.setQueryData(['lids', 1, 100], context.previous);
+        queryClient.setQueryData(["lids", 1, 100], context.previous);
       }
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['lids'] });
+      queryClient.invalidateQueries({ queryKey: ["lids"] });
     },
   });
 
@@ -118,13 +152,18 @@ export default function Lid() {
     () =>
       GROUPS.map((group) => ({
         ...group,
-        columns: COLUMNS.filter((col) => col.groupId === group.id).map((col) => {
-          const filter = columnFilters[col.id] || { source: null, course: null };
+        columns: COLUMNS.filter((col) => col.groupId === group.id).map(
+          (col) => {
+            const filter = columnFilters[col.id] || {
+              source: null,
+              course: null,
+            };
 
-          const colLeads = lids.filter((l) => l.status === col.id);
+            const colLeads = lids.filter((l) => l.status === col.id);
 
-          return { ...col, leads: colLeads, filter };
-        }),
+            return { ...col, leads: colLeads, filter };
+          },
+        ),
       })),
     [lids, columnFilters],
   );
@@ -191,51 +230,154 @@ export default function Lid() {
     setPendingDrop(null);
   }, []);
 
-  const handleFilterChange = useCallback((columnId: number, filter: ColumnFilter) => {
-    setColumnFilters((prev) => ({ ...prev, [columnId]: filter }));
-  }, []);
+  const handleFilterChange = useCallback(
+    (columnId: number, filter: ColumnFilter) => {
+      setColumnFilters((prev) => ({ ...prev, [columnId]: filter }));
+    },
+    [],
+  );
 
   const handleLeadClick = useCallback((lead: Lid) => {
     setSelectedLead(lead);
   }, []);
 
-  const activeLead = pendingDrop ? (lids.find((l) => l.id === pendingDrop.leadId) ?? null) : null;
+  const activeLead = pendingDrop
+    ? (lids.find((l) => l.id === pendingDrop.leadId) ?? null)
+    : null;
+
+  const mainGroups = grouped.slice(0, 3);
+  const sidebarGroup = grouped[3];
+
+  const togglePaymentSection = useCallback(() => {
+    setIsPaymentSectionOpen((prev) => {
+      const next = !prev;
+      localStorage.setItem("isPaymentSectionOpen", JSON.stringify(next));
+      return next;
+    });
+  }, []);
 
   return (
     <>
       <div className="lids-board-wrapper">
         <div className="lids-board">
-          {grouped.map((group) => (
-            <div key={group.id} className="lids-group">
-              <div className="lids-group__header">
-                <span className="lids-group__title">{t(group.title)}</span>
+          <div className="lids-main-sections">
+            {mainGroups.map((group) => (
+              <div key={group.id} className="lids-group">
+                <div className="lids-group__header">
+                  <span className="lids-group__title">{t(group.title)}</span>
+                </div>
+                <div className="lids-group__columns">
+                  {group.columns.map((col) => (
+                    <LeadColumn
+                      key={col.id}
+                      column={{ ...col, title: t(col.title) }}
+                      leads={col.leads}
+                      filter={col.filter}
+                      onDrop={handleDrop}
+                      onDragStart={handleDragStart}
+                      onFilterChange={handleFilterChange}
+                      onLeadClick={handleLeadClick}
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="lids-group__columns">
-                {group.columns.map((col) => (
-                  <LeadColumn
-                    key={col.id}
-                    column={{ ...col, title: t(col.title) }}
-                    leads={col.leads}
-                    filter={col.filter}
-                    onDrop={handleDrop}
-                    onDragStart={handleDragStart}
-                    onFilterChange={handleFilterChange}
-                    onLeadClick={handleLeadClick}
-                  />
-                ))}
+            ))}
+          </div>
+
+          <div
+            className={`lids-sidebar-section ${!isPaymentSectionOpen ? "is-collapsed" : ""}`}
+          >
+            {isPaymentSectionOpen ? (
+              <div
+                key={sidebarGroup.id}
+                className="lids-group lids-group--sidebar"
+              >
+                <div className="lids-group__header lids-group__header--sidebar">
+                  <span className="lids-group__title">
+                    {t(sidebarGroup.title)}
+                  </span>
+                  <button
+                    className="lids-sidebar-toggle"
+                    onClick={togglePaymentSection}
+                    type="button"
+                    aria-label="Collapse"
+                  >
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="lids-group__columns lids-group__columns--sidebar">
+                  {sidebarGroup.columns.map((col) => (
+                    <LeadColumn
+                      key={col.id}
+                      column={{ ...col, title: t(col.title) }}
+                      leads={col.leads}
+                      filter={col.filter}
+                      onDrop={handleDrop}
+                      onDragStart={handleDragStart}
+                      onFilterChange={handleFilterChange}
+                      onLeadClick={handleLeadClick}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ) : (
+              <div
+                className="lids-sidebar-collapsed"
+                onClick={togglePaymentSection}
+                role="button"
+                tabIndex={0}
+              >
+                <button
+                  className="lids-sidebar-toggle lids-sidebar-toggle--collapsed"
+                  type="button"
+                  aria-label="Expand"
+                  tabIndex={-1}
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    style={{ transform: "rotate(180deg)" }}
+                  >
+                    <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                  </svg>
+                </button>
+                <span className="lids-sidebar-collapsed-text">
+                  {t(sidebarGroup.title)}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {activeModal === 'aloqa' && activeLead && (
-        <AloqaModal lead={activeLead} onConfirm={handleModalConfirm} onCancel={handleModalCancel} />
+      {activeModal === "aloqa" && activeLead && (
+        <AloqaModal
+          lead={activeLead}
+          onConfirm={handleModalConfirm}
+          onCancel={handleModalCancel}
+        />
       )}
-      {activeModal === 'demo' && activeLead && (
-        <DemoModal lead={activeLead} onConfirm={handleModalConfirm} onCancel={handleModalCancel} />
+      {activeModal === "demo" && activeLead && (
+        <DemoModal
+          lead={activeLead}
+          onConfirm={handleModalConfirm}
+          onCancel={handleModalCancel}
+        />
       )}
-      {activeModal === 'shartnoma' && activeLead && (
+      {activeModal === "shartnoma" && activeLead && (
         <ShartnomaModal
           lead={activeLead}
           onConfirm={handleModalConfirm}

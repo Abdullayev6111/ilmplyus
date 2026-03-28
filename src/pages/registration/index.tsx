@@ -250,7 +250,7 @@ const Registration = () => {
                 onChange={handlePageSizeChange}
                 aria-label="Sahifadagi qatorlar soni"
               >
-                {PAGE_SIZE_OPTIONS.map((size) => (
+                {PAGE_SIZE_OPTIONS?.map((size) => (
                   <option key={size} value={size}>
                     {size}
                   </option>

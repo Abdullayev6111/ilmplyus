@@ -1,9 +1,9 @@
-import { useLocation } from 'react-router-dom';
-import LanguageSelect from './LanguageSelect/LanguageSelect';
-import adminImg from '../assets/images/admin-img.svg';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { API } from '../api/api';
+import { useLocation } from "react-router-dom";
+import LanguageSelect from "./LanguageSelect/LanguageSelect";
+import adminImg from "../assets/images/admin-img.svg";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { API } from "../api/api";
 
 type Role = {
   id: number;
@@ -21,29 +21,30 @@ const Header = () => {
   const { pathname } = useLocation();
 
   const pageTitles: Record<string, string> = {
-    '/': t('header.controlPanel'),
-    '/tasks': t('header.tasks'),
-    '/users': t('header.users'),
-    '/courses': t('header.courses'),
-    '/lids': t('header.lids'),
-    '/reports': t('header.reports'),
-    '/payments': t('header.payments'),
-    '/registration': t('header.registration'),
-    '/groups': t('header.groups'),
-    '/attendance': t('header.attendance'),
+    "/": t("header.controlPanel"),
+    "/tasks": t("header.tasks"),
+    "/users": t("header.users"),
+    "/courses": t("header.courses"),
+    "/lids": t("header.lids"),
+    "/reports": t("header.reports"),
+    "/payments": t("header.payments"),
+    "/registration": t("header.registration"),
+    "/groups": t("header.groups"),
+    "/attendance": t("header.attendance"),
+    "/contracts": t("header.contracts"),
   };
 
   const { data } = useQuery({
-    queryKey: ['me'],
+    queryKey: ["me"],
     queryFn: async (): Promise<MeResponse> => {
-      const { data } = await API.get('/me');
+      const { data } = await API.get("/me");
       return data;
     },
   });
 
-  const [firstName, lastName] = data?.full_name?.split(' ') ?? [];
+  const [firstName, lastName] = data?.full_name?.split(" ") ?? [];
 
-  const title = pageTitles[pathname] ?? t('header.controlPanel');
+  const title = pageTitles[pathname] ?? t("header.controlPanel");
 
   return (
     <header>
@@ -56,7 +57,7 @@ const Header = () => {
           }}
         >
           <i className="fa-solid fa-magnifying-glass"></i>
-          <input type="text" placeholder={t('registration.inputPlaceholder')} />
+          <input type="text" placeholder={t("registration.inputPlaceholder")} />
         </form>
       </div>
 
@@ -72,7 +73,7 @@ const Header = () => {
         </div>
 
         <div className="header-right-admin">
-          <div style={{ textAlign: 'right' }}>
+          <div style={{ textAlign: "right" }}>
             <h1>
               {firstName} {lastName}
             </h1>

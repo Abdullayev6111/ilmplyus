@@ -160,7 +160,7 @@ const SelectField = ({
       <option value="" disabled>
         {placeholder}
       </option>
-      {options.map((opt) => (
+      {options?.map((opt) => (
         <option key={opt.id} value={String(opt.id)}>
           {opt.name}
         </option>
@@ -227,46 +227,46 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
 
   const { data: regions } = useQuery<LidRegion[]>({
     queryKey: ['regions'],
-    queryFn: () => API.get('/regions').then((res) => res.data),
+    queryFn: () => API.get('/regions').then((res) => Array.isArray(res.data) ? res.data : res.data?.data || []),
   });
 
   const { data: districts } = useQuery<LidDistrict[]>({
     queryKey: ['districts', form.regionId],
-    queryFn: () => API.get(`/regions/${form.regionId}/districts`).then((res) => res.data),
+    queryFn: () => API.get(`/regions/${form.regionId}/districts`).then((res) => Array.isArray(res.data) ? res.data : res.data?.data || []),
     enabled: !!form.regionId,
   });
 
   const { data: branches } = useQuery<LidBranch[]>({
     queryKey: ['branches', form.districtId],
     queryFn: () =>
-      API.get('/branches', { params: { district_id: form.districtId } }).then((res) => res.data),
+      API.get('/branches', { params: { district_id: form.districtId } }).then((res) => Array.isArray(res.data) ? res.data : res.data?.data || []),
     enabled: !!form.districtId,
   });
 
   const { data: courses } = useQuery<LidCourse[]>({
     queryKey: ['courses', form.branchId],
     queryFn: () =>
-      API.get('/courses', { params: { branch_id: form.branchId } }).then((res) => res.data),
+      API.get('/courses', { params: { branch_id: form.branchId } }).then((res) => Array.isArray(res.data) ? res.data : res.data?.data || []),
     enabled: !!form.branchId,
   });
 
   const { data: levels } = useQuery<LidLevel[]>({
     queryKey: ['levels', form.courseId],
     queryFn: () =>
-      API.get('/levels', { params: { course_id: form.courseId } }).then((res) => res.data),
+      API.get('/levels', { params: { course_id: form.courseId } }).then((res) => Array.isArray(res.data) ? res.data : res.data?.data || []),
     enabled: !!form.courseId,
   });
 
   const { data: groups } = useQuery<LidGroup[]>({
     queryKey: ['groups', form.levelId],
     queryFn: () =>
-      API.get('/groups', { params: { level_id: form.levelId } }).then((res) => res.data),
+      API.get('/groups', { params: { level_id: form.levelId } }).then((res) => Array.isArray(res.data) ? res.data : res.data?.data || []),
     enabled: !!form.levelId,
   });
 
   const { data: sources } = useQuery<LidSource[]>({
     queryKey: ['sources'],
-    queryFn: () => API.get('/sources').then((res) => res.data),
+    queryFn: () => API.get('/sources').then((res) => Array.isArray(res.data) ? res.data : res.data?.data || []),
   });
 
   const createMutation = useMutation<void, Error, CreateLidPayload>({
@@ -636,7 +636,7 @@ export const RegistrationModal = ({ onClose, editId }: RegistrationModalProps) =
 
             <FormField label={t('registrationModal.fields.gender')} required error={errors.gender}>
               <div className="rm-gender-group" role="group" aria-label={t('registrationModal.fields.gender')}>
-                {(['Erkak', 'Ayol'] as StudentGender[]).map((g) => (
+                {(['Erkak', 'Ayol'] as StudentGender[])?.map((g) => (
                   <label
                     key={g}
                     className={`rm-gender-option${form.gender === g ? ' rm-gender-option--active' : ''}`}

@@ -1,0 +1,34 @@
+ .payments {
+     width: 100%;
+     display: flex;
+     flex-direction: column;
+     gap: 20px;
+     margin-top: 50px !important;
+     margin-left: 140px !important;
+ }
+
+  .payments-top {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+
+/* Responsive Scaling: 1920px -> 1200px */
+@media (max-width: 1600px) {
+  .payments {
+    margin-left: 100px !important;
+  }
+}
+
+@media (max-width: 1400px) {
+  .payments {
+    margin-left: 80px !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .payments {
+    margin-left: 60px !important;
+  }
+}

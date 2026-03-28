@@ -6,14 +6,28 @@ import TaskModal from '../../components/TaskModal';
 import './tasks.css';
 import { API } from '../../api/api';
 
+interface RoleObj {
+  id: number;
+  name: string;
+}
+
 interface User {
   id: number;
   full_name: string;
-  role_id: number;
+  role_id: number | null;
+  roles?: RoleObj[];
 }
 
 interface UsersResponse {
   data: User[];
+}
+
+function isOperatorUser(user: User): boolean {
+  if (user.role_id === 1 || user.role_id === 2) return true;
+  if (Array.isArray(user.roles)) {
+    return user.roles.some((r) => r.id === 1 || r.id === 2 || /operator|admin/i.test(r.name));
+  }
+  return true; // fallback if no roles defined
 }
 
 type FilterStatus = 'barchasi' | 'bajarish' | 'bajarildi' | 'bajarilmadi';
@@ -57,7 +71,7 @@ export default function Tasks() {
   });
 
   const operators: User[] = useMemo(() => {
-    return (usersData?.data ?? []).filter((u) => u.role_id === 2);
+    return (usersData?.data ?? []).filter(isOperatorUser);
   }, [usersData]);
 
   const filteredTasks: Task[] = (tasksRaw ?? []).filter((task) => {

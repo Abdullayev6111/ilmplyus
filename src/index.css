@@ -503,3 +503,96 @@ aside {
 }
 
 /* Aside end */
+
+/* Responsive Scaling: 1920px -> 1200px */
+@media (max-width: 1600px) {
+  .container {
+    max-width: 1400px;
+  }
+  header {
+    padding: 15px 40px;
+    height: 90px;
+  }
+  .header-left {
+    gap: 30px;
+  }
+  .header-left-form {
+    width: 400px;
+  }
+  aside {
+    width: 280px;
+  }
+  .header-right {
+    gap: 18px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .container {
+    max-width: 1200px;
+  }
+  header {
+    padding: 10px 30px;
+    height: 80px;
+  }
+  .header-left {
+    gap: 20px;
+  }
+  .header-left-form {
+    width: 320px;
+  }
+  .header-left h1 {
+    font-size: 22px;
+  }
+  aside {
+    width: 260px;
+  }
+  .header-right {
+    gap: 14px;
+  }
+  .header-right-admin h1 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .container {
+    max-width: 1000px;
+  }
+  header {
+    padding: 10px 20px;
+    height: 70px;
+  }
+  .header-left-form {
+    width: 250px;
+    height: 45px;
+  }
+  .header-left h1 {
+    font-size: 20px;
+  }
+  aside {
+    width: 240px;
+  }
+  .header-right {
+    gap: 10px;
+  }
+  .header-right-admin h1 {
+    font-size: 16px;
+  }
+  .header-right-admin h3 {
+    font-size: 14px;
+  }
+  .notification-btn, .chat-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+  .header-right-admin-card {
+    width: 50px;
+    height: 50px;
+  }
+  .header-right-admin-card img {
+    width: 32px;
+    height: 32px;
+  }
+}
